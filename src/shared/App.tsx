@@ -30,10 +30,6 @@ const App: React.FC<any> = () => {
                 titleTemplate="%s – React SSR Starter – TypeScript Edition"
                 link={[{ rel: 'icon', type: 'image/png', href: favicon }]}
             />
-            <h1>
-                <ReactLogo className={css.reactLogo} /> React + Express – SSR Starter – TypeScript
-                Edition
-            </h1>
             <Switch>
                 <Route exact path={routes.loading} component={Loading} />
                 <Route exact path={routes.login} component={Login} />

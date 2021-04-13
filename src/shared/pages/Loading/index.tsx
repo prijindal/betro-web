@@ -19,13 +19,13 @@ const App: React.FC<any> = () => {
             const state = location.state || { from: { pathname: '/login' } };
             history.replace((state as any).from);
         }
-    }, [dispatch, history, location]);
+    }, [dispatch, location, history]);
 
     const login = useCallback(
         (token: string) => {
             verifyLogin(token).then((resp) => {
                 if (resp) {
-                    const state = location.state || { from: { pathname: '/' } };
+                    const state = location.state || { from: { pathname: '/home' } };
                     dispatch(verifedLogin());
                     history.replace((state as any).from);
                 } else {
@@ -48,7 +48,7 @@ const App: React.FC<any> = () => {
                 login(auth.token as string);
             }
         }
-    }, [auth, login]);
+    }, [auth.isLoaded, auth.token, login]);
 
     return (
         <React.Fragment>
