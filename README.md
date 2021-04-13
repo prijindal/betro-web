@@ -1,5 +1,6 @@
 # ⚛ React + Express – SSR Setup with TypeScript
 
+[![Build Status](https://github.com/prijindal/betro-web/actions/workflows/nodejs-test.yml/badge.svg)](https://github.com/prijindal/betro-web/actions/workflows/nodejs-test.yml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/aad3cf7fc8d25d7024a3/maintainability)](https://codeclimate.com/github/prijindal/betro-web/maintainability)
 [![Known Vulnerabilities](https://snyk.io/test/github/prijindal/betro-web/badge.svg)](https://snyk.io/test/github/prijindal/betro-web)
 [![CircleCI](https://circleci.com/gh/prijindal/betro-web/tree/master.svg?style=svg)](https://circleci.com/gh/prijindal/betro-web/tree/master)
