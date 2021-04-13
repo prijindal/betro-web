@@ -4,6 +4,10 @@ const routes = {
     login: '/login',
     register: '/register',
     home: '/home',
+    user: '/user/:user_id',
+    approvals: '/approvals',
+    groups: '/groups',
+    post: '/post',
     page1: '/page-1',
     page2: '/page-2',
 };

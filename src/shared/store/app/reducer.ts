@@ -10,6 +10,7 @@ export const initialState = Object.freeze<AppState>({
         isLoggedIn: false,
         encryptionKey: null,
         encryptionMac: null,
+        privateKey: null,
         token: null,
     },
 });
@@ -44,11 +45,13 @@ export default (state: AppState = initialState, action: Action): AppState =>
                 draft.auth.encryptionKey = null;
                 draft.auth.encryptionMac = null;
                 draft.auth.token = null;
+                draft.auth.privateKey = null;
                 return draft;
             }
             case ActionTypes.AUTH_VERIFIED: {
                 draft.auth.isVerified = true;
                 draft.auth.isLoggedIn = true;
+                draft.auth.privateKey = action.payload;
                 return draft;
             }
         }

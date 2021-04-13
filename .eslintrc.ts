@@ -26,6 +26,7 @@ export default {
         'import/no-unassigned-import': 0,
         'import/no-named-as-default-member': 0,
         'prettier/prettier': 'error',
+        'camelcase': 0,
     },
     // overrides: [
     //     {

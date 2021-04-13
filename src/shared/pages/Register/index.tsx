@@ -1,5 +1,7 @@
+import { isEmpty } from 'lodash';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useHistory, useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import { loggedIn } from 'store/app/actions';
 import { register } from '../../api/login';
@@ -9,10 +11,17 @@ const App: React.FC<any> = () => {
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const dispatch = useDispatch();
+    const history = useHistory();
+    const location = useLocation();
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        if (isEmpty(password) || password !== confirmPassword) {
+            return;
+        }
         register(email, password).then((payload) => {
+            const state = location.state || { from: { pathname: '/' } };
             dispatch(loggedIn(payload));
+            history.replace((state as any).from);
         });
     };
     return (
@@ -34,7 +43,7 @@ const App: React.FC<any> = () => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                     <input
-                        type="confirm_password"
+                        type="password"
                         name="confirm_password"
                         placeholder="Confirm Password"
                         value={confirmPassword}

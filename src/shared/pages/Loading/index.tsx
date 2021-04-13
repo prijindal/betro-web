@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { isEmpty } from 'lodash';
+import { aesDecrypt } from 'betro-js-lib';
 import { useHistory, useLocation } from 'react-router';
 import { authLoaded, resetAuth, verifedLogin } from 'store/app/actions';
 import { AppState, AuthState } from 'store/app/types';
@@ -23,19 +25,33 @@ const App: React.FC<any> = () => {
 
     const login = useCallback(
         (token: string) => {
-            verifyLogin(token).then((resp) => {
-                if (resp) {
-                    const state = location.state || { from: { pathname: '/home' } };
-                    dispatch(verifedLogin());
-                    history.replace((state as any).from);
-                } else {
-                    const state = location.state || { from: { pathname: '/login' } };
-                    dispatch(resetAuth());
-                    history.replace((state as any).from);
+            verifyLogin(token).then(async (resp) => {
+                if (auth.encryptionKey !== null && auth.encryptionMac !== null) {
+                    if (!isEmpty(resp) && resp !== null) {
+                        const encryptedPrivateKey = resp;
+                        const privateKey = await aesDecrypt(
+                            auth.encryptionKey,
+                            auth.encryptionMac,
+                            encryptedPrivateKey
+                        );
+                        if (privateKey.isVerified) {
+                            const state = location.state || { from: { pathname: '/home' } };
+                            dispatch(verifedLogin(privateKey.data.toString('base64')));
+                            history.replace((state as any).from);
+                        } else {
+                            const state = { from: { pathname: '/login' } };
+                            dispatch(resetAuth());
+                            history.replace((state as any).from);
+                        }
+                    } else {
+                        const state = { from: { pathname: '/login' } };
+                        dispatch(resetAuth());
+                        history.replace((state as any).from);
+                    }
                 }
             });
         },
-        [dispatch, location, history]
+        [dispatch, location, history, auth.encryptionKey, auth.encryptionMac]
     );
 
     useEffect(() => {

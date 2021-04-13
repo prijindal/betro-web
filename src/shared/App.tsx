@@ -8,6 +8,10 @@ import Loading from './pages/Loading';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
+import User from './pages/User';
+import Post from './pages/Post';
+import Approvals from './pages/Approvals';
+import Groups from './pages/Groups';
 import Page1 from './pages/Page-1';
 import Page2 from './pages/Page-2';
 import routes from './routes';
@@ -34,8 +38,17 @@ const App: React.FC<any> = () => {
                 <PrivateRoute exact path={routes.home}>
                     <Route component={Home} />
                 </PrivateRoute>
-                <PrivateRoute exact path={routes.home}>
-                    <Route component={Home} />
+                <PrivateRoute exact path={routes.user}>
+                    <Route component={User} />
+                </PrivateRoute>
+                <PrivateRoute exact path={routes.groups}>
+                    <Route component={Groups} />
+                </PrivateRoute>
+                <PrivateRoute exact path={routes.approvals}>
+                    <Route component={Approvals} />
+                </PrivateRoute>
+                <PrivateRoute exact path={routes.post}>
+                    <Route component={Post} />
                 </PrivateRoute>
                 <PrivateRoute exact path={routes.page1}>
                     <Route component={Page1} />

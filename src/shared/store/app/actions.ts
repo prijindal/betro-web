@@ -1,4 +1,4 @@
-import { Locale, LoginPayload } from './types';
+import { Action, Locale, LoginPayload } from './types';
 
 export const ActionTypes = {
     SETLOCALE: 'app/set-locale',
@@ -8,7 +8,7 @@ export const ActionTypes = {
     AUTH_RESET: 'app/reset',
 };
 
-export const setLocale = (locale: Locale) => ({
+export const setLocale = (locale: Locale): Action => ({
     type: ActionTypes.SETLOCALE,
     payload: locale,
 });
@@ -17,7 +17,7 @@ export const authLoaded = (
     encryptionKey: string | null,
     encryptionMac: string | null,
     token: string | null
-) => ({
+): Action => ({
     type: ActionTypes.AUTH_LOADED,
     payload: {
         encryptionKey,
@@ -26,15 +26,16 @@ export const authLoaded = (
     },
 });
 
-export const loggedIn = (payload: LoginPayload) => ({
+export const loggedIn = (payload: LoginPayload): Action => ({
     type: ActionTypes.AUTH_LOGIN,
     payload,
 });
 
-export const resetAuth = () => ({
+export const resetAuth = (): Action => ({
     type: ActionTypes.AUTH_RESET,
 });
 
-export const verifedLogin = () => ({
+export const verifedLogin = (privateKey: string): Action => ({
     type: ActionTypes.AUTH_VERIFIED,
+    payload: privateKey,
 });

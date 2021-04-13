@@ -32,7 +32,7 @@
   "dependencies": {
     "@babel/runtime": "^7.13.10",
     "axios": "^0.21.1",
-    "betro-js-lib": "git://github.com/prijindal/betro-js-lib.git#02008d9e6cc8c5479e009511a297aca4c71eb88c",
+    "betro-js-lib": "git://github.com/prijindal/betro-js-lib.git#fb75b221d96aff3ee65803cb80290c953ff215bc",
     "body-parser": "^1.19.0",
     "chalk": "^4.0.0",
     "classnames": "^2.2.6",

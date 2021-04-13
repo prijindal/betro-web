@@ -1,5 +1,12 @@
 import axios from 'axios';
-import { getEncryptionKey, getMasterHash, getMasterKey } from 'betro-js-lib';
+import {
+    aesDecrypt,
+    aesEncrypt,
+    generateRsaPair,
+    getEncryptionKey,
+    getMasterHash,
+    getMasterKey,
+} from 'betro-js-lib';
 import { LoginPayload } from '../store/app/types';
 
 const storeLocal = (payload: LoginPayload) => {
@@ -8,14 +15,14 @@ const storeLocal = (payload: LoginPayload) => {
     localStorage.setItem('TOKEN', payload.token);
 };
 
-export const verifyLogin = async (token: string): Promise<boolean> => {
+export const verifyLogin = async (token: string): Promise<string | null> => {
     try {
-        const response = await axios.get('http://localhost:4000/api/account/whoami', {
+        const response = await axios.get('http://localhost:4000/api/account/keys', {
             headers: { Authorization: `Bearer ${token}` },
         });
-        return response.data.user_id !== null;
+        return response.data.private_key;
     } catch (e) {
-        return false;
+        return null;
     }
 };
 
@@ -28,10 +35,20 @@ export const login = async (email: string, password: string): Promise<LoginPaylo
     });
     const encryptionKeys = await getEncryptionKey(masterKey);
     const token = response.data.token;
+    const encryptedPrivateKey = response.data.private_key;
+    const privateKeyD = await aesDecrypt(
+        encryptionKeys.encryption_key,
+        encryptionKeys.encryption_mac,
+        encryptedPrivateKey
+    );
+    if (privateKeyD.isVerified === false) {
+        throw new Error();
+    }
     const payload: LoginPayload = {
-        encryptionKey: encryptionKeys.encryption_mac,
-        encryptionMac: encryptionKeys.encryption_key,
+        encryptionKey: encryptionKeys.encryption_key,
+        encryptionMac: encryptionKeys.encryption_mac,
         token: token,
+        privateKey: privateKeyD.data.toString('base64'),
     };
     storeLocal(payload);
     return payload;
@@ -40,17 +57,26 @@ export const login = async (email: string, password: string): Promise<LoginPaylo
 export const register = async (email: string, password: string): Promise<LoginPayload> => {
     const masterKey = await getMasterKey(email, password);
     const masterHash = await getMasterHash(masterKey, password);
+    const encryptionKeys = await getEncryptionKey(masterKey);
+    const { publicKey, privateKey } = await generateRsaPair();
+    const encryptedPrivateKey = await aesEncrypt(
+        encryptionKeys.encryption_key,
+        encryptionKeys.encryption_mac,
+        Buffer.from(privateKey, 'base64')
+    );
     const response = await axios.post('http://localhost:4000/api/register', {
         email,
         master_hash: masterHash,
         inhibit_login: true,
+        public_key: publicKey,
+        private_key: encryptedPrivateKey,
     });
-    const encryptionKeys = await getEncryptionKey(masterKey);
     const token = response.data.token;
     const payload: LoginPayload = {
         encryptionKey: encryptionKeys.encryption_mac,
         encryptionMac: encryptionKeys.encryption_key,
         token: token,
+        privateKey,
     };
     storeLocal(payload);
     return payload;

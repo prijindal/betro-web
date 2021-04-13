@@ -1,4 +1,4 @@
-# ⚛ React + Express – SSR Setup with TypeScript
+# Betro Web Application
 
 [![Build Status](https://github.com/prijindal/betro-web/actions/workflows/nodejs-test.yml/badge.svg)](https://github.com/prijindal/betro-web/actions/workflows/nodejs-test.yml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/aad3cf7fc8d25d7024a3/maintainability)](https://codeclimate.com/github/prijindal/betro-web/maintainability)

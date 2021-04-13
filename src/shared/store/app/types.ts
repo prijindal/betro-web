@@ -4,6 +4,7 @@ export type LoginPayload = {
     encryptionKey: string;
     encryptionMac: string;
     token: string;
+    privateKey: string;
 };
 
 export type AppState = Readonly<{
@@ -13,7 +14,7 @@ export type AppState = Readonly<{
 
 export type Action = {
     type: string;
-    payload: any;
+    payload?: any;
 };
 
 export type AuthState = {
@@ -22,5 +23,6 @@ export type AuthState = {
     isLoggedIn: boolean;
     encryptionKey: string | null;
     encryptionMac: string | null;
+    privateKey: string | null;
     token: string | null;
 };

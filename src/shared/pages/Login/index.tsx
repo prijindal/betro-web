@@ -13,8 +13,8 @@ const App: React.FC<any> = () => {
     const location = useLocation();
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const state = location.state || { from: { pathname: '/' } };
         login(email, password).then((payload) => {
+            const state = location.state || { from: { pathname: '/home' } };
             dispatch(loggedIn(payload));
             history.replace((state as any).from);
         });
