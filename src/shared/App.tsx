@@ -1,10 +1,8 @@
 // import React, { Suspense } from 'react';
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useTranslation } from 'react-i18next';
-import { Link, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import favicon from '../shared/assets/favicon.png';
-import { ReactComponent as ReactLogo } from './assets/react.svg';
 import PrivateRoute from './components/PrivateRoute';
 import Loading from './pages/Loading';
 import Login from './pages/Login';
@@ -21,7 +19,6 @@ import css from './App.module.css';
 // const Page2 = React.lazy(() => import('./pages/Page-2'));
 
 const App: React.FC<any> = () => {
-    const { t } = useTranslation();
     return (
         // <Suspense fallback={<div>Loading</div>}>
         <div className={css.wrapper}>
