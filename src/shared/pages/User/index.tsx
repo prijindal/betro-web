@@ -37,7 +37,7 @@ const Page = () => {
             }
         }
         fetchInfo();
-    }, [auth.token, params.user_id, auth.encryptionKey, auth.encryptionMac]);
+    }, [auth.token, params.user_id, auth.privateKey]);
     const followHandler = () => {
         if (auth.token !== null) {
             followUser(auth.token, params.user_id);

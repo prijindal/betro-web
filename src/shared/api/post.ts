@@ -1,15 +1,5 @@
 import axios from 'axios';
-import {
-    aesDecrypt,
-    aesEncrypt,
-    generateRsaPair,
-    generateSymKey,
-    getEncryptionKey,
-    getMasterHash,
-    getMasterKey,
-    rsaEncrypt,
-    symEncrypt,
-} from 'betro-js-lib';
+import { aesDecrypt, symEncrypt } from 'betro-js-lib';
 
 export const createTextPost = async (
     token: string,

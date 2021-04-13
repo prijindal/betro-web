@@ -1,15 +1,5 @@
 import axios from 'axios';
-import {
-    aesDecrypt,
-    aesEncrypt,
-    generateRsaPair,
-    generateSymKey,
-    getEncryptionKey,
-    getMasterHash,
-    getMasterKey,
-    rsaEncrypt,
-} from 'betro-js-lib';
-import { LoginPayload } from '../store/app/types';
+import { aesDecrypt, aesEncrypt, generateSymKey, rsaEncrypt } from 'betro-js-lib';
 export interface ApprovalResponse {
     id: string;
     follower_id: string;
