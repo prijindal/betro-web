@@ -32,7 +32,7 @@
   "dependencies": {
     "@babel/runtime": "^7.13.10",
     "axios": "^0.21.1",
-    "betro-js-lib": "git://github.com/prijindal/betro-js-lib.git#fb75b221d96aff3ee65803cb80290c953ff215bc",
+    "betro-js-lib": "https://github.com/prijindal/betro-js-lib.git#fb75b221d96aff3ee65803cb80290c953ff215bc",
     "body-parser": "^1.19.0",
     "chalk": "^4.0.0",
     "classnames": "^2.2.6",
@@ -155,6 +155,7 @@
     "object-assign": "^4.1.1",
     "opn-cli": "^3.1.0",
     "plop": "^2.6.0",
+    "plop-prettier": "^3.0.0",
     "postcss": "^8.2.10",
     "postcss-assets": "^5.0.0",
     "postcss-custom-properties": "^11.0.0",
