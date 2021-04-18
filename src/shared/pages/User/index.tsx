@@ -9,13 +9,13 @@ const Page = () => {
     const auth = useSelector<{ app: AppState }, AuthState>((a) => a.app.auth);
     const [loaded, setLoaded] = useState<boolean>(false);
     const [posts, setPosts] = useState<Array<PostResource>>([]);
-    const [email, setEmail] = useState<string | null>(null);
+    const [username, setUsername] = useState<string | null>(null);
     const [isFollowing, setIsFollowing] = useState<boolean>(false);
     const [isApproved, setIsApproved] = useState<boolean>(false);
     useEffect(() => {
         async function fetchPosts() {
             if (auth.token !== null && auth.privateKey !== null) {
-                const resp = await fetchUserPosts(auth.token, params.user_id, auth.privateKey);
+                const resp = await fetchUserPosts(auth.token, params.username, auth.privateKey);
                 if (resp !== null) {
                     console.log(resp.length);
                     setPosts(resp);
@@ -24,10 +24,10 @@ const Page = () => {
         }
         async function fetchInfo() {
             if (auth.token !== null) {
-                const userInfo = await fetchUserInfo(auth.token, params.user_id);
+                const userInfo = await fetchUserInfo(auth.token, params.username);
                 setLoaded(true);
                 if (userInfo !== null) {
-                    setEmail(userInfo.email);
+                    setUsername(userInfo.username);
                     setIsFollowing(userInfo.is_following);
                     setIsApproved(userInfo.is_approved);
                     if (userInfo.is_approved) {
@@ -37,10 +37,10 @@ const Page = () => {
             }
         }
         fetchInfo();
-    }, [auth.token, params.user_id, auth.privateKey]);
+    }, [auth.token, params.username, auth.privateKey]);
     const followHandler = () => {
         if (auth.token !== null) {
-            followUser(auth.token, params.user_id);
+            followUser(auth.token, params.username);
         }
     };
     if (loaded === false) {
@@ -49,7 +49,7 @@ const Page = () => {
     if (!isFollowing) {
         return (
             <div>
-                <span>{email}</span>
+                <span>{username}</span>
                 <button onClick={followHandler}>Follow</button>
             </div>
         );
@@ -57,16 +57,17 @@ const Page = () => {
     if (!isApproved) {
         return (
             <div>
-                <span>{email}</span>
+                <span>{username}</span>
                 <span>Not approved yet</span>
             </div>
         );
     }
     return (
         <div>
+            {posts.length === 0 && <div>No posts found</div>}
             {posts.map((post) => (
                 <div key={post.id} style={{ margin: '20px 0' }}>
-                    <div>{post.email}:</div>
+                    <div>{post.username}:</div>
                     <div style={{ marginLeft: '10px' }}>
                         {post.text_content !== null && post.text_content.toString()}
                     </div>

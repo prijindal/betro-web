@@ -64,7 +64,7 @@ const Page = () => {
             {approvals.length === 0 && <div>No Approvals</div>}
             {approvals.map((a) => (
                 <div key={a.id}>
-                    <span>{a.email}</span>
+                    <span>{a.username}</span>
                     <select value={groupId} onChange={(e) => setGroupId(e.target.value)}>
                         {groups?.map((g) => (
                             <option key={g.id} value={g.id}>

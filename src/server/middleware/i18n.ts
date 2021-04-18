@@ -64,14 +64,4 @@ export const i18nextXhr = (req: express.Request, res: express.Response) => {
     }
 };
 
-// Middleware to download updated translation files either manually or via webhook
-export const refreshTranslations = async (_req: any, res: any) => {
-    const { download, writeFiles, cleanup } = require('../lib/i18n/lokalise');
-
-    const data = await download();
-    await writeFiles(data, `${__dirname}/locales`);
-    cleanup();
-    res.sendStatus(200);
-};
-
 export default i18nextXhr;

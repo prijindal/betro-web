@@ -54,7 +54,11 @@ export const login = async (email: string, password: string): Promise<LoginPaylo
     return payload;
 };
 
-export const register = async (email: string, password: string): Promise<LoginPayload> => {
+export const register = async (
+    username: string,
+    email: string,
+    password: string
+): Promise<LoginPayload> => {
     const masterKey = await getMasterKey(email, password);
     const masterHash = await getMasterHash(masterKey, password);
     const encryptionKeys = await getEncryptionKey(masterKey);
@@ -65,6 +69,7 @@ export const register = async (email: string, password: string): Promise<LoginPa
         Buffer.from(privateKey, 'base64')
     );
     const response = await axios.post('http://localhost:4000/api/register', {
+        username,
         email,
         master_hash: masterHash,
         inhibit_login: true,

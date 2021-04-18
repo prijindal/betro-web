@@ -8,6 +8,7 @@ import { register } from '../../api/login';
 
 const App: React.FC<any> = () => {
     const [email, setEmail] = useState<string>('');
+    const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const dispatch = useDispatch();
@@ -18,8 +19,8 @@ const App: React.FC<any> = () => {
         if (isEmpty(password) || password !== confirmPassword) {
             return;
         }
-        register(email, password).then((payload) => {
-            const state = location.state || { from: { pathname: '/' } };
+        register(username, email, password).then((payload) => {
+            const state = location.state || { from: { pathname: '/home' } };
             dispatch(loggedIn(payload));
             history.replace((state as any).from);
         });
@@ -28,6 +29,13 @@ const App: React.FC<any> = () => {
         <React.Fragment>
             <div>
                 <form onSubmit={handleSubmit}>
+                    <input
+                        type="text"
+                        name="username"
+                        placeholder="Username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
                     <input
                         type="email"
                         name="email"

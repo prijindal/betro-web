@@ -6,7 +6,7 @@ export interface PostResource {
     text_content: Buffer | null;
     media_content: Buffer | null;
     media_encoding: string;
-    email: string;
+    username: string;
     created_at: Date;
 }
 
@@ -27,18 +27,18 @@ export interface PostResponse {
 }
 
 export interface PostUserResponse {
-    email: string;
+    username: string;
 }
 
 export const followUser = async (
     token: string,
-    userId: string
+    username: string
 ): Promise<{ is_following: boolean; is_approved: boolean; email: string } | null> => {
     try {
         const response = await axios.post(
             'http://localhost:4000/api/follow/',
             {
-                followee_id: userId,
+                followee_username: username,
             },
             {
                 headers: { Authorization: `Bearer ${token}` },
@@ -54,10 +54,10 @@ export const followUser = async (
 
 export const fetchUserInfo = async (
     token: string,
-    userId: string
-): Promise<{ is_following: boolean; is_approved: boolean; email: string } | null> => {
+    username: string
+): Promise<{ is_following: boolean; is_approved: boolean; username: string } | null> => {
     try {
-        const response = await axios.get(`http://localhost:4000/api/user/${userId}`, {
+        const response = await axios.get(`http://localhost:4000/api/user/${username}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         const data = response.data;
@@ -70,11 +70,11 @@ export const fetchUserInfo = async (
 
 export const fetchUserPosts = async (
     token: string,
-    userId: string,
+    username: string,
     private_key: string
 ): Promise<Array<PostResource> | null> => {
     try {
-        const response = await axios.get(`http://localhost:4000/api/user/${userId}/posts`, {
+        const response = await axios.get(`http://localhost:4000/api/user/${username}/posts`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         const data: PostsFeedResponse = response.data;
@@ -96,7 +96,7 @@ export const fetchUserPosts = async (
                 text_content: text,
                 media_content: media,
                 media_encoding: post.media_encoding,
-                email: data.users[post.user_id].email,
+                username: data.users[post.user_id].username,
             });
         }
         return posts;

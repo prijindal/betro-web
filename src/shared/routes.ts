@@ -4,7 +4,7 @@ const routes = {
     login: '/login',
     register: '/register',
     home: '/home',
-    user: '/user/:user_id',
+    user: '/user/:username',
     approvals: '/approvals',
     groups: '/groups',
     post: '/post',
