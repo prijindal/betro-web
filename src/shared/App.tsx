@@ -12,6 +12,8 @@ import User from './pages/User';
 import Post from './pages/Post';
 import Approvals from './pages/Approvals';
 import Groups from './pages/Groups';
+import Notifications from './pages/Notifications';
+import NotificationSettings from './pages/NotificationSettings';
 import Page1 from './pages/Page-1';
 import Page2 from './pages/Page-2';
 import routes from './routes';
@@ -49,6 +51,12 @@ const App: React.FC<any> = () => {
                 </PrivateRoute>
                 <PrivateRoute exact path={routes.post}>
                     <Route component={Post} />
+                </PrivateRoute>
+                <PrivateRoute exact path={routes.notifications}>
+                    <Route component={Notifications} />
+                </PrivateRoute>
+                <PrivateRoute exact path={routes.notificationSettings}>
+                    <Route component={NotificationSettings} />
                 </PrivateRoute>
                 <PrivateRoute exact path={routes.page1}>
                     <Route component={Page1} />

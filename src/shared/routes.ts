@@ -8,6 +8,8 @@ const routes = {
     approvals: '/approvals',
     groups: '/groups',
     post: '/post',
+    notifications: '/notifications',
+    notificationSettings: '/settings/notifications',
     page1: '/page-1',
     page2: '/page-2',
 };
