@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
-import { AppState, AuthState } from "../../store/app/types";
 import { fetchUserInfo, fetchUserPosts, followUser, PostResource } from "../../api/user";
+import Layout from "../../components/Layout";
+import { getAuth } from "../../store/app/selectors";
 
-const Page = () => {
+const User = () => {
     const params: any = useParams();
-    const auth = useSelector<{ app: AppState }, AuthState>((a) => a.app.auth);
+    const auth = useSelector(getAuth);
     const [loaded, setLoaded] = useState<boolean>(false);
     const [posts, setPosts] = useState<Array<PostResource>>([]);
     const [username, setUsername] = useState<string | null>(null);
@@ -76,5 +77,11 @@ const Page = () => {
         </div>
     );
 };
+
+const Page = () => (
+    <Layout>
+        <User />
+    </Layout>
+);
 
 export default Page;

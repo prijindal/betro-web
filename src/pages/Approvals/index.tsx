@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { AppState, AuthState } from "../../store/app/types";
 import {
     ApprovalResponse,
     fetchPendingApprovals,
@@ -8,9 +7,11 @@ import {
     fetchGroups,
     GroupResponse,
 } from "../../api/account";
+import Layout from "../../components/Layout";
+import { getAuth } from "../../store/app/selectors";
 
-const Page = () => {
-    const auth = useSelector<{ app: AppState }, AuthState>((a) => a.app.auth);
+const Approvals = () => {
+    const auth = useSelector(getAuth);
     const [groupId, setGroupId] = useState<string>("");
     const [loaded, setLoaded] = useState<boolean>(false);
     const [approvals, setApprovals] = useState<Array<ApprovalResponse> | null>(null);
@@ -78,5 +79,11 @@ const Page = () => {
         </div>
     );
 };
+
+const Page = () => (
+    <Layout>
+        <Approvals />
+    </Layout>
+);
 
 export default Page;

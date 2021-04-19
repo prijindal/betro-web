@@ -1,12 +1,13 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import moment from 'moment';
-import { Link } from 'react-router-dom';
-import { AppState, AuthState } from '../../store/app/types';
-import { fetchNotifications, NotificationResponse } from '../../api/notifications';
+import React, { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import moment from "moment";
+import { Link } from "react-router-dom";
+import { fetchNotifications, NotificationResponse } from "../../api/notifications";
+import Layout from "../../components/Layout";
+import { getAuth } from "../../store/app/selectors";
 
-const Page = () => {
-    const auth = useSelector<{ app: AppState }, AuthState>((a) => a.app.auth);
+const Notifications = () => {
+    const auth = useSelector(getAuth);
     const [loaded, setLoaded] = useState<boolean>(false);
     const [notifications, setNotifications] = useState<Array<NotificationResponse> | null>(null);
     const fetchGrps = useCallback(async () => {
@@ -37,8 +38,8 @@ const Page = () => {
                 <div key={a.id}>
                     <Link
                         to={
-                            a.action === 'on_followed'
-                                ? '/approvals'
+                            a.action === "on_followed"
+                                ? "/approvals"
                                 : `/user/${a.payload.username}`
                         }
                     >
@@ -50,5 +51,11 @@ const Page = () => {
         </div>
     );
 };
+
+const Page = () => (
+    <Layout>
+        <Notifications />
+    </Layout>
+);
 
 export default Page;

@@ -1,7 +1,4 @@
 @import "./variables.css";
-@import "uikit/src/scss/variables-theme.scss";
-@import "uikit/src/scss/mixins-theme.scss";
-@import url("https://fonts.googleapis.com/css?family=Lora:400,700|Titillium+Web:400,700");
 /* @import-normalize; */
 
 :global(body) {
@@ -11,8 +8,8 @@
 
 .wrapper {
     margin: auto;
-    max-width: 100%;
-    width: 768px;
+    padding:0 15px;
+    max-width: 1024px;
 
     h1 {
         font-size: var(--font-size-h1);
