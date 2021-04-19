@@ -1,0 +1,18 @@
+.paper {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.formWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.formComponent {
+  margin:5px auto;
+  text-align: center;
+}

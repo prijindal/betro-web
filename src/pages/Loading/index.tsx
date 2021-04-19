@@ -68,15 +68,15 @@ const App: React.FC<any> = () => {
 
     return (
         <React.Fragment>
-            <p>
-                <div>
+            <div>
+                <p>
                     {auth.isLoaded ? (
                         <span>{auth.isLoggedIn ? "Logging In" : "Logged In"}</span>
                     ) : (
                         <span>Loading</span>
                     )}
-                </div>
-            </p>
+                </p>
+            </div>
         </React.Fragment>
     );
 };

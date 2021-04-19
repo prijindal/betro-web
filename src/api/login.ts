@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 import {
     aesDecrypt,
     aesEncrypt,
@@ -6,18 +6,18 @@ import {
     getEncryptionKey,
     getMasterHash,
     getMasterKey,
-} from 'betro-js-lib';
-import { LoginPayload } from '../store/app/types';
+} from "betro-js-lib";
+import { LoginPayload } from "../store/app/types";
 
 const storeLocal = (payload: LoginPayload) => {
-    localStorage.setItem('ENCRYPTION_KEY', payload.encryptionKey);
-    localStorage.setItem('ENCRYPTION_MAC', payload.encryptionMac);
-    localStorage.setItem('TOKEN', payload.token);
+    localStorage.setItem("ENCRYPTION_KEY", payload.encryptionKey);
+    localStorage.setItem("ENCRYPTION_MAC", payload.encryptionMac);
+    localStorage.setItem("TOKEN", payload.token);
 };
 
 export const verifyLogin = async (token: string): Promise<string | null> => {
     try {
-        const response = await axios.get('http://localhost:4000/api/account/keys', {
+        const response = await axios.get("http://localhost:4000/api/account/keys", {
             headers: { Authorization: `Bearer ${token}` },
         });
         return response.data.private_key;
@@ -29,7 +29,7 @@ export const verifyLogin = async (token: string): Promise<string | null> => {
 export const login = async (email: string, password: string): Promise<LoginPayload> => {
     const masterKey = await getMasterKey(email, password);
     const masterHash = await getMasterHash(masterKey, password);
-    const response = await axios.post('http://localhost:4000/api/login', {
+    const response = await axios.post("http://localhost:4000/api/login", {
         email,
         master_hash: masterHash,
     });
@@ -48,7 +48,7 @@ export const login = async (email: string, password: string): Promise<LoginPaylo
         encryptionKey: encryptionKeys.encryption_key,
         encryptionMac: encryptionKeys.encryption_mac,
         token: token,
-        privateKey: privateKeyD.data.toString('base64'),
+        privateKey: privateKeyD.data.toString("base64"),
     };
     storeLocal(payload);
     return payload;
@@ -66,9 +66,9 @@ export const register = async (
     const encryptedPrivateKey = await aesEncrypt(
         encryptionKeys.encryption_key,
         encryptionKeys.encryption_mac,
-        Buffer.from(privateKey, 'base64')
+        Buffer.from(privateKey, "base64")
     );
-    const response = await axios.post('http://localhost:4000/api/register', {
+    const response = await axios.post("http://localhost:4000/api/register", {
         username,
         email,
         master_hash: masterHash,
@@ -85,4 +85,34 @@ export const register = async (
     };
     storeLocal(payload);
     return payload;
+};
+
+export const isAvailableUsername = async (username: string): Promise<boolean> => {
+    try {
+        const response = await axios.get(
+            `http://localhost:4000/api/register/available/username?username=${username}`
+        );
+        return response.data.available;
+    } catch (e) {
+        if (e.response.status === 400) {
+            return false;
+        } else {
+            throw e;
+        }
+    }
+};
+
+export const isAvailableEmail = async (email: string): Promise<boolean> => {
+    try {
+        const response = await axios.get(
+            `http://localhost:4000/api/register/available/email?email=${email}`
+        );
+        return response.data.available;
+    } catch (e) {
+        if (e.response.status === 402) {
+            return false;
+        } else {
+            throw e;
+        }
+    }
 };
