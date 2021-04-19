@@ -1,64 +1,51 @@
 # Betro Web Application
 
-[![Build Status](https://github.com/prijindal/betro-web/actions/workflows/nodejs-test.yml/badge.svg)](https://github.com/prijindal/betro-web/actions/workflows/nodejs-test.yml)
-[![Maintainability](https://api.codeclimate.com/v1/badges/aad3cf7fc8d25d7024a3/maintainability)](https://codeclimate.com/github/prijindal/betro-web/maintainability)
-[![Known Vulnerabilities](https://snyk.io/test/github/prijindal/betro-web/badge.svg)](https://snyk.io/test/github/prijindal/betro-web)
-[![CircleCI](https://circleci.com/gh/prijindal/betro-web/tree/master.svg?style=svg)](https://circleci.com/gh/prijindal/betro-web/tree/master)
-[![codecov](https://codecov.io/gh/prijindal/betro-web/branch/master/graph/badge.svg)](https://codecov.io/gh/prijindal/betro-web)
-[![CodeQL Analysis](https://github.com/prijindal/betro-web/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/prijindal/betro-web/actions/workflows/codeql-analysis.yml)
+[![Build Status](https://github.com/betro-app/betro-web/actions/workflows/nodejs-test.yml/badge.svg)](https://github.com/betro-app/betro-web/actions/workflows/nodejs-test.yml)
+[![Maintainability](https://api.codeclimate.com/v1/badges/aad3cf7fc8d25d7024a3/maintainability)](https://codeclimate.com/github/betro-app/betro-web/maintainability)
+[![Known Vulnerabilities](https://snyk.io/test/github/betro-app/betro-web/badge.svg)](https://snyk.io/test/github/betro-app/betro-web)
+[![CircleCI](https://circleci.com/gh/betro-app/betro-web/tree/master.svg?style=svg)](https://circleci.com/gh/betro-app/betro-web/tree/master)
+[![codecov](https://codecov.io/gh/betro-app/betro-web/branch/master/graph/badge.svg)](https://codecov.io/gh/betro-app/betro-web)
+[![CodeQL Analysis](https://github.com/betro-app/betro-web/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/betro-app/betro-web/actions/workflows/codeql-analysis.yml)
 
-## Usage
+## Available Scripts
 
-There are npm scripts for all the relevant things. The server will always be started on port 8500 unless otherwise specified in `process.env.PORT`. You can use a `.env` file to specify env vars. If you want to use them in your client side code, don't forget to add them in [config/env.js](config/env.js#L37).
+In the project directory, you can run:
 
-### Noteworthy scripts:
+### `yarn start`
 
-#### `yarn start`
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-Starts the app in development mode: creates a new client and server dev build using webpack, starts the Express server build (for both file serving and server side pre-rendering) and keeps webpack open in watchmode. Updates the app (if possible) on change using HMR.
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
 
-#### `yarn build`
+### `yarn test`
 
-Creates a new build, optimized for production. Does **not** start a dev server or anything else.
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-#### `yarn test`
+### `yarn build`
 
-Run all tests using jest.
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-#### `yarn test:update`
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-Update all Jest snapshots (if there are any)
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-#### `yarn lint:js`
+### `yarn eject`
 
-Run ESLint for all JavaScript and TypeScript files
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-#### `yarn lint:css`
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Run Stylelint for all CSS files
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-#### `yarn lint`
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-Run lint:js and lint:css in parallel
+## Learn More
 
-#### `yarn analyze`
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-Starts `webpack-bundle-analyzer` to give you the opportunity to analyze your bundle(s)
-
-#### `yarn depgraph`
-
-Creates an image of your dependency graph. Requires [GraphVIZ](https://www.graphviz.org/) to be in your system's `PATH`
-
-#### `yarn plop`
-
-Run plop to create new React components or Redux reducers via CLI
-
-## Environment Variables
-
-There are a few environment variables you can set to adjust the setup to your needs
-
-| Variable         | Default            | Description                                                                                                                                                                                                                                                                                      |
-| ---------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `PORT`           | `8500`             | Port number your application will be served on.                                                                                                                                                                                                                                                  |
-| `HOST`           | `http://localhost` | Host (including protocol!) your application will be served on. This is usually neglectable as most of the time your application will be served via remote proxy (e.g. Nginx) on localhost. **Note:** this is only for convenience. The server itself will not be bound exclusively to that host. |
-| `DEVSERVER_HOST` | `http://localhost` | Optional. Different host for the Webpack Dev Server to be served on.                                                                                                                                                                                                                             |
+To learn React, check out the [React documentation](https://reactjs.org/).
