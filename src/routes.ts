@@ -30,7 +30,7 @@ export const getRoute = (
             }
             return routeBranch[pathItem];
         }
-        return null;
+        return undefined;
     }, routesConfig);
 
 export default routes;

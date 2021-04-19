@@ -1,11 +1,11 @@
-@import './variables.css';
+@import "./variables.css";
 @import "uikit/src/scss/variables-theme.scss";
 @import "uikit/src/scss/mixins-theme.scss";
-@import url('https://fonts.googleapis.com/css?family=Lora:400,700|Titillium+Web:400,700');
+@import url("https://fonts.googleapis.com/css?family=Lora:400,700|Titillium+Web:400,700");
 /* @import-normalize; */
 
 :global(body) {
-    font-family: 'Titillium Web', Arial, Sans-Serif;
+    font-family: "Titillium Web", Arial, Sans-Serif;
     font-size: var(--font-size-base);
 }
 
