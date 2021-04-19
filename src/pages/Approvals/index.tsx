@@ -7,7 +7,7 @@ import {
     fetchGroups,
     GroupResponse,
 } from "../../api/account";
-import Layout from "../../components/Layout";
+import { wrapLayout } from "../../components/Layout";
 import { getAuth } from "../../store/app/selectors";
 
 const Approvals = () => {
@@ -80,10 +80,4 @@ const Approvals = () => {
     );
 };
 
-const Page = () => (
-    <Layout>
-        <Approvals />
-    </Layout>
-);
-
-export default Page;
+export default wrapLayout(Approvals);

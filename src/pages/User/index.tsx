@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { fetchUserInfo, fetchUserPosts, followUser, PostResource } from "../../api/user";
-import Layout from "../../components/Layout";
+import { wrapLayout } from "../../components/Layout";
 import { getAuth } from "../../store/app/selectors";
 
 const User = () => {
@@ -78,10 +78,4 @@ const User = () => {
     );
 };
 
-const Page = () => (
-    <Layout>
-        <User />
-    </Layout>
-);
-
-export default Page;
+export default wrapLayout(User);

@@ -9,6 +9,7 @@ const routes = {
     post: "/post",
     notifications: "/notifications",
     notificationSettings: "/settings/notifications",
+    logout: "/logout",
 };
 
 export const getRoute = (

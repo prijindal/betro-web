@@ -14,6 +14,7 @@ import Approvals from "./pages/Approvals";
 import Groups from "./pages/Groups";
 import Notifications from "./pages/Notifications";
 import NotificationSettings from "./pages/NotificationSettings";
+import Logout from "./pages/Logout";
 import routes from "./routes";
 import css from "./App.module.scss";
 
@@ -23,44 +24,47 @@ import css from "./App.module.scss";
 // const Page2 = React.lazy(() => import('./pages/Page-2'));
 
 const App: React.FC<any> = () => {
-  return (
-    // <Suspense fallback={<div>Loading</div>}>
-    <div className={css.wrapper}>
-      <Helmet
-        defaultTitle="React SSR Starter – TypeScript Edition"
-        titleTemplate="%s – React SSR Starter – TypeScript Edition"
-        link={[{ rel: "icon", type: "image/png", href: favicon }]}
-      />
-      <Switch>
-        <Route exact path={routes.loading} component={Loading} />
-        <Route exact path={routes.login} component={Login} />
-        <Route exact path={routes.register} component={Register} />
-        <PrivateRoute exact path={routes.home}>
-          <Route component={Home} />
-        </PrivateRoute>
-        <PrivateRoute exact path={routes.user}>
-          <Route component={User} />
-        </PrivateRoute>
-        <PrivateRoute exact path={routes.groups}>
-          <Route component={Groups} />
-        </PrivateRoute>
-        <PrivateRoute exact path={routes.approvals}>
-          <Route component={Approvals} />
-        </PrivateRoute>
-        <PrivateRoute exact path={routes.post}>
-          <Route component={Post} />
-        </PrivateRoute>
-        <PrivateRoute exact path={routes.notifications}>
-          <Route component={Notifications} />
-        </PrivateRoute>
-        <PrivateRoute exact path={routes.notificationSettings}>
-          <Route component={NotificationSettings} />
-        </PrivateRoute>
-        <Route render={() => "404!"} />
-      </Switch>
-    </div>
-    // </Suspense>
-  );
+    return (
+        // <Suspense fallback={<div>Loading</div>}>
+        <div className={css.wrapper}>
+            <Helmet
+                defaultTitle="React SSR Starter – TypeScript Edition"
+                titleTemplate="%s – React SSR Starter – TypeScript Edition"
+                link={[{ rel: "icon", type: "image/png", href: favicon }]}
+            />
+            <Switch>
+                <Route exact path={routes.loading} component={Loading} />
+                <Route exact path={routes.login} component={Login} />
+                <Route exact path={routes.register} component={Register} />
+                <PrivateRoute exact path={routes.home}>
+                    <Route component={Home} />
+                </PrivateRoute>
+                <PrivateRoute exact path={routes.user}>
+                    <Route component={User} />
+                </PrivateRoute>
+                <PrivateRoute exact path={routes.groups}>
+                    <Route component={Groups} />
+                </PrivateRoute>
+                <PrivateRoute exact path={routes.approvals}>
+                    <Route component={Approvals} />
+                </PrivateRoute>
+                <PrivateRoute exact path={routes.post}>
+                    <Route component={Post} />
+                </PrivateRoute>
+                <PrivateRoute exact path={routes.notifications}>
+                    <Route component={Notifications} />
+                </PrivateRoute>
+                <PrivateRoute exact path={routes.notificationSettings}>
+                    <Route component={NotificationSettings} />
+                </PrivateRoute>
+                <PrivateRoute exact path={routes.logout}>
+                    <Route component={Logout} />
+                </PrivateRoute>
+                <Route render={() => "404!"} />
+            </Switch>
+        </div>
+        // </Suspense>
+    );
 };
 
 export default App;

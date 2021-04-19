@@ -6,7 +6,7 @@ import {
     NotificationSettingsAction,
     changeNotificationSettings,
 } from "../../api/settings";
-import Layout from "../../components/Layout";
+import { wrapLayout } from "../../components/Layout";
 import { getAuth } from "../../store/app/selectors";
 
 interface SettingNotification {
@@ -104,10 +104,4 @@ const NotificationSettings = () => {
     );
 };
 
-const Page = () => (
-    <Layout>
-        <NotificationSettings />
-    </Layout>
-);
-
-export default Page;
+export default wrapLayout(NotificationSettings);

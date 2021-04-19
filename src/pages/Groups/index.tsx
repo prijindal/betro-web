@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { GroupResponse, fetchGroups, deleteGroup, createGroup } from "../../api/account";
-import Layout from "../../components/Layout";
+import { wrapLayout } from "../../components/Layout";
 import { getAuth } from "../../store/app/selectors";
 
 const NewGroupForm = (params: { onCreated: () => void }) => {
@@ -67,10 +67,4 @@ const Groups = () => {
     );
 };
 
-const Page = () => (
-    <Layout>
-        <Groups />
-    </Layout>
-);
-
-export default Page;
+export default wrapLayout(Groups);

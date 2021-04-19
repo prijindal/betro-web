@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import { fetchNotifications, NotificationResponse } from "../../api/notifications";
-import Layout from "../../components/Layout";
+import { wrapLayout } from "../../components/Layout";
 import { getAuth } from "../../store/app/selectors";
 
 const Notifications = () => {
@@ -52,10 +52,4 @@ const Notifications = () => {
     );
 };
 
-const Page = () => (
-    <Layout>
-        <Notifications />
-    </Layout>
-);
-
-export default Page;
+export default wrapLayout(Notifications);

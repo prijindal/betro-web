@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import Features from "../../components/Features";
 import { setLocale } from "../../store/app/actions";
 import { Locale } from "../../store/app/types";
-import Layout from "../../components/Layout";
+import { wrapLayout } from "../../components/Layout";
 
 const App: React.FC<any> = () => {
     const { t } = useTranslation();
@@ -17,7 +17,7 @@ const App: React.FC<any> = () => {
     );
 
     return (
-        <Layout>
+        <React.Fragment>
             <Features />
             <h2>{t("i18n-example")}</h2>
             <p>
@@ -28,8 +28,8 @@ const App: React.FC<any> = () => {
                     English
                 </button>
             </p>
-        </Layout>
+        </React.Fragment>
     );
 };
 
-export default App;
+export default wrapLayout(App);

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { fetchGroups, GroupResponse } from "../../api/account";
 import { createTextPost } from "../../api/post";
-import Layout from "../../components/Layout";
+import { wrapLayout } from "../../components/Layout";
 import { getAuth } from "../../store/app/selectors";
 
 const Post = () => {
@@ -63,10 +63,4 @@ const Post = () => {
     );
 };
 
-const Page = () => (
-    <Layout>
-        <Post />
-    </Layout>
-);
-
-export default Page;
+export default wrapLayout(Post);

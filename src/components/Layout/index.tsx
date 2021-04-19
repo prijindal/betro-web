@@ -34,4 +34,8 @@ const Layout: React.FunctionComponent = (props) => {
     );
 };
 
+export const wrapLayout = (children: React.FunctionComponent): React.FunctionComponent => {
+    return (props) => <Layout>{children(props)}</Layout>;
+};
+
 export default Layout;
