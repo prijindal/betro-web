@@ -1,0 +1,31 @@
+$topbar-height: 64px;
+$drawer-width: 200px;
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.appWrapper {
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 auto;
+  margin-top: $topbar-height;
+  overflow-y:hidden;
+}
+
+.drawer {
+  padding:0 15px;
+  min-width: $drawer-width;
+}
+
+.appBar {
+  height: $topbar-height;
+}
+
+.pageWrapper {
+  max-width: 1024px;
+  flex:1 1 auto;
+  overflow-y: auto;
+}
