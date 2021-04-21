@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { aesDecrypt, aesEncrypt, generateSymKey, symDecrypt, symEncrypt } from "betro-js-lib";
+import { API_HOST } from "../constants";
 
 export interface UserProfileResponse {
     first_name: string;
@@ -35,7 +36,7 @@ export const fetchProfile = async (
                 profile_picture: string;
                 sym_key: string;
             }>
-        >("http://localhost:4000/api/account/profile", {
+        >(`${API_HOST}/api/account/profile`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         const data = response.data;
@@ -83,7 +84,7 @@ export const createProfile = async (
             last_name: encrypted_last_name,
             profile_picture: encrypted_profile_picture,
         };
-        const response = await axios.post("http://localhost:4000/api/account/profile", request, {
+        const response = await axios.post(`${API_HOST}/api/account/profile`, request, {
             headers: { Authorization: `Bearer ${token}` },
         });
         const data = response.data;
@@ -111,7 +112,7 @@ export const updateProfile = async (
         if (profile_picture != null) {
             request.profile_picture = await symEncrypt(sym_key, profile_picture);
         }
-        const response = await axios.put("http://localhost:4000/api/account/profile", request, {
+        const response = await axios.put(`${API_HOST}/api/account/profile`, request, {
             headers: { Authorization: `Bearer ${token}` },
         });
         const data = response.data;

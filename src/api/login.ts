@@ -8,6 +8,7 @@ import {
     getMasterKey,
     symDecrypt,
 } from "betro-js-lib";
+import { API_HOST } from "../constants";
 import { LoginPayload } from "../store/app/types";
 export interface WhoAmiResponse {
     user_id: string;
@@ -29,7 +30,7 @@ export const fetchKeys = async (
     encryption_mac: string
 ): Promise<{ private_key: string; sym_key?: string } | null> => {
     try {
-        const response = await axios.get("http://localhost:4000/api/account/keys", {
+        const response = await axios.get(`${API_HOST}/api/account/keys`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         const data = response.data;
@@ -62,7 +63,7 @@ export const whoAmi = async (
     symKey: string | null
 ): Promise<WhoAmiResponse | null> => {
     try {
-        const response = await axios.get("http://localhost:4000/api/account/whoami", {
+        const response = await axios.get(`${API_HOST}/api/account/whoami`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         const data = response.data;
@@ -89,7 +90,7 @@ export const fetchProfilePicture = async (
     symKey: string
 ): Promise<Buffer | null> => {
     try {
-        const response = await axios.get("http://localhost:4000/api/account/profile_picture", {
+        const response = await axios.get(`${API_HOST}/api/account/profile_picture`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         const data = response.data;
@@ -103,7 +104,7 @@ export const fetchProfilePicture = async (
 export const login = async (email: string, password: string): Promise<LoginPayload> => {
     const masterKey = await getMasterKey(email, password);
     const masterHash = await getMasterHash(masterKey, password);
-    const response = await axios.post("http://localhost:4000/api/login", {
+    const response = await axios.post(`${API_HOST}/api/login`, {
         email,
         master_hash: masterHash,
     });
@@ -142,7 +143,7 @@ export const register = async (
         encryptionKeys.encryption_mac,
         Buffer.from(privateKey, "base64")
     );
-    const response = await axios.post("http://localhost:4000/api/register", {
+    const response = await axios.post(`${API_HOST}/api/register`, {
         username,
         email,
         master_hash: masterHash,
@@ -164,7 +165,7 @@ export const register = async (
 export const isAvailableUsername = async (username: string): Promise<boolean> => {
     try {
         const response = await axios.get(
-            `http://localhost:4000/api/register/available/username?username=${username}`
+            `${API_HOST}/api/register/available/username?username=${username}`
         );
         return response.data.available;
     } catch (e) {
@@ -178,9 +179,7 @@ export const isAvailableUsername = async (username: string): Promise<boolean> =>
 
 export const isAvailableEmail = async (email: string): Promise<boolean> => {
     try {
-        const response = await axios.get(
-            `http://localhost:4000/api/register/available/email?email=${email}`
-        );
+        const response = await axios.get(`${API_HOST}/api/register/available/email?email=${email}`);
         return response.data.available;
     } catch (e) {
         if (e.response.status === 402) {

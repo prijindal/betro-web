@@ -1,6 +1,7 @@
-import axios from 'axios';
+import axios from "axios";
+import { API_HOST } from "../constants";
 
-export type NotificationSettingsAction = 'on_approved' | 'on_followed';
+export type NotificationSettingsAction = "on_approved" | "on_followed";
 
 export interface UserNotificationSettingResponse {
     id: string;
@@ -13,7 +14,7 @@ export const fetchNotificationSettings = async (
     token: string
 ): Promise<Array<UserNotificationSettingResponse> | null> => {
     try {
-        const response = await axios.get('http://localhost:4000/api/settings/notifications', {
+        const response = await axios.get(`${API_HOST}/api/settings/notifications`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         const data = response.data;
@@ -30,7 +31,7 @@ export const changeNotificationSettings = async (
 ): Promise<null> => {
     try {
         const response = await axios.post(
-            'http://localhost:4000/api/settings/notifications',
+            `${API_HOST}/api/settings/notifications`,
             { action, enabled },
             {
                 headers: { Authorization: `Bearer ${token}` },

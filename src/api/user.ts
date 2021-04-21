@@ -1,5 +1,6 @@
-import axios from 'axios';
-import { rsaDecrypt, symDecrypt } from 'betro-js-lib';
+import axios from "axios";
+import { rsaDecrypt, symDecrypt } from "betro-js-lib";
+import { API_HOST } from "../constants";
 
 export interface PostResource {
     id: string;
@@ -36,7 +37,7 @@ export const followUser = async (
 ): Promise<{ is_following: boolean; is_approved: boolean; email: string } | null> => {
     try {
         const response = await axios.post(
-            'http://localhost:4000/api/follow/',
+            `${API_HOST}/api/follow/`,
             {
                 followee_username: username,
             },
@@ -57,7 +58,7 @@ export const fetchUserInfo = async (
     username: string
 ): Promise<{ is_following: boolean; is_approved: boolean; username: string } | null> => {
     try {
-        const response = await axios.get(`http://localhost:4000/api/user/${username}`, {
+        const response = await axios.get(`${API_HOST}/api/user/${username}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         const data = response.data;
@@ -74,14 +75,14 @@ export const fetchUserPosts = async (
     private_key: string
 ): Promise<Array<PostResource> | null> => {
     try {
-        const response = await axios.get(`http://localhost:4000/api/user/${username}/posts`, {
+        const response = await axios.get(`${API_HOST}/api/user/${username}/posts`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         const data: PostsFeedResponse = response.data;
         const posts: Array<PostResource> = [];
         for (const post of data.posts) {
             const symKey = await rsaDecrypt(private_key, data.keys[post.key_id]);
-            const sym_key = symKey.toString('base64');
+            const sym_key = symKey.toString("base64");
             let text: Buffer | null = null;
             let media: Buffer | null = null;
             if (post.text_content !== null) {

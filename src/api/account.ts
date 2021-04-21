@@ -30,7 +30,7 @@ export const fetchPendingApprovals = async (
 
 export const fetchGroups = async (token: string): Promise<Array<GroupResponse> | null> => {
     try {
-        const response = await axios.get("http://localhost:4000/api/groups", {
+        const response = await axios.get(`${API_HOST}/api/groups`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         const data = response.data;
@@ -45,7 +45,7 @@ export const deleteGroup = async (
     groupId: string
 ): Promise<{ is_following: boolean; is_approved: boolean; email: string } | null> => {
     try {
-        const response = await axios.delete(`http://localhost:4000/api/groups/${groupId}`, {
+        const response = await axios.delete(`${API_HOST}/api/groups/${groupId}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         const data = response.data;
@@ -71,7 +71,7 @@ export const createGroup = async (
     );
     try {
         const response = await axios.post(
-            "http://localhost:4000/api/groups",
+            `${API_HOST}/api/groups`,
             { name: name, sym_key: encryptedSymKey, is_default: is_default },
             {
                 headers: { Authorization: `Bearer ${token}` },
@@ -100,7 +100,7 @@ export const approveUser = async (
     const groupSymKey = await rsaEncrypt(publicKey, decryptedGroupSymKey.data);
     try {
         const response = await axios.post(
-            "http://localhost:4000/api/follow/approve",
+            `${API_HOST}/api/follow/approve`,
             {
                 follow_id: followId,
                 group_id: group_id,
