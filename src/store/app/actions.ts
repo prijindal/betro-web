@@ -1,11 +1,13 @@
-import { Action, Locale, LoginPayload } from './types';
+import { Action, Locale, LoginPayload } from "./types";
 
 export const ActionTypes = {
-    SETLOCALE: 'app/set-locale',
-    AUTH_LOADED: 'app/auth/loaded',
-    AUTH_LOGIN: 'app/login',
-    AUTH_VERIFIED: 'app/verified',
-    AUTH_RESET: 'app/reset',
+    SETLOCALE: "app/set-locale",
+    AUTH_LOADED: "app/auth/loaded",
+    AUTH_LOGIN: "app/login",
+    AUTH_VERIFIED: "app/verified",
+    AUTH_RESET: "app/reset",
+    PROFILE_LOADED: "profile/loaded",
+    PROFILE_PICTURE_LOADED: "profile/picture_loaded",
 };
 
 export const setLocale = (locale: Locale): Action => ({
@@ -35,7 +37,34 @@ export const resetAuth = (): Action => ({
     type: ActionTypes.AUTH_RESET,
 });
 
-export const verifedLogin = (privateKey: string): Action => ({
+export const verifedLogin = (privateKey: string, symKey?: string): Action => ({
     type: ActionTypes.AUTH_VERIFIED,
-    payload: privateKey,
+    payload: {
+        privateKey,
+        symKey,
+    },
+});
+
+export const profileLoaded = (
+    user_id: string,
+    username: string,
+    email: string,
+    first_name?: string,
+    last_name?: string
+): Action => ({
+    type: ActionTypes.PROFILE_LOADED,
+    payload: {
+        user_id,
+        username,
+        email,
+        first_name,
+        last_name,
+    },
+});
+
+export const profilePictureLoaded = (profile_picture: string): Action => ({
+    type: ActionTypes.PROFILE_PICTURE_LOADED,
+    payload: {
+        profile_picture,
+    },
 });

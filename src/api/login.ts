@@ -6,8 +6,16 @@ import {
     getEncryptionKey,
     getMasterHash,
     getMasterKey,
+    symDecrypt,
 } from "betro-js-lib";
 import { LoginPayload } from "../store/app/types";
+export interface WhoAmiResponse {
+    user_id: string;
+    username: string;
+    email: string;
+    first_name?: string;
+    last_name?: string;
+}
 
 const storeLocal = (payload: LoginPayload) => {
     localStorage.setItem("ENCRYPTION_KEY", payload.encryptionKey);
@@ -15,12 +23,78 @@ const storeLocal = (payload: LoginPayload) => {
     localStorage.setItem("TOKEN", payload.token);
 };
 
-export const verifyLogin = async (token: string): Promise<string | null> => {
+export const fetchKeys = async (
+    token: string,
+    encryption_key: string,
+    encryption_mac: string
+): Promise<{ private_key: string; sym_key?: string } | null> => {
     try {
         const response = await axios.get("http://localhost:4000/api/account/keys", {
             headers: { Authorization: `Bearer ${token}` },
         });
-        return response.data.private_key;
+        const data = response.data;
+
+        const encryptedPrivateKey = data.private_key;
+        const encryptedSymKey = data.sym_key;
+        const privateKey = await aesDecrypt(encryption_key, encryption_mac, encryptedPrivateKey);
+        if (privateKey.isVerified) {
+            const private_key = privateKey.data.toString("base64");
+            let sym_key: string | undefined;
+            if (encryptedSymKey) {
+                const symKey = await aesDecrypt(encryption_key, encryption_mac, encryptedSymKey);
+                if (symKey.isVerified) {
+                    sym_key = symKey.data.toString("base64");
+                }
+            }
+            return {
+                private_key,
+                sym_key,
+            };
+        }
+        return null;
+    } catch (e) {
+        return null;
+    }
+};
+
+export const whoAmi = async (
+    token: string,
+    symKey: string | null
+): Promise<WhoAmiResponse | null> => {
+    try {
+        const response = await axios.get("http://localhost:4000/api/account/whoami", {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = response.data;
+        let first_name: string | undefined;
+        let last_name: string | undefined;
+        if (symKey != null) {
+            first_name = (await symDecrypt(symKey, data.first_name)).toString("utf-8");
+            last_name = (await symDecrypt(symKey, data.last_name)).toString("utf-8");
+        }
+        return {
+            user_id: data.user_id,
+            username: data.username,
+            email: data.email,
+            first_name: first_name,
+            last_name: last_name,
+        };
+    } catch (e) {
+        return null;
+    }
+};
+
+export const fetchProfilePicture = async (
+    token: string,
+    symKey: string
+): Promise<Buffer | null> => {
+    try {
+        const response = await axios.get("http://localhost:4000/api/account/profile_picture", {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = response.data;
+        const profile_picture = await symDecrypt(symKey, data);
+        return profile_picture;
     } catch (e) {
         return null;
     }

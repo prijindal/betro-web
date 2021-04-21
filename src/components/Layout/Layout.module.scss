@@ -1,6 +1,4 @@
-$topbar-height: 64px;
-$drawer-width: 200px;
-
+@import "../../variables.scss";
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -18,10 +16,6 @@ $drawer-width: 200px;
 .drawer {
   padding:0 15px;
   min-width: $drawer-width;
-}
-
-.appBar {
-  height: $topbar-height;
 }
 
 .pageWrapper {

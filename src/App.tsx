@@ -20,6 +20,7 @@ const Approvals = React.lazy(() => import("./pages/Approvals"));
 const Groups = React.lazy(() => import("./pages/Groups"));
 const Notifications = React.lazy(() => import("./pages/Notifications"));
 const NotificationSettings = React.lazy(() => import("./pages/NotificationSettings"));
+const Profile = React.lazy(() => import("./pages/Profile"));
 const Logout = React.lazy(() => import("./pages/Logout"));
 
 const history = createHistory();
@@ -62,6 +63,9 @@ const App: React.FC<any> = () => {
                     </PrivateRoute>
                     <PrivateRoute exact path={routes.post}>
                         <Route component={Post} />
+                    </PrivateRoute>
+                    <PrivateRoute exact path={routes.profile}>
+                        <Route component={Profile} />
                     </PrivateRoute>
                     <PrivateRoute exact path={routes.notifications}>
                         <Route component={Notifications} />

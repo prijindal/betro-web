@@ -31,7 +31,9 @@ const Approvals = () => {
                 const resp = await fetchGroups(auth.token);
                 if (resp !== null) {
                     setGroups(resp);
-                    setGroupId(resp[0].id);
+                    if (resp.length > 0) {
+                        setGroupId(resp[0].id);
+                    }
                 }
             }
         }

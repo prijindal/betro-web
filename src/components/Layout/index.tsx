@@ -1,37 +1,15 @@
-import AppBar from "@material-ui/core/AppBar";
-import HomeIcon from "@material-ui/icons/Home";
-import IconButton from "@material-ui/core/IconButton";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 import React from "react";
 import classes from "./Layout.module.scss";
 import NavLink from "../NavLink";
-import { Link } from "react-router-dom";
+import TopAppBar from "../TopAppBar";
 
 const Layout: React.FunctionComponent<{ includeRouting: boolean }> = (props) => {
     const { children, includeRouting } = props;
     return (
         <div className={classes.wrapper}>
-            <AppBar position="fixed" className={classes.appBar}>
-                <Toolbar>
-                    <IconButton
-                        component={includeRouting ? Link : "a"}
-                        to="/home"
-                        href="/home"
-                        edge="start"
-                        className={classes.menuButton}
-                        color="inherit"
-                        aria-label="menu"
-                    >
-                        <HomeIcon />
-                    </IconButton>
-                    <Typography variant="h6" className={classes.title}>
-                        Betro
-                    </Typography>
-                </Toolbar>
-            </AppBar>
+            <TopAppBar includeRouting={includeRouting} />
             <div className={classes.appWrapper}>
                 <nav className={classes.drawer} aria-label="mailbox folders">
                     <List>
@@ -52,6 +30,9 @@ const Layout: React.FunctionComponent<{ includeRouting: boolean }> = (props) => 
                             Post
                         </NavLink>
                         <Divider />
+                        <NavLink includeRouting={includeRouting} to="/profile">
+                            Profile
+                        </NavLink>
                         <NavLink includeRouting={includeRouting} to="/settings/notifications">
                             Notification Settings
                         </NavLink>

@@ -11,7 +11,17 @@ export const initialState = Object.freeze<AppState>({
         encryptionKey: null,
         encryptionMac: null,
         privateKey: null,
+        symKey: null,
         token: null,
+    },
+    profile: {
+        isLoaded: false,
+        user_id: null,
+        username: null,
+        email: null,
+        first_name: null,
+        last_name: null,
+        profile_picture: null,
     },
 });
 
@@ -51,8 +61,21 @@ const appReducer = (state: AppState = initialState, action: Action): AppState =>
             case ActionTypes.AUTH_VERIFIED: {
                 draft.auth.isVerified = true;
                 draft.auth.isLoggedIn = true;
-                draft.auth.privateKey = action.payload;
+                draft.auth.privateKey = action.payload.privateKey;
+                draft.auth.symKey = action.payload.symKey;
                 return draft;
+            }
+            case ActionTypes.PROFILE_LOADED: {
+                draft.profile.isLoaded = true;
+                draft.profile.user_id = action.payload.user_id;
+                draft.profile.username = action.payload.username;
+                draft.profile.email = action.payload.email;
+                draft.profile.first_name = action.payload.first_name;
+                draft.profile.last_name = action.payload.last_name;
+                return draft;
+            }
+            case ActionTypes.PROFILE_PICTURE_LOADED: {
+                draft.profile.profile_picture = action.payload.profile_picture;
             }
         }
     });

@@ -7,6 +7,7 @@ const routes = {
     approvals: "/approvals",
     groups: "/groups",
     post: "/post",
+    profile: "/profile",
     notifications: "/notifications",
     notificationSettings: "/settings/notifications",
     logout: "/logout",
