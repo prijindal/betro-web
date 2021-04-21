@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { aesDecrypt, aesEncrypt, generateSymKey, symDecrypt, symEncrypt } from "betro-js-lib";
+import { aesDecrypt, aesEncrypt, symDecrypt, symEncrypt } from "betro-js-lib";
 import { API_HOST } from "../constants";
 
 export interface UserProfileResponse {

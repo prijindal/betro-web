@@ -94,7 +94,7 @@ const TopAppBar: React.FunctionComponent<{ includeRouting: boolean }> = (props) 
                 <div style={{ flex: 1 }}></div>
                 <div>
                     {profile.profile_picture && (
-                        <img width="30" height="30" src={profile.profile_picture} />
+                        <img width="30" height="30" src={profile.profile_picture} alt="Profile" />
                     )}
                 </div>
                 <Typography>

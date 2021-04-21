@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { isEmpty } from "lodash";
-import { aesDecrypt } from "betro-js-lib";
 import { useHistory, useLocation } from "react-router";
 import { authLoaded, resetAuth, verifedLogin } from "../../store/app/actions";
-import { fetchKeys, whoAmi } from "../../api/login";
+import { fetchKeys } from "../../api/login";
 import { getAuth } from "../../store/app/selectors";
 
 const App: React.FC<any> = () => {

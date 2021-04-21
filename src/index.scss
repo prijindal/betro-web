@@ -3,17 +3,19 @@
 @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Lora:400,700|Titillium+Web:400,700&display=swap");
 
 body {
+    font-family: "Titillium Web", Arial, Sans-Serif;
+    font-size: var(--font-size-base);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     margin: 0;
-    font-family: "Titillium Web", Arial, Sans-Serif;
-    font-size: var(--font-size-base);
 }
 
-html,body,#root {
-    width: 100%;
+html,
+body,
+#root {
     height: 100%;
-    overflow-y:hidden;
+    overflow-y: hidden;
+    width: 100%;
 }
 
 code {
@@ -23,6 +25,6 @@ code {
 p {
     display: block;
     margin: 0;
-    padding-block-start: 1rem;
     padding-block-end: 1rem;
+    padding-block-start: 1rem;
 }

@@ -2,7 +2,7 @@ import { Button, TextField, Typography } from "@material-ui/core";
 import { generateSymKey } from "betro-js-lib";
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { UserProfileResponse, fetchProfile, createProfile, updateProfile } from "../../api/profile";
+import { UserProfileResponse, fetchProfile, createProfile } from "../../api/profile";
 import { wrapLayout } from "../../components/Layout";
 import { getAuth } from "../../store/app/selectors";
 import { bufferToImageUrl } from "../../util/bufferToImage";
@@ -91,7 +91,9 @@ const Profile = () => {
                         />
                     </div>
                     <div>
-                        {profilePicture != null && <img src={bufferToImageUrl(profilePicture)} />}
+                        {profilePicture != null && (
+                            <img src={bufferToImageUrl(profilePicture)} alt="Profile" />
+                        )}
                     </div>
                     <div>
                         <input
@@ -118,7 +120,7 @@ const Profile = () => {
             <div>First Name: {profile.first_name}</div>
             <div>Last Name: {profile.last_name}</div>
             <div>
-                <img src={bufferToImageUrl(profile.profile_picture)} />
+                <img src={bufferToImageUrl(profile.profile_picture)} alt="Profile" />
             </div>
         </div>
     );
