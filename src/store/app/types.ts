@@ -12,6 +12,7 @@ export type AppState = Readonly<{
     auth: AuthState;
     profile: ProfileState;
     group: GroupState;
+    count: CountState;
 }>;
 
 export type Action = {
@@ -32,6 +33,7 @@ export type AuthState = Readonly<{
 
 export type ProfileState = Readonly<{
     isLoaded: boolean;
+    isProfilePictureLoaded: boolean;
     user_id: string | null;
     username: string | null;
     email: string | null;
@@ -50,4 +52,15 @@ export type Group = Readonly<{
     is_default: boolean;
     name: string;
     sym_key: string;
+}>;
+
+export type CountState = Readonly<{
+    isLoaded: boolean;
+    notifications: number | null;
+    notificationSettings: number | null;
+    groups: number | null;
+    followers: number | null;
+    followees: number | null;
+    approvals: number | null;
+    posts: number | null;
 }>;

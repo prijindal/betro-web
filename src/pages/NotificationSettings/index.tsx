@@ -1,13 +1,14 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { FormControlLabel, List, ListItem, Switch } from "@material-ui/core";
 import {
-    fetchNotificationSettings,
     UserNotificationSettingResponse,
     NotificationSettingsAction,
     changeNotificationSettings,
 } from "../../api/settings";
 import { wrapLayout } from "../../components/Layout";
 import { getAuth } from "../../store/app/selectors";
+import { useFetchNotificationSettings, useFetchCountHook } from "../../util/customHooks";
 
 interface SettingNotification {
     action: NotificationSettingsAction;
@@ -47,48 +48,40 @@ const NotificationSetting = (params: { notificationSetting: SettingNotification 
     const notificationSetting = params.notificationSetting;
     const [enabled, setEnabled] = useState<boolean>(notificationSetting.enabled);
     const [saving, setSaving] = useState<boolean>(false);
+    const fetchCount = useFetchCountHook();
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.checked;
         if (auth.token !== null) {
             setEnabled(value);
             setSaving(true);
             changeNotificationSettings(auth.token, notificationSetting.action, value)
-                .then(() => {})
+                .then(() => {
+                    fetchCount(true);
+                })
                 .finally(() => {
                     setSaving(false);
                 });
         }
     };
     return (
-        <div>
-            <span>{notificationSetting.text}</span>
-            <input disabled={saving} type="checkbox" checked={enabled} onChange={handleChange} />
-        </div>
+        <ListItem>
+            <FormControlLabel
+                control={<Switch disabled={saving} checked={enabled} onChange={handleChange} />}
+                label={notificationSetting.text}
+            />
+        </ListItem>
     );
 };
 
 const NotificationSettings = () => {
-    const auth = useSelector(getAuth);
-    const [loaded, setLoaded] = useState<boolean>(false);
-    const [
+    const {
+        fetchNotificationSettings,
+        loaded,
         notificationSettings,
-        setNotificationSettings,
-    ] = useState<Array<UserNotificationSettingResponse> | null>(null);
-    const fetchGrps = useCallback(async () => {
-        async function fetchgr() {
-            if (auth.token !== null) {
-                const resp = await fetchNotificationSettings(auth.token);
-                setLoaded(true);
-                if (resp !== null) {
-                    setNotificationSettings(resp);
-                }
-            }
-        }
-        fetchgr();
-    }, [auth.token]);
+    } = useFetchNotificationSettings();
     useEffect(() => {
-        fetchGrps();
-    }, [fetchGrps]);
+        fetchNotificationSettings();
+    }, [fetchNotificationSettings]);
     if (loaded === false) {
         return <div>Loading</div>;
     }
@@ -96,11 +89,11 @@ const NotificationSettings = () => {
         return <div>Some error</div>;
     }
     return (
-        <div>
+        <List>
             {parseNotificationSettings(notificationSettings).map((a) => (
                 <NotificationSetting key={a.action} notificationSetting={a} />
             ))}
-        </div>
+        </List>
     );
 };
 

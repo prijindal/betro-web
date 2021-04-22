@@ -6,12 +6,12 @@ import { isEmpty } from "lodash";
 import { Badge } from "@material-ui/core";
 import classes from "./AppDrawer.module.scss";
 import NavLink from "../NavLink";
-import { getGroup, getProfile } from "../../store/app/selectors";
+import { getCount, getProfile } from "../../store/app/selectors";
 
 const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) => {
     const { includeRouting } = props;
     const profile = useSelector(getProfile);
-    const groupData = useSelector(getGroup);
+    const countData = useSelector(getCount);
     return (
         <nav className={classes.drawer} aria-label="mailbox folders">
             <List>
@@ -19,13 +19,25 @@ const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) 
                     Home
                 </NavLink>
                 <NavLink includeRouting={includeRouting} to="/notifications">
-                    Notifications
+                    {countData.isLoaded && countData.notifications !== 0 ? (
+                        <Badge color="secondary" badgeContent={countData.notifications}>
+                            <span>Notifications</span>
+                        </Badge>
+                    ) : (
+                        "Notifications"
+                    )}
                 </NavLink>
                 <NavLink includeRouting={includeRouting} to="/approvals">
-                    Approvals
+                    {countData.isLoaded && countData.approvals !== 0 ? (
+                        <Badge color="secondary" badgeContent={countData.approvals}>
+                            <span>Approvals</span>
+                        </Badge>
+                    ) : (
+                        "Approvals"
+                    )}
                 </NavLink>
                 <NavLink includeRouting={includeRouting} to="/groups">
-                    {groupData.isLoaded && isEmpty(groupData.data) ? (
+                    {countData.isLoaded && countData.groups === 0 ? (
                         <Badge color="secondary" variant="dot">
                             <span>Groups</span>
                         </Badge>
@@ -48,7 +60,13 @@ const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) 
                     )}
                 </NavLink>
                 <NavLink includeRouting={includeRouting} to="/settings/notifications">
-                    Notification Settings
+                    {countData.isLoaded && countData.notificationSettings === 0 ? (
+                        <Badge color="secondary" variant="dot">
+                            <span>Notification Settings</span>
+                        </Badge>
+                    ) : (
+                        "Notification Settings"
+                    )}
                 </NavLink>
                 <Divider />
                 <NavLink includeRouting={includeRouting} to="/logout">

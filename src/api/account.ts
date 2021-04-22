@@ -7,6 +7,41 @@ export interface ApprovalResponse {
     public_key: string;
     username: string;
 }
+
+export interface CountResponse {
+    notifications: number;
+    notificationSettings: number;
+    groups: number;
+    followers: number;
+    followees: number;
+    approvals: number;
+    posts: number;
+}
+
+export const fetchCounts = async (token: string): Promise<CountResponse | null> => {
+    try {
+        const include_fields = [
+            "notifications",
+            "notificationSettings",
+            "groups",
+            "followers",
+            "followees",
+            "approvals",
+            "posts",
+        ];
+        const response = await axios.get(
+            `${API_HOST}/api/account/count?include_fields=${include_fields.join(",")}`,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+        );
+        const data = response.data;
+        return data;
+    } catch (e) {
+        return null;
+    }
+};
+
 export const fetchPendingApprovals = async (
     token: string
 ): Promise<Array<ApprovalResponse> | null> => {

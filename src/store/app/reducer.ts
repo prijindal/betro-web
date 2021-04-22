@@ -16,6 +16,7 @@ export const initialState = Object.freeze<AppState>({
     },
     profile: {
         isLoaded: false,
+        isProfilePictureLoaded: false,
         user_id: null,
         username: null,
         email: null,
@@ -26,6 +27,16 @@ export const initialState = Object.freeze<AppState>({
     group: {
         isLoaded: false,
         data: [],
+    },
+    count: {
+        isLoaded: false,
+        notifications: null,
+        notificationSettings: null,
+        groups: null,
+        followers: null,
+        followees: null,
+        approvals: null,
+        posts: null,
     },
 });
 
@@ -79,12 +90,25 @@ const appReducer = (state: AppState = initialState, action: Action): AppState =>
                 return draft;
             }
             case ActionTypes.PROFILE_PICTURE_LOADED: {
+                draft.profile.isProfilePictureLoaded = true;
                 draft.profile.profile_picture = action.payload.profile_picture;
                 return draft;
             }
             case ActionTypes.GROUPS_LOADED: {
                 draft.group.isLoaded = true;
                 draft.group.data = action.payload;
+                return draft;
+            }
+            case ActionTypes.COUNT_LOADED: {
+                draft.count.isLoaded = true;
+                draft.count.notifications = action.payload.notifications;
+                draft.count.notificationSettings = action.payload.notificationSettings;
+                draft.count.groups = action.payload.groups;
+                draft.count.followers = action.payload.followers;
+                draft.count.followees = action.payload.followees;
+                draft.count.approvals = action.payload.approvals;
+                draft.count.posts = action.payload.posts;
+                return draft;
             }
         }
     });

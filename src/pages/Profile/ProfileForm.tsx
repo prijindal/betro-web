@@ -2,11 +2,12 @@ import React, { useCallback, useState } from "react";
 import { Button, TextField, Typography } from "@material-ui/core";
 import { generateSymKey } from "betro-js-lib";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchKeys, whoAmi } from "../../api/login";
+import { fetchKeys } from "../../api/login";
 import { createProfile, updateProfile } from "../../api/profile";
-import { profileLoaded, profilePictureLoaded, verifedLogin } from "../../store/app/actions";
+import { profilePictureLoaded, verifedLogin } from "../../store/app/actions";
 import { getAuth } from "../../store/app/selectors";
 import { bufferToImageUrl } from "../../util/bufferToImage";
+import { useFetchWhoami } from "../../util/customHooks";
 
 const ProfileForm: React.FunctionComponent<{
     method: "POST" | "PUT";
@@ -21,6 +22,7 @@ const ProfileForm: React.FunctionComponent<{
         props.profilePicture || null
     );
     const dispatch = useDispatch();
+    const fetchWhoami = useFetchWhoami();
     const handleUploadClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files != null) {
             var file = event.target.files[0];
@@ -43,29 +45,17 @@ const ProfileForm: React.FunctionComponent<{
                 if (auth.encryptionKey !== null && auth.encryptionMac !== null) {
                     fetchKeys(auth.token, auth.encryptionKey, auth.encryptionMac).then((resp) => {
                         if (resp != null) {
-                            dispatch(verifedLogin(resp.private_key, resp.sym_key));
+                            dispatch(verifedLogin(resp.private_key, sym_key));
                         }
                     });
                 }
-                whoAmi(auth.token, sym_key).then((resp) => {
-                    if (resp !== null) {
-                        dispatch(
-                            profileLoaded(
-                                resp.user_id,
-                                resp.username,
-                                resp.email,
-                                resp.first_name,
-                                resp.last_name
-                            )
-                        );
-                    }
-                });
+                fetchWhoami(true, sym_key);
                 if (profilePicture != null) {
                     dispatch(profilePictureLoaded(bufferToImageUrl(profilePicture)));
                 }
             }
         },
-        [dispatch, profilePicture, auth.token, auth.encryptionKey, auth.encryptionMac]
+        [dispatch, profilePicture, auth.token, auth.encryptionKey, auth.encryptionMac, fetchWhoami]
     );
     const profileSaveHandler = useCallback(
         async (e: React.FormEvent) => {

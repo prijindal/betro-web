@@ -1,15 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { List } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { wrapLayout } from "../../components/Layout";
 import { getGroup } from "../../store/app/selectors";
-import { useFetchGroupsHook } from "../../util/customHooks";
+import { useFetchGroupsHook, useFetchCountHook } from "../../util/customHooks";
 import NewGroupForm from "./NewGroupForm";
 import GroupComponent from "./GroupComponent";
 
 const Groups = () => {
     const groupData = useSelector(getGroup);
     const fetchGroups = useFetchGroupsHook();
+    const fetchCount = useFetchCountHook();
+    const handleNewGroup = useCallback(() => {
+        fetchGroups(true);
+        fetchCount(true);
+    }, [fetchCount, fetchGroups]);
     useEffect(() => {
         fetchGroups(true);
     }, [fetchGroups]);
@@ -26,7 +31,7 @@ const Groups = () => {
                 <GroupComponent key={a.id} group={a} />
             ))}
             <NewGroupForm
-                onCreated={() => fetchGroups(true)}
+                onCreated={handleNewGroup}
                 isDefault={groupData.data.filter((a) => a.is_default).length === 0}
             />
         </List>

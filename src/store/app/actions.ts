@@ -1,3 +1,4 @@
+import { CountResponse } from "../../api/account";
 import { Action, Group, Locale, LoginPayload } from "./types";
 
 export const ActionTypes = {
@@ -9,6 +10,7 @@ export const ActionTypes = {
     PROFILE_LOADED: "profile/loaded",
     PROFILE_PICTURE_LOADED: "profile/picture_loaded",
     GROUPS_LOADED: "group/loaded",
+    COUNT_LOADED: "count/loaded",
 };
 
 export const setLocale = (locale: Locale): Action => ({
@@ -63,7 +65,7 @@ export const profileLoaded = (
     },
 });
 
-export const profilePictureLoaded = (profile_picture: string): Action => ({
+export const profilePictureLoaded = (profile_picture: string | null): Action => ({
     type: ActionTypes.PROFILE_PICTURE_LOADED,
     payload: {
         profile_picture,
@@ -73,4 +75,9 @@ export const profilePictureLoaded = (profile_picture: string): Action => ({
 export const groupsLoaded = (groups: Array<Group>): Action => ({
     type: ActionTypes.GROUPS_LOADED,
     payload: groups,
+});
+
+export const countLoaded = (count: CountResponse): Action => ({
+    type: ActionTypes.COUNT_LOADED,
+    payload: count,
 });
