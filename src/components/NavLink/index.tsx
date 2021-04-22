@@ -7,7 +7,7 @@ import classes from "./NavLink.module.scss";
 const NavLinkWithoutRouting: React.FunctionComponent = (props) => {
     const { children } = props;
     return (
-        <ListItem className={classes.listItem}>
+        <ListItem>
             <ListItemText>{children}</ListItemText>
         </ListItem>
     );

@@ -49,7 +49,6 @@ export const deleteGroup = async (
             headers: { Authorization: `Bearer ${token}` },
         });
         const data = response.data;
-        console.log(data);
         return data;
     } catch (e) {
         return null;
@@ -111,7 +110,6 @@ export const approveUser = async (
             }
         );
         const data = response.data;
-        console.log(data);
         return data;
     } catch (e) {
         return null;

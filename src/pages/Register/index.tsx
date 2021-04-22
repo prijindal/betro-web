@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { isEmpty, throttle } from "lodash";
 import { useDispatch } from "react-redux";
-import { useHistory, useLocation } from "react-router";
+import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { loggedIn } from "../../store/app/actions";
 import { register, isAvailableUsername, isAvailableEmail } from "../../api/login";
@@ -91,7 +91,6 @@ const App: React.FC<any> = () => {
     const [error, setError] = useState<string | null>(null);
     const dispatch = useDispatch();
     const history = useHistory();
-    const location = useLocation();
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (isEmpty(password) || password !== confirmPassword) {
@@ -100,9 +99,8 @@ const App: React.FC<any> = () => {
         register(username, email, password)
             .then((payload) => {
                 setLoading(false);
-                const state = location.state || { from: { pathname: "/home" } };
                 dispatch(loggedIn(payload));
-                history.replace((state as any).from);
+                history.push("/");
             })
             .catch((error) => {
                 const errorMessage = error.response?.data?.data || "Registration error";

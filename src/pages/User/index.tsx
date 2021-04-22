@@ -18,7 +18,6 @@ const User = () => {
             if (auth.token !== null && auth.privateKey !== null) {
                 const resp = await fetchUserPosts(auth.token, params.username, auth.privateKey);
                 if (resp !== null) {
-                    console.log(resp.length);
                     setPosts(resp);
                 }
             }

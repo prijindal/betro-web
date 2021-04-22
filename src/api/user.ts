@@ -46,7 +46,6 @@ export const followUser = async (
             }
         );
         const data = response.data;
-        console.log(data);
         return data;
     } catch (e) {
         return null;
@@ -62,7 +61,6 @@ export const fetchUserInfo = async (
             headers: { Authorization: `Bearer ${token}` },
         });
         const data = response.data;
-        console.log(data);
         return data;
     } catch (e) {
         return null;

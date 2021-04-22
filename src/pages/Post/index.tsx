@@ -18,7 +18,9 @@ const Post = () => {
                 setLoaded(true);
                 if (resp !== null) {
                     setGroups(resp);
-                    setGroupId(resp[0].id);
+                    if (resp.length > 0) {
+                        setGroupId(resp[0].id);
+                    }
                 }
             }
         }

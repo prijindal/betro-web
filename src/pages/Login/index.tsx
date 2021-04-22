@@ -8,9 +8,10 @@ import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import { loggedIn } from "../../store/app/actions";
-import { login } from "../../api/login";
+import { loggedIn, resetAuth, verifedLogin } from "../../store/app/actions";
+import { fetchKeys, login } from "../../api/login";
 import classes from "./Login.module.scss";
+import { isEmpty } from "lodash";
 
 const App: React.FC<any> = () => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -25,10 +26,27 @@ const App: React.FC<any> = () => {
         setLoading(true);
         login(email, password)
             .then((payload) => {
-                setLoading(false);
-                const state = location.state || { from: { pathname: "/home" } };
                 dispatch(loggedIn(payload));
-                history.replace((state as any).from);
+                fetchKeys(payload.token, payload.encryptionKey, payload.encryptionMac)
+                    .then(async (resp) => {
+                        setLoading(false);
+                        if (!isEmpty(resp) && resp !== null) {
+                            const private_key = resp.private_key;
+                            const sym_key = resp.sym_key;
+                            dispatch(verifedLogin(private_key, sym_key));
+                            const state = location.state || { from: { pathname: "/home" } };
+                            history.replace((state as any).from);
+                        } else {
+                            const state = { from: { pathname: "/login" } };
+                            dispatch(resetAuth());
+                            history.replace((state as any).from);
+                        }
+                    })
+                    .catch((error) => {
+                        const errorMessage = error.response?.data?.data || "Login error";
+                        setLoading(false);
+                        setError(errorMessage);
+                    });
             })
             .catch((error) => {
                 const errorMessage = error.response?.data?.data || "Login error";

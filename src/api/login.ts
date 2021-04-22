@@ -153,8 +153,8 @@ export const register = async (
     });
     const token = response.data.token;
     const payload: LoginPayload = {
-        encryptionKey: encryptionKeys.encryption_mac,
-        encryptionMac: encryptionKeys.encryption_key,
+        encryptionKey: encryptionKeys.encryption_key,
+        encryptionMac: encryptionKeys.encryption_mac,
         token: token,
         privateKey,
     };
