@@ -10,8 +10,6 @@ import { Store } from "redux";
 import { RootState } from "./store/types";
 import "./index.scss";
 
-// Create/use the store
-// history MUST be passed here if you want syncing between server on initial route
 const store: Store<RootState> = configureStore({
     initialState: { app: initialState },
 });
