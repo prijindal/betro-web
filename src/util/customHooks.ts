@@ -8,23 +8,25 @@ import {
     profileLoaded,
     profilePictureLoaded,
 } from "../store/app/actions";
-import { fetchCounts } from "../api/account";
+import { ApprovalResponse, fetchCounts, fetchPendingApprovals } from "../api/account";
 import { throttle } from "lodash";
 import { fetchProfilePicture, whoAmi } from "../api/login";
 import { bufferToImageUrl } from "./bufferToImage";
 import { fetchNotificationSettings, UserNotificationSettingResponse } from "../api/settings";
+import { PaginatedResponse } from "../api/PaginatedResponse";
 
 export function useFetchGroupsHook() {
     const auth = useSelector(getAuth);
     const groupData = useSelector(getGroup);
     const dispatch = useDispatch();
     const refreshGroup = useCallback(
-        async (forceLoad: boolean = false) => {
+        (forceLoad: boolean = false) => {
             if (auth.token !== null && (!groupData.isLoaded || forceLoad)) {
-                const resp = await fetchGroups(auth.token);
-                if (resp !== null) {
-                    dispatch(groupsLoaded(resp));
-                }
+                fetchGroups(auth.token).then((resp) => {
+                    if (resp !== null) {
+                        dispatch(groupsLoaded(resp));
+                    }
+                });
             }
         },
         [auth.token, dispatch, groupData.isLoaded]
@@ -132,6 +134,32 @@ export function useFetchNotificationSettings() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         fetchNotificationSettings: useCallback(throttle(getNotificationSettings, 2000), []),
         notificationSettings,
+        loaded,
+    };
+}
+
+export function useFetchApprovals() {
+    const auth = useSelector(getAuth);
+    const [response, setResponse] = useState<PaginatedResponse<ApprovalResponse> | null>(null);
+    const after = response == null ? undefined : response.after;
+    const [loaded, setLoaded] = useState<boolean>(false);
+    const getPendingApprovals = useCallback(async () => {
+        if (auth.token !== null) {
+            console.log(after);
+            const resp = await fetchPendingApprovals(auth.token, after);
+            setLoaded(true);
+            if (resp !== null) {
+                if (response == null) {
+                    setResponse(resp);
+                } else {
+                    setResponse({ ...resp, data: [...response.data, ...resp.data] });
+                }
+            }
+        }
+    }, [auth.token, after, response]);
+    return {
+        fetchPendingApprovals: getPendingApprovals,
+        response,
         loaded,
     };
 }

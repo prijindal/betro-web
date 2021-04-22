@@ -1,76 +1,44 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { ApprovalResponse, fetchPendingApprovals, approveUser } from "../../api/account";
+import { Button, List } from "@material-ui/core";
+import { throttle } from "lodash";
+import { useCallback, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { wrapLayout } from "../../components/Layout";
-import { getAuth, getGroup } from "../../store/app/selectors";
-import { useFetchGroupsHook } from "../../util/customHooks";
+import { getGroup } from "../../store/app/selectors";
+import { useFetchApprovals, useFetchGroupsHook } from "../../util/customHooks";
+import ApprovalComponent from "./ApprovalComponent";
 
 const Approvals = () => {
-    const auth = useSelector(getAuth);
     const groupData = useSelector(getGroup);
-    const dispatch = useDispatch();
-    const [groupId, setGroupId] = useState<string>("");
-    const [loaded, setLoaded] = useState<boolean>(false);
-    const [approvals, setApprovals] = useState<Array<ApprovalResponse> | null>(null);
     const fetchGroups = useFetchGroupsHook();
+    const { fetchPendingApprovals, response, loaded } = useFetchApprovals();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const fetchPendingApprovalsThrottled = useCallback(throttle(fetchPendingApprovals, 2000), []);
     useEffect(() => {
         fetchGroups();
-        if (groupData.isLoaded) {
-            const defaultGroup = groupData.data.find((a) => a.is_default);
-            if (defaultGroup != null) {
-                setGroupId(defaultGroup.id);
-            }
-        }
-        async function fetchApprovals() {
-            if (auth.token !== null) {
-                const resp = await fetchPendingApprovals(auth.token);
-                setLoaded(true);
-                if (resp !== null) {
-                    setApprovals(resp);
-                }
-            }
-        }
-        fetchApprovals();
-    }, [auth.token, dispatch, groupData, fetchGroups]);
-    const approveHandler = (followId: string, publicKey: string) => {
-        if (auth.token !== null && auth.encryptionKey !== null && auth.encryptionMac !== null) {
-            const group = groupData.data.find((a) => a.id === groupId);
-            if (group !== undefined) {
-                approveUser(
-                    auth.token,
-                    followId,
-                    publicKey,
-                    groupId,
-                    auth.encryptionKey,
-                    auth.encryptionMac,
-                    group?.sym_key
-                );
-            }
-        }
-    };
+        fetchPendingApprovalsThrottled();
+    }, [fetchGroups, fetchPendingApprovalsThrottled]);
     if (loaded === false || groupData.isLoaded === false) {
         return <div>Loading</div>;
     }
-    if (approvals === null) {
+    if (response === null) {
         return <div>Some error</div>;
     }
     return (
-        <div>
-            {approvals.length === 0 && <div>No Approvals</div>}
-            {approvals.map((a) => (
-                <div key={a.id}>
-                    <span>{a.username}</span>
-                    <select value={groupId} onChange={(e) => setGroupId(e.target.value)}>
-                        {groupData.data.map((g) => (
-                            <option key={g.id} value={g.id}>
-                                {g.name}
-                            </option>
-                        ))}
-                    </select>
-                    <button onClick={() => approveHandler(a.id, a.public_key)}>Approve</button>
-                </div>
+        <List>
+            {response.total === 0 && <div>No Approvals</div>}
+            {response.data.map((a) => (
+                <ApprovalComponent
+                    key={a.id}
+                    approval={a}
+                    onApproved={fetchPendingApprovalsThrottled}
+                />
             ))}
-        </div>
+            {response.next && (
+                <Button onClick={() => fetchPendingApprovals()}>
+                    Load More (Loaded {response.data.length} out of {response.total})
+                </Button>
+            )}
+        </List>
     );
 };
 

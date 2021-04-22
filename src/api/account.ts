@@ -1,6 +1,8 @@
 import axios from "axios";
 import { aesDecrypt, rsaEncrypt } from "betro-js-lib";
+import moment from "moment";
 import { API_HOST } from "../constants";
+import { PaginatedResponse } from "./PaginatedResponse";
 export interface ApprovalResponse {
     id: string;
     follower_id: string;
@@ -43,12 +45,17 @@ export const fetchCounts = async (token: string): Promise<CountResponse | null> 
 };
 
 export const fetchPendingApprovals = async (
-    token: string
-): Promise<Array<ApprovalResponse> | null> => {
+    token: string,
+    after?: string
+): Promise<PaginatedResponse<ApprovalResponse> | null> => {
+    const limit = 50;
     try {
-        const response = await axios.get(`${API_HOST}/api/follow/approvals`, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get(
+            `${API_HOST}/api/follow/approvals?limit=${limit}&after=${after}`,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+        );
         const data = response.data;
         return data;
     } catch (e) {
