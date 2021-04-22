@@ -11,17 +11,17 @@ import { useSelector } from "react-redux";
 import { getAuth } from "./store/app/selectors";
 import { wrapLayout } from "./components/Layout";
 
-const Home = React.lazy(() => import("./pages/Home"));
-const Login = React.lazy(() => import("./pages/Login"));
-const Register = React.lazy(() => import("./pages/Register"));
-const User = React.lazy(() => import("./pages/User"));
-const Post = React.lazy(() => import("./pages/Post"));
-const Approvals = React.lazy(() => import("./pages/Approvals"));
-const Groups = React.lazy(() => import("./pages/Groups"));
-const Notifications = React.lazy(() => import("./pages/Notifications"));
-const NotificationSettings = React.lazy(() => import("./pages/NotificationSettings"));
-const Profile = React.lazy(() => import("./pages/Profile"));
-const Logout = React.lazy(() => import("./pages/Logout"));
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import User from "./pages/User";
+import Post from "./pages/Post";
+import Approvals from "./pages/Approvals";
+import Groups from "./pages/Groups";
+import Notifications from "./pages/Notifications";
+import NotificationSettings from "./pages/NotificationSettings";
+import Profile from "./pages/Profile";
+import Logout from "./pages/Logout";
 
 const history = createHistory();
 

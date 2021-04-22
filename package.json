@@ -6,7 +6,7 @@
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
     "axios": "^0.21.1",
-    "betro-js-lib": "git+https://prijindal@github.com/betro-app/betro-js-lib.git#c867c9f81c7c609d69997a60c34e0d292af3a2d4",
+    "betro-js-lib": "git+https://prijindal@github.com/betro-app/betro-js-lib.git#1abca06c720c0c7962f1477e638043b69d73c8fa",
     "history": "^4.10.1",
     "i18next": "^20.2.1",
     "i18next-xhr-backend": "^3.2.2",
@@ -25,11 +25,14 @@
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "sass": "^1.32.10",
+    "source-map-explorer": "^2.5.2",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build-with-stats": "npm run build && npm run analyze",
     "depgraph": "depcruise -c .dependency-cruiser.js --exclude \"node_modules/*\" --output-type dot src | dot -T svg > dependency-graph.svg",
     "lint": "concurrently \"yarn-or-npm run lint:js\" \"yarn-or-npm run lint:css\"",
     "lint:js": "eslint --ext .js,.jsx,.ts,.tsx src/",
