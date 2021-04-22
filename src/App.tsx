@@ -46,37 +46,61 @@ const App: React.FC<any> = () => {
                     link={[{ rel: "icon", type: "image/png", href: favicon }]}
                 />
                 <Switch>
-                    <Route exact path={routes.loading} component={Loading} />
-                    <Route exact path={routes.login} component={Login} />
-                    <Route exact path={routes.register} component={Register} />
+                    <Route exact path={routes.loading}>
+                        <Loading />
+                    </Route>
+                    <Route exact path={routes.login}>
+                        <Login />
+                    </Route>
+                    <Route exact path={routes.register}>
+                        <Register />
+                    </Route>
                     <PrivateRoute exact path={routes.home}>
-                        <Route component={Home} />
+                        <Route>
+                            <Home />
+                        </Route>
                     </PrivateRoute>
                     <PrivateRoute exact path={routes.user}>
-                        <Route component={User} />
+                        <Route>
+                            <User />
+                        </Route>
                     </PrivateRoute>
                     <PrivateRoute exact path={routes.groups}>
-                        <Route component={Groups} />
+                        <Route>
+                            <Groups />
+                        </Route>
                     </PrivateRoute>
                     <PrivateRoute exact path={routes.approvals}>
-                        <Route component={Approvals} />
+                        <Route>
+                            <Approvals />
+                        </Route>
                     </PrivateRoute>
                     <PrivateRoute exact path={routes.post}>
-                        <Route component={Post} />
+                        <Route>
+                            <Post />
+                        </Route>
                     </PrivateRoute>
                     <PrivateRoute exact path={routes.profile}>
-                        <Route component={Profile} />
+                        <Route>
+                            <Profile />
+                        </Route>
                     </PrivateRoute>
                     <PrivateRoute exact path={routes.notifications}>
-                        <Route component={Notifications} />
+                        <Route>
+                            <Notifications />
+                        </Route>
                     </PrivateRoute>
                     <PrivateRoute exact path={routes.notificationSettings}>
-                        <Route component={NotificationSettings} />
+                        <Route>
+                            <NotificationSettings />
+                        </Route>
                     </PrivateRoute>
                     <PrivateRoute exact path={routes.logout}>
-                        <Route component={Logout} />
+                        <Route>
+                            <Logout />
+                        </Route>
                     </PrivateRoute>
-                    <Route render={() => "404!"} />
+                    <Route>404</Route>
                 </Switch>
             </Router>
         </React.Suspense>
