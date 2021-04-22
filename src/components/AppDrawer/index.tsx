@@ -2,15 +2,16 @@ import React from "react";
 import { useSelector } from "react-redux";
 import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
-import classes from "./AppDrawer.module.scss";
-import NavLink from "../NavLink";
-import { getProfile } from "../../store/app/selectors";
 import { isEmpty } from "lodash";
 import { Badge } from "@material-ui/core";
+import classes from "./AppDrawer.module.scss";
+import NavLink from "../NavLink";
+import { getGroup, getProfile } from "../../store/app/selectors";
 
 const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) => {
     const { includeRouting } = props;
     const profile = useSelector(getProfile);
+    const groupData = useSelector(getGroup);
     return (
         <nav className={classes.drawer} aria-label="mailbox folders">
             <List>
@@ -24,7 +25,13 @@ const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) 
                     Approvals
                 </NavLink>
                 <NavLink includeRouting={includeRouting} to="/groups">
-                    Groups
+                    {groupData.isLoaded && isEmpty(groupData.data) ? (
+                        <Badge color="secondary" variant="dot">
+                            <span>Groups</span>
+                        </Badge>
+                    ) : (
+                        "Groups"
+                    )}
                 </NavLink>
                 <Divider />
                 <NavLink includeRouting={includeRouting} to="/post">

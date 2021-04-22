@@ -1,4 +1,4 @@
-import { Action, Locale, LoginPayload } from "./types";
+import { Action, Group, Locale, LoginPayload } from "./types";
 
 export const ActionTypes = {
     SETLOCALE: "app/set-locale",
@@ -8,6 +8,7 @@ export const ActionTypes = {
     AUTH_RESET: "app/reset",
     PROFILE_LOADED: "profile/loaded",
     PROFILE_PICTURE_LOADED: "profile/picture_loaded",
+    GROUPS_LOADED: "group/loaded",
 };
 
 export const setLocale = (locale: Locale): Action => ({
@@ -67,4 +68,9 @@ export const profilePictureLoaded = (profile_picture: string): Action => ({
     payload: {
         profile_picture,
     },
+});
+
+export const groupsLoaded = (groups: Array<Group>): Action => ({
+    type: ActionTypes.GROUPS_LOADED,
+    payload: groups,
 });

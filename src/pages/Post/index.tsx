@@ -1,34 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { fetchGroups, GroupResponse } from "../../api/account";
 import { createTextPost } from "../../api/post";
 import { wrapLayout } from "../../components/Layout";
-import { getAuth } from "../../store/app/selectors";
+import { getAuth, getGroup } from "../../store/app/selectors";
+import { useFetchGroupsHook } from "../../util/customHooks";
 
 const Post = () => {
     const auth = useSelector(getAuth);
     const [groupId, setGroupId] = useState<string>("");
-    const [loaded, setLoaded] = useState<boolean>(false);
-    const [groups, setGroups] = useState<Array<GroupResponse> | null>(null);
+    const groupData = useSelector(getGroup);
     const [text, setText] = useState<string>("");
+    const fetchGroups = useFetchGroupsHook();
     useEffect(() => {
-        async function fetchgr() {
-            if (auth.token !== null) {
-                const resp = await fetchGroups(auth.token);
-                setLoaded(true);
-                if (resp !== null) {
-                    setGroups(resp);
-                    if (resp.length > 0) {
-                        setGroupId(resp[0].id);
-                    }
-                }
+        fetchGroups();
+        if (groupData.isLoaded) {
+            const defaultGroup = groupData.data.find((a) => a.is_default);
+            if (defaultGroup != null) {
+                setGroupId(defaultGroup.id);
             }
         }
-        fetchgr();
-    }, [auth.token]);
+    }, [groupData, fetchGroups]);
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const group = groups?.find((a) => a.id === groupId);
+        const group = groupData.data.find((a) => a.id === groupId);
         if (
             auth.token !== null &&
             auth.encryptionKey !== null &&
@@ -45,7 +39,7 @@ const Post = () => {
             );
         }
     };
-    if (loaded === false) {
+    if (groupData.isLoaded === false) {
         return <div>Loading</div>;
     }
     return (
@@ -53,7 +47,7 @@ const Post = () => {
             <form onSubmit={handleSubmit}>
                 <input type="text" value={text} onChange={(e) => setText(e.target.value)} />
                 <select value={groupId} onChange={(e) => setGroupId(e.target.value)}>
-                    {groups?.map((g) => (
+                    {groupData.data.map((g) => (
                         <option key={g.id} value={g.id}>
                             {g.name}
                         </option>

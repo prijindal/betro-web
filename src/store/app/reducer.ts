@@ -23,6 +23,10 @@ export const initialState = Object.freeze<AppState>({
         last_name: null,
         profile_picture: null,
     },
+    group: {
+        isLoaded: false,
+        data: [],
+    },
 });
 
 const appReducer = (state: AppState = initialState, action: Action): AppState =>
@@ -76,6 +80,11 @@ const appReducer = (state: AppState = initialState, action: Action): AppState =>
             }
             case ActionTypes.PROFILE_PICTURE_LOADED: {
                 draft.profile.profile_picture = action.payload.profile_picture;
+                return draft;
+            }
+            case ActionTypes.GROUPS_LOADED: {
+                draft.group.isLoaded = true;
+                draft.group.data = action.payload;
             }
         }
     });

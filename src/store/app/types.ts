@@ -1,16 +1,17 @@
 export type Locale = "en_US" | "de_DE";
 
-export type LoginPayload = {
+export type LoginPayload = Readonly<{
     encryptionKey: string;
     encryptionMac: string;
     token: string;
     privateKey: string;
-};
+}>;
 
 export type AppState = Readonly<{
     locale: Locale;
     auth: AuthState;
     profile: ProfileState;
+    group: GroupState;
 }>;
 
 export type Action = {
@@ -18,7 +19,7 @@ export type Action = {
     payload?: any;
 };
 
-export type AuthState = {
+export type AuthState = Readonly<{
     isLoaded: boolean;
     isVerified: boolean;
     isLoggedIn: boolean;
@@ -27,9 +28,9 @@ export type AuthState = {
     privateKey: string | null;
     symKey: string | null;
     token: string | null;
-};
+}>;
 
-export type ProfileState = {
+export type ProfileState = Readonly<{
     isLoaded: boolean;
     user_id: string | null;
     username: string | null;
@@ -37,4 +38,16 @@ export type ProfileState = {
     first_name: string | null;
     last_name: string | null;
     profile_picture: string | null;
-};
+}>;
+
+export type GroupState = Readonly<{
+    isLoaded: boolean;
+    data: Array<Group>;
+}>;
+
+export type Group = Readonly<{
+    id: string;
+    is_default: boolean;
+    name: string;
+    sym_key: string;
+}>;

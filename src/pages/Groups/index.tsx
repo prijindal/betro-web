@@ -1,69 +1,35 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { List } from "@material-ui/core";
 import { useSelector } from "react-redux";
-import { GroupResponse, fetchGroups, deleteGroup, createGroup } from "../../api/account";
 import { wrapLayout } from "../../components/Layout";
-import { getAuth } from "../../store/app/selectors";
+import { getGroup } from "../../store/app/selectors";
+import { useFetchGroupsHook } from "../../util/customHooks";
+import NewGroupForm from "./NewGroupForm";
+import GroupComponent from "./GroupComponent";
 
-const NewGroupForm = (params: { onCreated: () => void }) => {
-    const [name, setName] = useState<string>("");
-    const auth = useSelector(getAuth);
-    const handleNewGroup = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (auth.token !== null && auth.encryptionKey !== null && auth.encryptionMac !== null) {
-            createGroup(auth.token, auth.encryptionKey, auth.encryptionMac, name, false).then(
-                params.onCreated
-            );
-        }
-    };
-    return (
-        <form onSubmit={handleNewGroup}>
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
-            <button type="submit">New group</button>
-        </form>
-    );
-};
 const Groups = () => {
-    const auth = useSelector(getAuth);
-    const [loaded, setLoaded] = useState<boolean>(false);
-    const [groups, setGroups] = useState<Array<GroupResponse> | null>(null);
-    const fetchGrps = useCallback(async () => {
-        async function fetchgr() {
-            if (auth.token !== null) {
-                const resp = await fetchGroups(auth.token);
-                setLoaded(true);
-                if (resp !== null) {
-                    setGroups(resp);
-                }
-            }
-        }
-        fetchgr();
-    }, [auth.token]);
+    const groupData = useSelector(getGroup);
+    const fetchGroups = useFetchGroupsHook();
     useEffect(() => {
-        fetchGrps();
-    }, [fetchGrps]);
-    const deleteGroupHandler = (group_id: string) => {
-        if (auth.token !== null) {
-            deleteGroup(auth.token, group_id);
-        }
-    };
-    if (loaded === false) {
+        fetchGroups(true);
+    }, [fetchGroups]);
+    if (groupData.isLoaded === false) {
         return <div>Loading</div>;
     }
-    if (groups === null) {
+    if (groupData.data === null) {
         return <div>Some error</div>;
     }
     return (
-        <div>
-            {groups.length === 0 && <div>No Groups</div>}
-            {groups.map((a) => (
-                <div key={a.id}>
-                    <span>{a.name}</span>
-                    <span>{a.is_default && "Default"}</span>
-                    <button onClick={() => deleteGroupHandler(a.id)}>Delete</button>
-                </div>
+        <List>
+            {groupData.data.length === 0 && <div>No Groups</div>}
+            {groupData.data.map((a) => (
+                <GroupComponent key={a.id} group={a} />
             ))}
-            <NewGroupForm onCreated={() => fetchGrps()} />
-        </div>
+            <NewGroupForm
+                onCreated={() => fetchGroups(true)}
+                isDefault={groupData.data.filter((a) => a.is_default).length === 0}
+            />
+        </List>
     );
 };
 
