@@ -2,6 +2,7 @@ import * as React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { HelmetProvider } from "react-helmet-async";
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 
 import { configureStore } from "./store";
 import { initialState } from "./store/app/reducer";
@@ -33,4 +34,7 @@ if (process.env.NODE_ENV === "development") {
     if (!window.store) {
         window.store = store;
     }
+    serviceWorkerRegistration.unregister();
+} else if (process.env.NODE_ENV === "production") {
+    serviceWorkerRegistration.register();
 }
