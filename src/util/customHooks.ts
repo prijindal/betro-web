@@ -9,7 +9,7 @@ import {
     profilePictureLoaded,
 } from "../store/app/actions";
 import { ApprovalResponse, fetchCounts, fetchPendingApprovals } from "../api/account";
-import { throttle } from "lodash";
+import throttle from "lodash/throttle";
 import { fetchProfilePicture, whoAmi } from "../api/login";
 import { bufferToImageUrl } from "./bufferToImage";
 import { fetchNotificationSettings, UserNotificationSettingResponse } from "../api/settings";

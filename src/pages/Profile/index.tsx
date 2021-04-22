@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Button from "@material-ui/core/Button";
-import { isEmpty } from "lodash";
+import isEmpty from "lodash/isEmpty";
 import { useSelector } from "react-redux";
 import { wrapLayout } from "../../components/Layout";
 import { getProfile } from "../../store/app/selectors";

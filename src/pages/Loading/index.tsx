@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { isEmpty } from "lodash";
+import isEmpty from "lodash/isEmpty";
 import { useHistory, useLocation } from "react-router";
 import { authLoaded, resetAuth, verifedLogin } from "../../store/app/actions";
 import { fetchKeys } from "../../api/login";

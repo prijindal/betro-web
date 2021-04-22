@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Button, ListItem, Typography, Select, MenuItem, ListItemText } from "@material-ui/core";
-import { isEmpty } from "lodash";
+import Button from "@material-ui/core/Button";
+import ListItem from "@material-ui/core/ListItem";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import isEmpty from "lodash/isEmpty";
 import { ApprovalResponse, approveUser } from "../../api/account";
 import { getAuth, getGroup } from "../../store/app/selectors";
 

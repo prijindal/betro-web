@@ -1,6 +1,5 @@
 import axios from "axios";
 import { aesDecrypt, rsaEncrypt } from "betro-js-lib";
-import moment from "moment";
 import { API_HOST } from "../constants";
 import { PaginatedResponse } from "./PaginatedResponse";
 export interface ApprovalResponse {

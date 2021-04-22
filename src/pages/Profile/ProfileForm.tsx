@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from "react";
-import { Button, TextField, Typography } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 import { generateSymKey } from "betro-js-lib";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchKeys } from "../../api/login";

@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { FormControlLabel, Button, Switch, TextField } from "@material-ui/core";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Button from "@material-ui/core/Button";
+import Switch from "@material-ui/core/Switch";
+import TextField from "@material-ui/core/TextField";
 import { useSelector } from "react-redux";
 import { createGroup } from "../../api/group";
 import { getAuth } from "../../store/app/selectors";

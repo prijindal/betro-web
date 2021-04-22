@@ -1,5 +1,8 @@
 import React, { useCallback, useState } from "react";
-import { Button, Chip, ListItem, Typography } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import Chip from "@material-ui/core/Chip";
+import ListItem from "@material-ui/core/ListItem";
+import Typography from "@material-ui/core/Typography";
 import { useSelector } from "react-redux";
 import { deleteGroup } from "../../api/group";
 import { getAuth } from "../../store/app/selectors";

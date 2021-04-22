@@ -11,7 +11,7 @@ import Paper from "@material-ui/core/Paper";
 import { loggedIn, resetAuth, verifedLogin } from "../../store/app/actions";
 import { fetchKeys, login } from "../../api/login";
 import classes from "./Login.module.scss";
-import { isEmpty } from "lodash";
+import isEmpty from "lodash/isEmpty";
 
 const App: React.FC<any> = () => {
     const [loading, setLoading] = useState<boolean>(false);

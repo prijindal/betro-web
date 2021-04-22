@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import moment from "moment";
 import { Link } from "react-router-dom";
 import { fetchNotifications, NotificationResponse } from "../../api/notifications";
 import { wrapLayout } from "../../components/Layout";
 import { getAuth } from "../../store/app/selectors";
+import { fromNow } from "../../util/fromNow";
 
 const Notifications = () => {
     const auth = useSelector(getAuth);
@@ -45,7 +45,7 @@ const Notifications = () => {
                     >
                         <b>{a.content}&nbsp;</b>
                     </Link>
-                    <span>{moment(a.created_at).fromNow()}</span>
+                    <span>{fromNow(new Date(Date.parse(a.created_at)))}</span>
                 </div>
             ))}
         </div>

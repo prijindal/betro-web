@@ -1,7 +1,8 @@
-import { Button, List } from "@material-ui/core";
-import { throttle } from "lodash";
 import { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
+import Button from "@material-ui/core/Button";
+import List from "@material-ui/core/List";
+import throttle from "lodash/throttle";
 import { wrapLayout } from "../../components/Layout";
 import { getGroup } from "../../store/app/selectors";
 import { useFetchApprovals, useFetchGroupsHook } from "../../util/customHooks";

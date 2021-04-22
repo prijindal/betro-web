@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import { List } from "@material-ui/core";
+import List from "@material-ui/core/List";
 import { useSelector } from "react-redux";
 import { wrapLayout } from "../../components/Layout";
 import { getGroup } from "../../store/app/selectors";

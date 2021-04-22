@@ -5,7 +5,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { Link } from "react-router-dom";
-import { isEmpty } from "lodash";
+import isEmpty from "lodash/isEmpty";
 import { useSelector } from "react-redux";
 import classes from "./TopAppBar.module.scss";
 import { getProfile } from "../../store/app/selectors";

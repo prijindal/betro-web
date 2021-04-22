@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { FormControlLabel, List, ListItem, Switch } from "@material-ui/core";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import Switch from "@material-ui/core/Switch";
 import {
     UserNotificationSettingResponse,
     NotificationSettingsAction,

@@ -9,7 +9,7 @@ export interface NotificationResponse {
     action: NotificationSettingsAction;
     content: string;
     payload: Record<string, unknown>;
-    created_at: Date;
+    created_at: string;
 }
 
 export const fetchNotifications = async (

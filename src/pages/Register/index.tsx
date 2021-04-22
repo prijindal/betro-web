@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from "react";
-import { isEmpty, throttle } from "lodash";
+import isEmpty from "lodash/isEmpty";
+import throttle from "lodash/throttle";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
