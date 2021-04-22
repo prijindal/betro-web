@@ -6,7 +6,7 @@
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
     "axios": "^0.21.1",
-    "betro-js-lib": "https://github.com/betro-app/betro-js-lib.git#0c05a576cb772847a636216f7c170b1ac9327913",
+    "betro-js-lib": "https://github.com/betro-app/betro-js-lib.git#c867c9f81c7c609d69997a60c34e0d292af3a2d4",
     "history": "^4.10.1",
     "i18next": "^20.2.1",
     "i18next-xhr-backend": "^3.2.2",
