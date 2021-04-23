@@ -97,6 +97,7 @@ const App: React.FC<any> = () => {
         if (isEmpty(password) || password !== confirmPassword) {
             return;
         }
+        setLoading(true);
         register(username, email, password)
             .then((payload) => {
                 setLoading(false);

@@ -11,9 +11,9 @@ import ApprovalComponent from "./ApprovalComponent";
 const Approvals = () => {
     const groupData = useSelector(getGroup);
     const fetchGroups = useFetchGroupsHook();
-    const { fetchPendingApprovals, response, loaded } = useFetchApprovals();
+    const { fetch, response, loaded } = useFetchApprovals();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const fetchPendingApprovalsThrottled = useCallback(throttle(fetchPendingApprovals, 2000), []);
+    const fetchPendingApprovalsThrottled = useCallback(throttle(fetch, 2000), []);
     useEffect(() => {
         fetchGroups();
         fetchPendingApprovalsThrottled();
@@ -35,7 +35,7 @@ const Approvals = () => {
                 />
             ))}
             {response.next && (
-                <Button onClick={() => fetchPendingApprovals()}>
+                <Button onClick={() => fetch()}>
                     Load More (Loaded {response.data.length} out of {response.total})
                 </Button>
             )}

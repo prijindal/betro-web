@@ -17,6 +17,8 @@ import Register from "./pages/Register";
 import User from "./pages/User";
 import Post from "./pages/Post";
 import Approvals from "./pages/Approvals";
+import Followers from "./pages/Followers";
+import Followees from "./pages/Followees";
 import Groups from "./pages/Groups";
 import Notifications from "./pages/Notifications";
 import NotificationSettings from "./pages/NotificationSettings";
@@ -73,6 +75,16 @@ const App: React.FC<any> = () => {
                     <PrivateRoute exact path={routes.approvals}>
                         <Route>
                             <Approvals />
+                        </Route>
+                    </PrivateRoute>
+                    <PrivateRoute exact path={routes.followers}>
+                        <Route>
+                            <Followers />
+                        </Route>
+                    </PrivateRoute>
+                    <PrivateRoute exact path={routes.followees}>
+                        <Route>
+                            <Followees />
                         </Route>
                     </PrivateRoute>
                     <PrivateRoute exact path={routes.post}>

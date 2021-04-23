@@ -1,8 +1,10 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import isEmpty from "lodash/isEmpty";
 import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
-import isEmpty from "lodash/isEmpty";
+import ListItemText from "@material-ui/core/ListItemText";
+import Chip from "@material-ui/core/Chip";
 import Badge from "@material-ui/core/Badge";
 import classes from "./AppDrawer.module.scss";
 import NavLink from "../NavLink";
@@ -16,61 +18,84 @@ const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) 
         <nav className={classes.drawer} aria-label="mailbox folders">
             <List>
                 <NavLink includeRouting={includeRouting} to="/home">
-                    Home
+                    <ListItemText>Home</ListItemText>
                 </NavLink>
                 <NavLink includeRouting={includeRouting} to="/notifications">
-                    {countData.isLoaded && countData.notifications !== 0 ? (
-                        <Badge color="secondary" badgeContent={countData.notifications}>
-                            <span>Notifications</span>
-                        </Badge>
-                    ) : (
-                        "Notifications"
+                    <ListItemText>Notifications</ListItemText>
+                    {countData.isLoaded && countData.notifications !== 0 && (
+                        <Chip
+                            className={classes.chip}
+                            color="secondary"
+                            size="small"
+                            label={countData.notifications}
+                        />
                     )}
                 </NavLink>
                 <NavLink includeRouting={includeRouting} to="/approvals">
-                    {countData.isLoaded && countData.approvals !== 0 ? (
-                        <Badge color="secondary" badgeContent={countData.approvals}>
-                            <span>Approvals</span>
-                        </Badge>
-                    ) : (
-                        "Approvals"
+                    <ListItemText>Approvals</ListItemText>
+                    {countData.isLoaded && countData.approvals !== 0 && (
+                        <Chip
+                            className={classes.chip}
+                            color="secondary"
+                            size="small"
+                            label={countData.approvals}
+                        />
                     )}
                 </NavLink>
                 <NavLink includeRouting={includeRouting} to="/groups">
-                    {countData.isLoaded && countData.groups === 0 ? (
-                        <Badge color="secondary" variant="dot">
-                            <span>Groups</span>
-                        </Badge>
-                    ) : (
-                        "Groups"
+                    <ListItemText>
+                        {countData.isLoaded && countData.groups === 0 ? (
+                            <Badge color="secondary" variant="dot">
+                                <span>Groups</span>
+                            </Badge>
+                        ) : (
+                            "Groups"
+                        )}
+                    </ListItemText>
+                </NavLink>
+                <Divider />
+                <NavLink includeRouting={includeRouting} to="/followers">
+                    <ListItemText>Followers</ListItemText>
+                    {countData.isLoaded && countData.followers !== 0 && (
+                        <Chip className={classes.chip} size="small" label={countData.followers} />
+                    )}
+                </NavLink>
+                <NavLink includeRouting={includeRouting} to="/followees">
+                    <ListItemText>Followees</ListItemText>
+                    {countData.isLoaded && countData.followees !== 0 && (
+                        <Chip className={classes.chip} size="small" label={countData.followees} />
                     )}
                 </NavLink>
                 <Divider />
                 <NavLink includeRouting={includeRouting} to="/post">
-                    Post
+                    <ListItemText>Post</ListItemText>
                 </NavLink>
                 <Divider />
                 <NavLink includeRouting={includeRouting} to="/profile">
-                    {profile.isLoaded && isEmpty(profile.first_name) ? (
-                        <Badge color="secondary" variant="dot">
-                            <span>Profile</span>
-                        </Badge>
-                    ) : (
-                        "Profile"
-                    )}
+                    <ListItemText>
+                        {profile.isLoaded && isEmpty(profile.first_name) ? (
+                            <Badge color="secondary" variant="dot">
+                                <span>Profile</span>
+                            </Badge>
+                        ) : (
+                            "Profile"
+                        )}
+                    </ListItemText>
                 </NavLink>
                 <NavLink includeRouting={includeRouting} to="/settings/notifications">
-                    {countData.isLoaded && countData.notificationSettings === 0 ? (
-                        <Badge color="secondary" variant="dot">
-                            <span>Notification Settings</span>
-                        </Badge>
-                    ) : (
-                        "Notification Settings"
-                    )}
+                    <ListItemText>
+                        {countData.isLoaded && countData.notificationSettings === 0 ? (
+                            <Badge color="secondary" variant="dot">
+                                <span>Notification Settings</span>
+                            </Badge>
+                        ) : (
+                            "Notification Settings"
+                        )}
+                    </ListItemText>
                 </NavLink>
                 <Divider />
                 <NavLink includeRouting={includeRouting} to="/logout">
-                    Logout
+                    <ListItemText>Logout</ListItemText>
                 </NavLink>
             </List>
         </nav>

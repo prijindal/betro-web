@@ -5,6 +5,8 @@ const routes = {
     home: "/home",
     user: "/user/:username",
     approvals: "/approvals",
+    followers: "/followers",
+    followees: "/followees",
     groups: "/groups",
     post: "/post",
     profile: "/profile",

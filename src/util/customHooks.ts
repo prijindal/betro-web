@@ -8,7 +8,15 @@ import {
     profileLoaded,
     profilePictureLoaded,
 } from "../store/app/actions";
-import { ApprovalResponse, fetchCounts, fetchPendingApprovals } from "../api/account";
+import {
+    ApprovalResponse,
+    fetchCounts,
+    fetchFollowees,
+    fetchFollowers,
+    fetchPendingApprovals,
+    FolloweeResponse,
+    FollowerResponse,
+} from "../api/account";
 import throttle from "lodash/throttle";
 import { fetchProfilePicture, whoAmi } from "../api/login";
 import { bufferToImageUrl } from "./bufferToImage";
@@ -138,28 +146,37 @@ export function useFetchNotificationSettings() {
     };
 }
 
-export function useFetchApprovals() {
-    const auth = useSelector(getAuth);
-    const [response, setResponse] = useState<PaginatedResponse<ApprovalResponse> | null>(null);
-    const after = response == null ? undefined : response.after;
-    const [loaded, setLoaded] = useState<boolean>(false);
-    const getPendingApprovals = useCallback(async () => {
-        if (auth.token !== null) {
-            console.log(after);
-            const resp = await fetchPendingApprovals(auth.token, after);
-            setLoaded(true);
-            if (resp !== null) {
-                if (response == null) {
-                    setResponse(resp);
-                } else {
-                    setResponse({ ...resp, data: [...response.data, ...resp.data] });
+function createPaginatedHook<T>(
+    fetchApi: (token: string, after?: string) => Promise<PaginatedResponse<T> | null>
+) {
+    function usePaginatedApi() {
+        const auth = useSelector(getAuth);
+        const [response, setResponse] = useState<PaginatedResponse<T> | null>(null);
+        const after = response == null ? undefined : response.after;
+        const [loaded, setLoaded] = useState<boolean>(false);
+        const getResponse = useCallback(async () => {
+            if (auth.token !== null) {
+                console.log(after);
+                const resp = await fetchApi(auth.token, after);
+                setLoaded(true);
+                if (resp !== null) {
+                    if (response == null) {
+                        setResponse(resp);
+                    } else {
+                        setResponse({ ...resp, data: [...response.data, ...resp.data] });
+                    }
                 }
             }
-        }
-    }, [auth.token, after, response]);
-    return {
-        fetchPendingApprovals: getPendingApprovals,
-        response,
-        loaded,
-    };
+        }, [auth.token, after, response]);
+        return {
+            fetch: getResponse,
+            response,
+            loaded,
+        };
+    }
+    return usePaginatedApi;
 }
+
+export const useFetchApprovals = createPaginatedHook<ApprovalResponse>(fetchPendingApprovals);
+export const useFetchFollowers = createPaginatedHook<FollowerResponse>(fetchFollowers);
+export const useFetchFollowees = createPaginatedHook<FolloweeResponse>(fetchFollowees);

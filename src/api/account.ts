@@ -9,6 +9,24 @@ export interface ApprovalResponse {
     username: string;
 }
 
+export interface FollowerResponse {
+    follow_id: string;
+    group_id: string;
+    group_is_default: boolean;
+    group_name: string;
+    user_id: string;
+    username: string;
+    is_following: boolean;
+    is_following_approved: boolean;
+}
+
+export interface FolloweeResponse {
+    follow_id: string;
+    is_approved: boolean;
+    user_id: string;
+    username: string;
+}
+
 export interface CountResponse {
     notifications: number;
     notificationSettings: number;
@@ -51,6 +69,44 @@ export const fetchPendingApprovals = async (
     try {
         const response = await axios.get(
             `${API_HOST}/api/follow/approvals?limit=${limit}&after=${after}`,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+        );
+        const data = response.data;
+        return data;
+    } catch (e) {
+        return null;
+    }
+};
+
+export const fetchFollowers = async (
+    token: string,
+    after?: string
+): Promise<PaginatedResponse<FollowerResponse> | null> => {
+    const limit = 50;
+    try {
+        const response = await axios.get(
+            `${API_HOST}/api/follow/followers?limit=${limit}&after=${after}`,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+        );
+        const data = response.data;
+        return data;
+    } catch (e) {
+        return null;
+    }
+};
+
+export const fetchFollowees = async (
+    token: string,
+    after?: string
+): Promise<PaginatedResponse<FolloweeResponse> | null> => {
+    const limit = 50;
+    try {
+        const response = await axios.get(
+            `${API_HOST}/api/follow/followees?limit=${limit}&after=${after}`,
             {
                 headers: { Authorization: `Bearer ${token}` },
             }

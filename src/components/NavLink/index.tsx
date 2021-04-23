@@ -1,16 +1,11 @@
 import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import classes from "./NavLink.module.scss";
 
 const NavLinkWithoutRouting: React.FunctionComponent = (props) => {
     const { children } = props;
-    return (
-        <ListItem>
-            <ListItemText>{children}</ListItemText>
-        </ListItem>
-    );
+    return <ListItem>{children}</ListItem>;
 };
 
 const NavLinkWithRouting: React.FunctionComponent<{ pathname: string }> = (props) => {
@@ -21,10 +16,10 @@ const NavLinkWithRouting: React.FunctionComponent<{ pathname: string }> = (props
             className={classes.listItem}
             selected={location.pathname === pathname}
             disabled={location.pathname === pathname}
-            component={Link}
+            component={location.pathname === pathname ? "span" : Link}
             to={pathname}
         >
-            <ListItemText>{children}</ListItemText>
+            {children}
         </ListItem>
     );
 };
