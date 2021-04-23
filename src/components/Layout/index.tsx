@@ -1,15 +1,26 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
+import Drawer from "@material-ui/core/Drawer";
+import Hidden from "@material-ui/core/Hidden";
 import classes from "./Layout.module.scss";
 import TopAppBar from "../TopAppBar";
 import AppDrawer from "../AppDrawer";
 
 const Layout: React.FunctionComponent<{ includeRouting: boolean }> = (props) => {
     const { children, includeRouting } = props;
+    const [open, setOpen] = useState<boolean>(false);
+    const drawerToggle = useCallback(() => setOpen(!open), [open]);
     return (
         <div className={classes.wrapper}>
-            <TopAppBar includeRouting={includeRouting} />
+            <TopAppBar onDrawerToggle={drawerToggle} includeRouting={includeRouting} />
             <div className={classes.appWrapper}>
-                <AppDrawer includeRouting={includeRouting} />
+                <Hidden mdUp implementation="css">
+                    <Drawer onClose={() => setOpen(false)} variant="temporary" open={open}>
+                        <AppDrawer includeRouting={includeRouting} />
+                    </Drawer>
+                </Hidden>
+                <Hidden mdDown implementation="css">
+                    <AppDrawer includeRouting={includeRouting} />
+                </Hidden>
                 <div className={classes.pageWrapper}>{children}</div>
             </div>
         </div>
