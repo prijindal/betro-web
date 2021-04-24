@@ -20,11 +20,11 @@ const SETTINGS_NOTIFICATIONS: Array<{
     text: string;
 }> = [
     {
-        action: "on_approved",
+        action: "notification_on_approved",
         text: "When somebody approves your follow request",
     },
     {
-        action: "on_followed",
+        action: "notification_on_followed",
         text: "When somebody sends you a follow request",
     },
 ];

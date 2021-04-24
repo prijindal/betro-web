@@ -38,7 +38,7 @@ const Notifications = () => {
                 <div key={a.id}>
                     <Link
                         to={
-                            a.action === "on_followed"
+                            a.action === "notification_on_followed"
                                 ? "/approvals"
                                 : `/user/${a.payload.username}`
                         }
