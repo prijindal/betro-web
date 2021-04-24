@@ -179,3 +179,22 @@ export const fetchOwnPosts = async (
         return null;
     }
 };
+
+export const fetchHomeFeed = async (
+    token: string,
+    private_key: string
+): Promise<Array<PostResource> | null> => {
+    try {
+        const response = await axios.get(`${API_HOST}/api/feed`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        const data: PostsFeedResponse = response.data;
+        return transformPostFeed(data, private_key, async (post, keys) => {
+            const symKey = await rsaDecrypt(private_key, keys[post.key_id]);
+            const sym_key = symKey.toString("base64");
+            return sym_key;
+        });
+    } catch (e) {
+        return null;
+    }
+};
