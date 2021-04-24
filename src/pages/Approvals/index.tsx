@@ -1,14 +1,18 @@
 import { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
+import Alert from "@material-ui/core/Alert";
 import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
 import throttle from "lodash/throttle";
 import { wrapLayout } from "../../components/Layout";
-import { getGroup } from "../../store/app/selectors";
+import { getGroup, getProfile } from "../../store/app/selectors";
 import { useFetchApprovals, useFetchGroupsHook } from "../../hooks";
 import ApprovalComponent from "./ApprovalComponent";
+import { Link } from "react-router-dom";
+import isEmpty from "lodash/isEmpty";
 
 const Approvals = () => {
+    const profile = useSelector(getProfile);
     const groupData = useSelector(getGroup);
     const fetchGroups = useFetchGroupsHook();
     const { fetch, response, loaded } = useFetchApprovals();
@@ -25,21 +29,35 @@ const Approvals = () => {
         return <div>Some error</div>;
     }
     return (
-        <List>
-            {response.total === 0 && <div>No Approvals</div>}
-            {response.data.map((a) => (
-                <ApprovalComponent
-                    key={a.id}
-                    approval={a}
-                    onApproved={fetchPendingApprovalsThrottled}
-                />
-            ))}
-            {response.next && (
-                <Button onClick={() => fetch()}>
-                    Load More (Loaded {response.data.length} out of {response.total})
-                </Button>
+        <div>
+            {groupData.isLoaded && groupData.data.length === 0 && (
+                <Alert severity="warning">
+                    You have not created a group. Please create one under{" "}
+                    <Link to="/groups">Groups</Link> to start approving user
+                </Alert>
             )}
-        </List>
+            {profile.isLoaded && isEmpty(profile.first_name) && (
+                <Alert severity="warning">
+                    You have not Setup your profile. Please setup under{" "}
+                    <Link to="/profile">Profile</Link> to start approving user
+                </Alert>
+            )}
+            {response.total === 0 && <div>No Approvals</div>}
+            <List>
+                {response.data.map((a) => (
+                    <ApprovalComponent
+                        key={a.id}
+                        approval={a}
+                        onApproved={fetchPendingApprovalsThrottled}
+                    />
+                ))}
+                {response.next && (
+                    <Button onClick={() => fetch()}>
+                        Load More (Loaded {response.data.length} out of {response.total})
+                    </Button>
+                )}
+            </List>
+        </div>
     );
 };
 

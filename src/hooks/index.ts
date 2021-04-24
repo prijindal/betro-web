@@ -202,9 +202,9 @@ export const useFetchUserInfoHook = (
 
 export const useFollowUserHook = (username?: string, public_key?: string | null) => {
     const auth = useSelector(getAuth);
-    const followHandler = useCallback(() => {
+    const followHandler = useCallback(async () => {
         if (auth.token !== null && auth.symKey != null && username != null && public_key != null) {
-            followUser(auth.token, username, public_key, auth.symKey);
+            return followUser(auth.token, username, public_key, auth.symKey);
         }
     }, [auth.token, username, public_key, auth.symKey]);
     return followHandler;
