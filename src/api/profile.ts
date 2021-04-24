@@ -19,7 +19,7 @@ export interface UserProfilePostRequest {
     sym_key: string;
     first_name: string;
     last_name: string;
-    profile_picture: string;
+    profile_picture?: string;
 }
 
 export const fetchProfile = async (
@@ -67,7 +67,7 @@ export const createProfile = async (
     encryption_mac: string,
     first_name: string,
     last_name: string,
-    profile_picture: Buffer
+    profile_picture: Buffer | null
 ): Promise<UserProfileResponse | null> => {
     try {
         const encrypted_sym_key = await aesEncrypt(
@@ -77,13 +77,15 @@ export const createProfile = async (
         );
         const encrypted_first_name = await symEncrypt(sym_key, Buffer.from(first_name));
         const encrypted_last_name = await symEncrypt(sym_key, Buffer.from(last_name));
-        const encrypted_profile_picture = await symEncrypt(sym_key, profile_picture);
         const request: UserProfilePostRequest = {
             sym_key: encrypted_sym_key,
             first_name: encrypted_first_name,
             last_name: encrypted_last_name,
-            profile_picture: encrypted_profile_picture,
         };
+        if (profile_picture != null) {
+            const encrypted_profile_picture = await symEncrypt(sym_key, profile_picture);
+            request.profile_picture = encrypted_profile_picture;
+        }
         const response = await axios.post(`${API_HOST}/api/account/profile`, request, {
             headers: { Authorization: `Bearer ${token}` },
         });
@@ -99,7 +101,7 @@ export const updateProfile = async (
     sym_key: string,
     first_name?: string,
     last_name?: string,
-    profile_picture?: Buffer
+    profile_picture?: Buffer | null
 ): Promise<UserProfileResponse | null> => {
     try {
         const request: UserProfilePutRequest = {};

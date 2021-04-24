@@ -5,7 +5,7 @@ import List from "@material-ui/core/List";
 import throttle from "lodash/throttle";
 import { wrapLayout } from "../../components/Layout";
 import { getGroup } from "../../store/app/selectors";
-import { useFetchApprovals, useFetchGroupsHook } from "../../util/customHooks";
+import { useFetchApprovals, useFetchGroupsHook } from "../../hooks";
 import ApprovalComponent from "./ApprovalComponent";
 
 const Approvals = () => {

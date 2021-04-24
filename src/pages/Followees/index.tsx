@@ -7,7 +7,7 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import throttle from "lodash/throttle";
 import { wrapLayout } from "../../components/Layout";
 import { getGroup } from "../../store/app/selectors";
-import { useFetchFollowees, useFetchGroupsHook } from "../../util/customHooks";
+import { useFetchFollowees, useFetchGroupsHook } from "../../hooks";
 import { FolloweeResponse } from "../../api/account";
 import UserListItem from "../../components/UserListItem";
 

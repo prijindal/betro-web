@@ -6,7 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import { useSelector } from "react-redux";
 import { deleteGroup } from "../../api/group";
 import { getAuth } from "../../store/app/selectors";
-import { useFetchGroupsHook } from "../../util/customHooks";
+import { useFetchGroupsHook } from "../../hooks";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { Group } from "../../store/app/types";
 

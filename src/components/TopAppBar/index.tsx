@@ -11,7 +11,7 @@ import isEmpty from "lodash/isEmpty";
 import { useSelector } from "react-redux";
 import classes from "./TopAppBar.module.scss";
 import { getProfile } from "../../store/app/selectors";
-import { useFetchCountHook, useFetchWhoami, useFetchProfilePicture } from "../../util/customHooks";
+import { useFetchCountHook, useFetchWhoami, useFetchProfilePicture } from "../../hooks";
 
 const TopAppBar: React.FunctionComponent<{
     includeRouting: boolean;

@@ -7,7 +7,7 @@ import Switch from "@material-ui/core/Switch";
 import { UserSettingResponse, UserSettingsAction, changeUserSettings } from "../../api/settings";
 import { wrapLayout } from "../../components/Layout";
 import { getAuth } from "../../store/app/selectors";
-import { useFetchUserSettings, useFetchCountHook } from "../../util/customHooks";
+import { useFetchUserSettings, useFetchCountHook } from "../../hooks";
 
 interface SettingNotification {
     action: UserSettingsAction;

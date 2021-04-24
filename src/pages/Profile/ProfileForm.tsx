@@ -9,7 +9,7 @@ import { createProfile, updateProfile } from "../../api/profile";
 import { profilePictureLoaded, verifedLogin } from "../../store/app/actions";
 import { getAuth } from "../../store/app/selectors";
 import { bufferToImageUrl } from "../../util/bufferToImage";
-import { useFetchWhoami } from "../../util/customHooks";
+import { useFetchWhoami } from "../../hooks";
 
 const ProfileForm: React.FunctionComponent<{
     method: "POST" | "PUT";
@@ -62,12 +62,7 @@ const ProfileForm: React.FunctionComponent<{
     const profileSaveHandler = useCallback(
         async (e: React.FormEvent) => {
             e.preventDefault();
-            if (
-                auth.token !== null &&
-                auth.encryptionKey !== null &&
-                auth.encryptionMac !== null &&
-                profilePicture != null
-            ) {
+            if (auth.token !== null && auth.encryptionKey !== null && auth.encryptionMac !== null) {
                 if (props.method === "POST") {
                     const sym_key = await generateSymKey();
                     createProfile(

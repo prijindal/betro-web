@@ -3,7 +3,7 @@ import List from "@material-ui/core/List";
 import { useSelector } from "react-redux";
 import { wrapLayout } from "../../components/Layout";
 import { getGroup } from "../../store/app/selectors";
-import { useFetchGroupsHook, useFetchCountHook } from "../../util/customHooks";
+import { useFetchGroupsHook, useFetchCountHook } from "../../hooks";
 import NewGroupForm from "./NewGroupForm";
 import GroupComponent from "./GroupComponent";
 

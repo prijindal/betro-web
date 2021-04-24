@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { createTextPost } from "../../api/post";
 import { wrapLayout } from "../../components/Layout";
 import { getAuth, getGroup } from "../../store/app/selectors";
-import { useFetchGroupsHook } from "../../util/customHooks";
+import { useFetchGroupsHook } from "../../hooks";
 
 const Post = () => {
     const auth = useSelector(getAuth);

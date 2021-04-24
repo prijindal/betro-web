@@ -1,77 +1,26 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import List from "@material-ui/core/List";
+import Button from "@material-ui/core/Button";
 import { useSelector } from "react-redux";
 import { Redirect, useLocation, useParams } from "react-router";
-import { fetchUserInfo, fetchUserPosts, followUser, PostResource, UserInfo } from "../../api/user";
 import { wrapLayout } from "../../components/Layout";
-import { getAuth, getProfile } from "../../store/app/selectors";
+import { getProfile } from "../../store/app/selectors";
 import UserListItem, { UserListItemUserProps } from "../../components/UserListItem";
+import { useFollowUserHook, useFetchUserInfoHook } from "../../hooks";
 
 const User = () => {
     const params: any = useParams();
     const location = useLocation<UserListItemUserProps | undefined>();
-    const auth = useSelector(getAuth);
     const profile = useSelector(getProfile);
     const ownProfile = params.username === profile.username;
-    const [loaded, setLoaded] = useState<boolean>(false);
-    const [posts, setPosts] = useState<Array<PostResource> | null>(null);
-    const [userInfo, setUserInfo] = useState<UserInfo | null>(
-        location.state == null
-            ? null
-            : {
-                  is_approved: true,
-                  is_following: true,
-                  public_key: null,
-                  ...location.state,
-                  profile_picture:
-                      typeof location.state.profile_picture == "string"
-                          ? null
-                          : location.state.profile_picture,
-              }
+    const { fetch, userInfo, loaded, posts, postsLoading } = useFetchUserInfoHook(
+        params.username,
+        location.state
     );
+    const followUser = useFollowUserHook(userInfo?.username, userInfo?.public_key);
     useEffect(() => {
-        async function fetchPosts() {
-            if (
-                auth.token !== null &&
-                auth.privateKey !== null &&
-                profile.isLoaded &&
-                ownProfile === false
-            ) {
-                const resp = await fetchUserPosts(auth.token, params.username, auth.privateKey);
-                if (resp !== null) {
-                    setPosts(resp);
-                }
-            }
-        }
-        async function fetchInfo() {
-            if (
-                auth.token !== null &&
-                auth.privateKey != null &&
-                profile.isLoaded &&
-                ownProfile === false
-            ) {
-                const userInfo = await fetchUserInfo(auth.token, auth.privateKey, params.username);
-                setLoaded(true);
-                if (userInfo !== null) {
-                    setUserInfo(userInfo);
-                    if (userInfo.is_approved) {
-                        fetchPosts();
-                    }
-                }
-            }
-        }
-        fetchInfo();
-    }, [auth.token, params.username, auth.privateKey, ownProfile, profile.isLoaded]);
-    const followHandler = useCallback(() => {
-        if (
-            auth.token !== null &&
-            userInfo != null &&
-            userInfo.public_key != null &&
-            auth.symKey != null
-        ) {
-            followUser(auth.token, params.username, userInfo.public_key, auth.symKey);
-        }
-    }, [auth.token, userInfo, auth.symKey, params.username]);
+        fetch();
+    }, [fetch]);
     if (ownProfile) {
         return <Redirect to="/posts" />;
     }
@@ -84,28 +33,33 @@ const User = () => {
                 <UserListItem user={userInfo}>
                     {loaded === true && (
                         <React.Fragment>
-                            {!userInfo.is_following && (
-                                <button onClick={followHandler}>Follow</button>
+                            {!userInfo.is_following && <Button onClick={followUser}>Follow</Button>}
+                            {userInfo.is_following && !userInfo.is_approved && (
+                                <span>Not Approved Yet</span>
                             )}
-                            {!userInfo.is_approved && <span>Not Approved Yet</span>}
                         </React.Fragment>
                     )}
                 </UserListItem>
             </List>
-            {posts == null && <div>Loading...</div>}
-            {userInfo.is_approved && posts != null && (
-                <div>
-                    {posts.length === 0 && <div>No posts found</div>}
-                    {posts.map((post) => (
-                        <div key={post.id} style={{ margin: "20px 0" }}>
-                            <UserListItem user={post.user}>
-                                <div style={{ marginLeft: "10px" }}>
-                                    {post.text_content !== null && post.text_content.toString()}
+            {loaded && (
+                <React.Fragment>
+                    {postsLoading === true && <div>Loading...</div>}
+                    {userInfo.is_approved && posts != null && (
+                        <div>
+                            {posts.length === 0 && <div>No posts found</div>}
+                            {posts.map((post) => (
+                                <div key={post.id} style={{ margin: "20px 0" }}>
+                                    <UserListItem user={post.user}>
+                                        <div style={{ marginLeft: "10px" }}>
+                                            {post.text_content !== null &&
+                                                post.text_content.toString()}
+                                        </div>
+                                    </UserListItem>
                                 </div>
-                            </UserListItem>
+                            ))}
                         </div>
-                    ))}
-                </div>
+                    )}
+                </React.Fragment>
             )}
         </div>
     );

@@ -19,9 +19,11 @@ import {
 } from "../api/account";
 import throttle from "lodash/throttle";
 import { fetchProfilePicture, whoAmi } from "../api/login";
-import { bufferToImageUrl } from "./bufferToImage";
+import { bufferToImageUrl } from "../util/bufferToImage";
 import { fetchUserSettings, UserSettingResponse } from "../api/settings";
-import { PaginatedResponse } from "../api/PaginatedResponse";
+import { UserListItemUserProps } from "../components/UserListItem";
+import { fetchUserInfo, fetchUserPosts, followUser, PostResource, UserInfo } from "../api/user";
+import { createPaginatedHook } from "./paginated";
 
 export function useFetchGroupsHook() {
     const auth = useSelector(getAuth);
@@ -143,39 +145,70 @@ export function useFetchUserSettings() {
     };
 }
 
-function createPaginatedHook<T>(
-    fetchApi: (
-        token: string,
-        private_key: string,
-        after?: string
-    ) => Promise<PaginatedResponse<T> | null>
-) {
-    function usePaginatedApi() {
-        const auth = useSelector(getAuth);
-        const [response, setResponse] = useState<PaginatedResponse<T> | null>(null);
-        const after = response == null ? undefined : response.after;
-        const [loaded, setLoaded] = useState<boolean>(false);
-        const getResponse = useCallback(async () => {
-            if (auth.token !== null && auth.privateKey !== null) {
-                const resp = await fetchApi(auth.token, auth.privateKey, after);
-                setLoaded(true);
+export const useFetchUserInfoHook = (
+    username: string,
+    state: UserListItemUserProps | undefined
+) => {
+    const auth = useSelector(getAuth);
+    const profile = useSelector(getProfile);
+    const [loaded, setLoaded] = useState<boolean>(false);
+    const [postsLoading, setPostsLoading] = useState<boolean>(false);
+    const [posts, setPosts] = useState<Array<PostResource> | null>(null);
+    const [userInfo, setUserInfo] = useState<UserInfo | null>(
+        state == null
+            ? null
+            : {
+                  is_approved: true,
+                  is_following: true,
+                  public_key: null,
+                  ...state,
+                  profile_picture:
+                      typeof state.profile_picture == "string" ? null : state.profile_picture,
+              }
+    );
+    const fetchUser = useCallback(() => {
+        async function fetchPosts() {
+            if (auth.token !== null && auth.privateKey !== null && profile.isLoaded) {
+                setPostsLoading(true);
+                const resp = await fetchUserPosts(auth.token, username, auth.privateKey);
+                setPostsLoading(false);
                 if (resp !== null) {
-                    if (response == null) {
-                        setResponse(resp);
-                    } else {
-                        setResponse({ ...resp, data: [...response.data, ...resp.data] });
+                    setPosts(resp);
+                }
+            }
+        }
+        async function fetchInfo() {
+            if (auth.token !== null && auth.privateKey != null && profile.isLoaded) {
+                const userInfo = await fetchUserInfo(auth.token, auth.privateKey, username);
+                setLoaded(true);
+                if (userInfo !== null) {
+                    setUserInfo(userInfo);
+                    if (userInfo.is_approved) {
+                        fetchPosts();
                     }
                 }
             }
-        }, [auth.token, auth.privateKey, after, response]);
-        return {
-            fetch: getResponse,
-            response,
-            loaded,
-        };
-    }
-    return usePaginatedApi;
-}
+        }
+        fetchInfo();
+    }, [auth.token, username, auth.privateKey, profile.isLoaded]);
+    return {
+        fetch: fetchUser,
+        loaded,
+        posts,
+        userInfo,
+        postsLoading,
+    };
+};
+
+export const useFollowUserHook = (username?: string, public_key?: string | null) => {
+    const auth = useSelector(getAuth);
+    const followHandler = useCallback(() => {
+        if (auth.token !== null && auth.symKey != null && username != null && public_key != null) {
+            followUser(auth.token, username, public_key, auth.symKey);
+        }
+    }, [auth.token, username, public_key, auth.symKey]);
+    return followHandler;
+};
 
 export const useFetchApprovals = createPaginatedHook<ApprovalResponse>(fetchPendingApprovals);
 export const useFetchFollowers = createPaginatedHook<FollowerResponse>(fetchFollowers);
