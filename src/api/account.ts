@@ -1,15 +1,16 @@
 import axios from "axios";
-import { aesDecrypt, rsaDecrypt, rsaEncrypt, symDecrypt } from "betro-js-lib";
+import { aesDecrypt, rsaEncrypt } from "betro-js-lib";
 import { API_HOST } from "../constants";
 import { PaginatedResponse } from "./PaginatedResponse";
+import { parseUserProfile } from "./profileHelper";
 export interface ApprovalResponse {
     id: string;
     follower_id: string;
     public_key: string;
     username: string;
-    first_name: string | null;
-    last_name: string | null;
-    profile_picture: Buffer | null;
+    first_name?: string | null;
+    last_name?: string | null;
+    profile_picture?: Buffer | null;
 }
 
 export interface FollowerResponse {
@@ -22,9 +23,9 @@ export interface FollowerResponse {
     is_following: boolean;
     is_following_approved: boolean;
     public_key: string | null;
-    first_name: string | null;
-    last_name: string | null;
-    profile_picture: Buffer | null;
+    first_name?: string | null;
+    last_name?: string | null;
+    profile_picture?: Buffer | null;
 }
 
 export interface FolloweeResponse {
@@ -32,9 +33,9 @@ export interface FolloweeResponse {
     is_approved: boolean;
     user_id: string;
     username: string;
-    first_name: string | null;
-    last_name: string | null;
-    profile_picture: Buffer | null;
+    first_name?: string | null;
+    last_name?: string | null;
+    profile_picture?: Buffer | null;
 }
 
 export interface CountResponse {
@@ -87,26 +88,13 @@ export const fetchPendingApprovals = async (
         const resp = response.data;
         const data: Array<ApprovalResponse> = [];
         for (const res of resp.data) {
-            const encrypted_sym_key = res.sym_key;
-            const sym_key = (await rsaDecrypt(private_key, encrypted_sym_key)).toString("base64");
-            const first_name =
-                res.first_name != null
-                    ? (await symDecrypt(sym_key, res.first_name)).toString("utf-8")
-                    : null;
-            const last_name =
-                res.last_name != null
-                    ? (await symDecrypt(sym_key, res.last_name)).toString("utf-8")
-                    : null;
-            const profile_picture =
-                res.profile_picture != null ? await symDecrypt(sym_key, res.profile_picture) : null;
+            const userResponse = await parseUserProfile(res.sym_key, private_key, res);
             data.push({
                 id: res.id,
                 follower_id: res.follower_id,
                 public_key: res.public_key,
                 username: res.username,
-                first_name: first_name,
-                last_name: last_name,
-                profile_picture: profile_picture,
+                ...userResponse,
             });
         }
         return { ...resp, data };
@@ -131,18 +119,7 @@ export const fetchFollowers = async (
         const resp = response.data;
         const data: Array<FollowerResponse> = [];
         for (const res of resp.data) {
-            const encrypted_sym_key = res.sym_key;
-            const sym_key = (await rsaDecrypt(private_key, encrypted_sym_key)).toString("base64");
-            const first_name =
-                res.first_name != null
-                    ? (await symDecrypt(sym_key, res.first_name)).toString("utf-8")
-                    : null;
-            const last_name =
-                res.last_name != null
-                    ? (await symDecrypt(sym_key, res.last_name)).toString("utf-8")
-                    : null;
-            const profile_picture =
-                res.profile_picture != null ? await symDecrypt(sym_key, res.profile_picture) : null;
+            const userResponse = await parseUserProfile(res.sym_key, private_key, res);
             data.push({
                 follow_id: res.follow_id,
                 group_id: res.group_id,
@@ -153,9 +130,7 @@ export const fetchFollowers = async (
                 is_following: res.is_following,
                 is_following_approved: res.is_following_approved,
                 public_key: res.public_key,
-                first_name: first_name,
-                last_name: last_name,
-                profile_picture: profile_picture,
+                ...userResponse,
             });
         }
         return { ...resp, data };
@@ -180,27 +155,17 @@ export const fetchFollowees = async (
         const resp = response.data;
         const data: Array<FolloweeResponse> = [];
         for (const res of resp.data) {
-            const encrypted_sym_key = res.sym_key;
-            const sym_key = (await rsaDecrypt(private_key, encrypted_sym_key)).toString("base64");
-            const first_name =
-                res.first_name != null
-                    ? (await symDecrypt(sym_key, res.first_name)).toString("utf-8")
-                    : null;
-            const last_name =
-                res.last_name != null
-                    ? (await symDecrypt(sym_key, res.last_name)).toString("utf-8")
-                    : null;
-            const profile_picture =
-                res.profile_picture != null ? await symDecrypt(sym_key, res.profile_picture) : null;
-            data.push({
+            let row: FolloweeResponse = {
                 follow_id: res.follow_id,
                 is_approved: res.is_approved,
                 user_id: res.user_id,
                 username: res.username,
-                first_name: first_name,
-                last_name: last_name,
-                profile_picture: profile_picture,
-            });
+            };
+            if (res.sym_key != null) {
+                const userResponse = await parseUserProfile(res.sym_key, private_key, res);
+                row = { ...row, ...userResponse };
+            }
+            data.push(row);
         }
         return { ...resp, data };
     } catch (e) {

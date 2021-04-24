@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import throttle from "lodash/throttle";
 import { wrapLayout } from "../../components/Layout";
 import { getGroup } from "../../store/app/selectors";
@@ -13,10 +14,12 @@ import UserListItem from "../../components/UserListItem";
 const FolloweeComponent: React.FunctionComponent<{ follower: FolloweeResponse }> = (props) => {
     const { follower } = props;
     return (
-        <UserListItem user={follower}>
-            <Typography component="span" variant="body2" color="textPrimary">
-                {follower.is_approved ? "Approved" : "Waiting for approval"}
-            </Typography>
+        <UserListItem user={follower} routing>
+            <ListItemSecondaryAction>
+                <Typography component="span" variant="body2" color="textPrimary">
+                    {follower.is_approved ? "Approved" : "Waiting for approval"}
+                </Typography>
+            </ListItemSecondaryAction>
         </UserListItem>
     );
 };

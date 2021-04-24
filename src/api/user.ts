@@ -1,14 +1,32 @@
 import axios from "axios";
 import { rsaDecrypt, rsaEncrypt, symDecrypt } from "betro-js-lib";
 import { API_HOST } from "../constants";
+import { parseUserProfile } from "./profileHelper";
 
 export interface PostResource {
     id: string;
     text_content: Buffer | null;
     media_content: Buffer | null;
     media_encoding: string;
-    username: string;
+    user: PostResourceUser;
     created_at: Date;
+}
+
+export interface PostResourceUser {
+    username: string;
+    first_name?: string | null;
+    last_name?: string | null;
+    profile_picture?: Buffer | null;
+}
+
+export interface UserInfo {
+    is_following: boolean;
+    is_approved: boolean;
+    username: string;
+    public_key: string | null;
+    first_name?: string | null;
+    last_name?: string | null;
+    profile_picture?: Buffer | null;
 }
 
 export interface PostsFeedResponse {
@@ -29,6 +47,10 @@ export interface PostResponse {
 
 export interface PostUserResponse {
     username: string;
+    sym_key?: string | null;
+    first_name?: string | null;
+    last_name?: string | null;
+    profile_picture?: string | null;
 }
 
 export const followUser = async (
@@ -58,19 +80,20 @@ export const followUser = async (
 
 export const fetchUserInfo = async (
     token: string,
+    private_key: string,
     username: string
-): Promise<{
-    is_following: boolean;
-    is_approved: boolean;
-    username: string;
-    public_key: string;
-} | null> => {
+): Promise<UserInfo | null> => {
     try {
         const response = await axios.get(`${API_HOST}/api/user/${username}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         const data = response.data;
-        return data;
+        if (data.sym_key != null) {
+            const userResponse = await parseUserProfile(data.sym_key, private_key, data);
+            return { ...data, ...userResponse };
+        } else {
+            return { ...data, first_name: null, last_name: null, profile_picture: null };
+        }
     } catch (e) {
         return null;
     }
@@ -98,13 +121,22 @@ export const fetchUserPosts = async (
             if (post.media_content !== null) {
                 media = await symDecrypt(sym_key, post.media_content);
             }
+            let resUser: PostUserResponse = data.users[post.user_id];
+            let user: PostResourceUser = { username: resUser.username };
+            if (resUser.sym_key != null) {
+                const userProfile = await parseUserProfile(resUser.sym_key, private_key, resUser);
+                user = {
+                    username: resUser.username,
+                    ...userProfile,
+                };
+            }
             posts.push({
                 id: post.id,
                 created_at: post.created_at,
                 text_content: text,
                 media_content: media,
                 media_encoding: post.media_encoding,
-                username: data.users[post.user_id].username,
+                user: user,
             });
         }
         return posts;
