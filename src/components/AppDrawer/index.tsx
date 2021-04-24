@@ -88,9 +88,9 @@ const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) 
                         )}
                     </ListItemText>
                 </NavLink>
-                <NavLink includeRouting={includeRouting} to="/settings/notifications">
+                <NavLink includeRouting={includeRouting} to="/settings">
                     <ListItemText>
-                        {countData.isLoaded && countData.notificationSettings === 0 ? (
+                        {countData.isLoaded && countData.settings === 0 ? (
                             <Badge color="secondary" variant="dot">
                                 <span>Notification Settings</span>
                             </Badge>

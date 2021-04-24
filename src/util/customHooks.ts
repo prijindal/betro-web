@@ -20,7 +20,7 @@ import {
 import throttle from "lodash/throttle";
 import { fetchProfilePicture, whoAmi } from "../api/login";
 import { bufferToImageUrl } from "./bufferToImage";
-import { fetchNotificationSettings, UserNotificationSettingResponse } from "../api/settings";
+import { fetchUserSettings, UserSettingResponse } from "../api/settings";
 import { PaginatedResponse } from "../api/PaginatedResponse";
 
 export function useFetchGroupsHook() {
@@ -122,26 +122,23 @@ export function useFetchProfilePicture() {
     return useCallback(throttle(getProfilePicture, 2000), []);
 }
 
-export function useFetchNotificationSettings() {
+export function useFetchUserSettings() {
     const auth = useSelector(getAuth);
     const [loaded, setLoaded] = useState<boolean>(false);
-    const [
-        notificationSettings,
-        setNotificationSettings,
-    ] = useState<Array<UserNotificationSettingResponse> | null>(null);
-    const getNotificationSettings = useCallback(async () => {
+    const [settings, setUserSettings] = useState<Array<UserSettingResponse> | null>(null);
+    const getUserSettings = useCallback(async () => {
         if (auth.token !== null) {
-            const resp = await fetchNotificationSettings(auth.token);
+            const resp = await fetchUserSettings(auth.token);
             setLoaded(true);
             if (resp !== null) {
-                setNotificationSettings(resp);
+                setUserSettings(resp);
             }
         }
     }, [auth.token]);
     return {
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        fetchNotificationSettings: useCallback(throttle(getNotificationSettings, 2000), []),
-        notificationSettings,
+        fetchUserSettings: useCallback(throttle(getUserSettings, 2000), []),
+        settings,
         loaded,
     };
 }

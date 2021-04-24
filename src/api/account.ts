@@ -40,7 +40,7 @@ export interface FolloweeResponse {
 
 export interface CountResponse {
     notifications: number;
-    notificationSettings: number;
+    settings: number;
     groups: number;
     followers: number;
     followees: number;
@@ -52,7 +52,7 @@ export const fetchCounts = async (token: string): Promise<CountResponse | null> 
     try {
         const include_fields = [
             "notifications",
-            "notificationSettings",
+            "settings",
             "groups",
             "followers",
             "followees",

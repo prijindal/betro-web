@@ -1,12 +1,12 @@
 import axios from "axios";
 import { API_HOST } from "../constants";
 
-export type NotificationSettingsAction = "on_approved" | "on_followed";
+export type UserSettingsAction = "on_approved" | "on_followed";
 
 export interface NotificationResponse {
     id: string;
     user_id: string;
-    action: NotificationSettingsAction;
+    action: UserSettingsAction;
     content: string;
     payload: Record<string, unknown>;
     created_at: string;

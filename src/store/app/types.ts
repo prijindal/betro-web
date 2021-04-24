@@ -57,7 +57,7 @@ export type Group = Readonly<{
 export type CountState = Readonly<{
     isLoaded: boolean;
     notifications: number | null;
-    notificationSettings: number | null;
+    settings: number | null;
     groups: number | null;
     followers: number | null;
     followees: number | null;

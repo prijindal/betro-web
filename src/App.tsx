@@ -22,7 +22,7 @@ import Followers from "./pages/Followers";
 import Followees from "./pages/Followees";
 import Groups from "./pages/Groups";
 import Notifications from "./pages/Notifications";
-import NotificationSettings from "./pages/NotificationSettings";
+import UserSettings from "./pages/UserSettings";
 import Profile from "./pages/Profile";
 import Logout from "./pages/Logout";
 
@@ -108,9 +108,9 @@ const App: React.FC<any> = () => {
                             <Notifications />
                         </Route>
                     </PrivateRoute>
-                    <PrivateRoute exact path={routes.notificationSettings}>
+                    <PrivateRoute exact path={routes.settings}>
                         <Route>
-                            <NotificationSettings />
+                            <UserSettings />
                         </Route>
                     </PrivateRoute>
                     <PrivateRoute exact path={routes.logout}>

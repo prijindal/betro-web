@@ -4,23 +4,19 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Switch from "@material-ui/core/Switch";
-import {
-    UserNotificationSettingResponse,
-    NotificationSettingsAction,
-    changeNotificationSettings,
-} from "../../api/settings";
+import { UserSettingResponse, UserSettingsAction, changeUserSettings } from "../../api/settings";
 import { wrapLayout } from "../../components/Layout";
 import { getAuth } from "../../store/app/selectors";
-import { useFetchNotificationSettings, useFetchCountHook } from "../../util/customHooks";
+import { useFetchUserSettings, useFetchCountHook } from "../../util/customHooks";
 
 interface SettingNotification {
-    action: NotificationSettingsAction;
+    action: UserSettingsAction;
     text: string;
     enabled: boolean;
 }
 
 const SETTINGS_NOTIFICATIONS: Array<{
-    action: NotificationSettingsAction;
+    action: UserSettingsAction;
     text: string;
 }> = [
     {
@@ -33,23 +29,21 @@ const SETTINGS_NOTIFICATIONS: Array<{
     },
 ];
 
-const parseNotificationSettings = (
-    notificationSettings: Array<UserNotificationSettingResponse>
-): Array<SettingNotification> => {
+const parseUserSettings = (settings: Array<UserSettingResponse>): Array<SettingNotification> => {
     return SETTINGS_NOTIFICATIONS.map((a) => {
-        const notificationSetting = notificationSettings.find((b) => b.action === a.action);
+        const userSetting = settings.find((b) => b.action === a.action);
         let enabled = false;
-        if (notificationSetting !== null && notificationSetting !== undefined) {
-            enabled = notificationSetting.enabled;
+        if (userSetting !== null && userSetting !== undefined) {
+            enabled = userSetting.enabled;
         }
         return { ...a, enabled: enabled };
     });
 };
 
-const NotificationSetting = (params: { notificationSetting: SettingNotification }) => {
+const UserSetting = (params: { userSetting: SettingNotification }) => {
     const auth = useSelector(getAuth);
-    const notificationSetting = params.notificationSetting;
-    const [enabled, setEnabled] = useState<boolean>(notificationSetting.enabled);
+    const userSetting = params.userSetting;
+    const [enabled, setEnabled] = useState<boolean>(userSetting.enabled);
     const [saving, setSaving] = useState<boolean>(false);
     const fetchCount = useFetchCountHook();
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +51,7 @@ const NotificationSetting = (params: { notificationSetting: SettingNotification 
         if (auth.token !== null) {
             setEnabled(value);
             setSaving(true);
-            changeNotificationSettings(auth.token, notificationSetting.action, value)
+            changeUserSettings(auth.token, userSetting.action, value)
                 .then(() => {
                     fetchCount(true);
                 })
@@ -70,34 +64,30 @@ const NotificationSetting = (params: { notificationSetting: SettingNotification 
         <ListItem>
             <FormControlLabel
                 control={<Switch disabled={saving} checked={enabled} onChange={handleChange} />}
-                label={notificationSetting.text}
+                label={userSetting.text}
             />
         </ListItem>
     );
 };
 
-const NotificationSettings = () => {
-    const {
-        fetchNotificationSettings,
-        loaded,
-        notificationSettings,
-    } = useFetchNotificationSettings();
+const UserSettings = () => {
+    const { fetchUserSettings, loaded, settings } = useFetchUserSettings();
     useEffect(() => {
-        fetchNotificationSettings();
-    }, [fetchNotificationSettings]);
+        fetchUserSettings();
+    }, [fetchUserSettings]);
     if (loaded === false) {
         return <div>Loading</div>;
     }
-    if (notificationSettings === null) {
+    if (settings === null) {
         return <div>Some error</div>;
     }
     return (
         <List>
-            {parseNotificationSettings(notificationSettings).map((a) => (
-                <NotificationSetting key={a.action} notificationSetting={a} />
+            {parseUserSettings(settings).map((a) => (
+                <UserSetting key={a.action} userSetting={a} />
             ))}
         </List>
     );
 };
 
-export default wrapLayout(NotificationSettings);
+export default wrapLayout(UserSettings);

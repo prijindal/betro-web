@@ -31,7 +31,7 @@ export const initialState = Object.freeze<AppState>({
     count: {
         isLoaded: false,
         notifications: null,
-        notificationSettings: null,
+        settings: null,
         groups: null,
         followers: null,
         followees: null,
@@ -102,7 +102,7 @@ const appReducer = (state: AppState = initialState, action: Action): AppState =>
             case ActionTypes.COUNT_LOADED: {
                 draft.count.isLoaded = true;
                 draft.count.notifications = action.payload.notifications;
-                draft.count.notificationSettings = action.payload.notificationSettings;
+                draft.count.settings = action.payload.settings;
                 draft.count.groups = action.payload.groups;
                 draft.count.followers = action.payload.followers;
                 draft.count.followees = action.payload.followees;

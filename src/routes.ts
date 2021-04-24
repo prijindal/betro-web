@@ -12,7 +12,7 @@ const routes = {
     posts: "/posts",
     profile: "/profile",
     notifications: "/notifications",
-    notificationSettings: "/settings/notifications",
+    settings: "/settings",
     logout: "/logout",
 };
 

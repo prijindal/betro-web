@@ -1,20 +1,20 @@
 import axios from "axios";
 import { API_HOST } from "../constants";
 
-export type NotificationSettingsAction = "on_approved" | "on_followed";
+export type UserSettingsAction = "on_approved" | "on_followed";
 
-export interface UserNotificationSettingResponse {
+export interface UserSettingResponse {
     id: string;
     user_id: string;
-    action: NotificationSettingsAction;
+    action: UserSettingsAction;
     enabled: boolean;
 }
 
-export const fetchNotificationSettings = async (
+export const fetchUserSettings = async (
     token: string
-): Promise<Array<UserNotificationSettingResponse> | null> => {
+): Promise<Array<UserSettingResponse> | null> => {
     try {
-        const response = await axios.get(`${API_HOST}/api/settings/notifications`, {
+        const response = await axios.get(`${API_HOST}/api/settings`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         const data = response.data;
@@ -24,14 +24,14 @@ export const fetchNotificationSettings = async (
     }
 };
 
-export const changeNotificationSettings = async (
+export const changeUserSettings = async (
     token: string,
-    action: NotificationSettingsAction,
+    action: UserSettingsAction,
     enabled: boolean
 ): Promise<null> => {
     try {
         const response = await axios.post(
-            `${API_HOST}/api/settings/notifications`,
+            `${API_HOST}/api/settings`,
             { action, enabled },
             {
                 headers: { Authorization: `Bearer ${token}` },
