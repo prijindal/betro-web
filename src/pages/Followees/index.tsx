@@ -2,23 +2,22 @@ import { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
+import Typography from "@material-ui/core/Typography";
 import throttle from "lodash/throttle";
 import { wrapLayout } from "../../components/Layout";
 import { getGroup } from "../../store/app/selectors";
 import { useFetchFollowees, useFetchGroupsHook } from "../../util/customHooks";
 import { FolloweeResponse } from "../../api/account";
+import UserListItem from "../../components/UserListItem";
 
 const FolloweeComponent: React.FunctionComponent<{ follower: FolloweeResponse }> = (props) => {
     const { follower } = props;
     return (
-        <ListItem>
-            <ListItemText
-                primary={follower.username}
-                secondary={follower.is_approved ? "Approved" : "Waiting for approval"}
-            />
-        </ListItem>
+        <UserListItem user={follower}>
+            <Typography component="span" variant="body2" color="textPrimary">
+                {follower.is_approved ? "Approved" : "Waiting for approval"}
+            </Typography>
+        </UserListItem>
     );
 };
 

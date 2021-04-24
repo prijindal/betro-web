@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Button from "@material-ui/core/Button";
-import ListItem from "@material-ui/core/ListItem";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import ListItemText from "@material-ui/core/ListItemText";
 import isEmpty from "lodash/isEmpty";
 import { ApprovalResponse, approveUser } from "../../api/account";
 import { getAuth, getGroup } from "../../store/app/selectors";
+
+import UserListItem from "../../components/UserListItem";
 
 const ApprovalComponent: React.FunctionComponent<{
     approval: ApprovalResponse;
@@ -26,7 +26,12 @@ const ApprovalComponent: React.FunctionComponent<{
     }, [groupId, groupData]);
     const auth = useSelector(getAuth);
     const approveHandler = () => {
-        if (auth.token !== null && auth.encryptionKey !== null && auth.encryptionMac !== null) {
+        if (
+            auth.token !== null &&
+            auth.encryptionKey !== null &&
+            auth.encryptionMac !== null &&
+            auth.symKey !== null
+        ) {
             const group = groupData.data.find((a) => a.id === groupId);
             if (group !== undefined) {
                 approveUser(
@@ -36,14 +41,14 @@ const ApprovalComponent: React.FunctionComponent<{
                     groupId,
                     auth.encryptionKey,
                     auth.encryptionMac,
-                    group?.sym_key
+                    group?.sym_key,
+                    auth.symKey
                 ).then(onApproved);
             }
         }
     };
     return (
-        <ListItem>
-            <ListItemText>{approval.username}</ListItemText>
+        <UserListItem user={approval}>
             <Select value={groupId} onChange={(e) => setGroupId(e.target.value as string)}>
                 {groupData.data.map((g) => (
                     <MenuItem key={g.id} value={g.id}>
@@ -52,7 +57,7 @@ const ApprovalComponent: React.FunctionComponent<{
                 ))}
             </Select>
             <Button onClick={() => approveHandler()}>Approve</Button>
-        </ListItem>
+        </UserListItem>
     );
 };
 

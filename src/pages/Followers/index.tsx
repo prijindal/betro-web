@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import Typography from "@material-ui/core/Typography";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import throttle from "lodash/throttle";
 import { wrapLayout } from "../../components/Layout";
@@ -11,32 +12,32 @@ import { getAuth, getGroup } from "../../store/app/selectors";
 import { useFetchFollowers, useFetchGroupsHook } from "../../util/customHooks";
 import { FollowerResponse } from "../../api/account";
 import { followUser } from "../../api/user";
+import UserListItem from "../../components/UserListItem";
 
 const FollowerComponent: React.FunctionComponent<{ follower: FollowerResponse }> = (props) => {
     const { follower } = props;
     const auth = useSelector(getAuth);
     const followHandler = useCallback(() => {
-        if (auth.token !== null) {
-            followUser(auth.token, follower.username);
+        if (auth.token !== null && follower.public_key != null && auth.symKey != null) {
+            followUser(auth.token, follower.username, follower.public_key, auth.symKey);
         }
-    }, [auth.token, follower.username]);
+    }, [auth.token, follower.username, follower.public_key, auth.symKey]);
     return (
-        <ListItem>
-            <ListItemText
-                primary={follower.username}
-                secondary={
-                    follower.is_following &&
-                    (follower.is_following_approved ? "Already following" : "Follow not approved")
-                }
-            />
-            {!follower.is_following && (
-                <ListItemSecondaryAction>
+        <UserListItem user={follower}>
+            <ListItemSecondaryAction>
+                {follower.is_following ? (
+                    <Typography component="span" variant="body2" color="textPrimary">
+                        {follower.is_following_approved
+                            ? "Already following"
+                            : "Follow not approved"}
+                    </Typography>
+                ) : (
                     <Button onClick={followHandler} aria-label="follow">
                         Follow
                     </Button>
-                </ListItemSecondaryAction>
-            )}
-        </ListItem>
+                )}
+            </ListItemSecondaryAction>
+        </UserListItem>
     );
 };
 

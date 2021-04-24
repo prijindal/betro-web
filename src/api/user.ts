@@ -1,5 +1,5 @@
 import axios from "axios";
-import { rsaDecrypt, symDecrypt } from "betro-js-lib";
+import { rsaDecrypt, rsaEncrypt, symDecrypt } from "betro-js-lib";
 import { API_HOST } from "../constants";
 
 export interface PostResource {
@@ -33,13 +33,17 @@ export interface PostUserResponse {
 
 export const followUser = async (
     token: string,
-    username: string
+    username: string,
+    public_key: string,
+    sym_key: string
 ): Promise<{ is_following: boolean; is_approved: boolean; email: string } | null> => {
     try {
+        const encrypted_sym_key = await rsaEncrypt(public_key, Buffer.from(sym_key, "base64"));
         const response = await axios.post(
             `${API_HOST}/api/follow/`,
             {
                 followee_username: username,
+                sym_key: encrypted_sym_key,
             },
             {
                 headers: { Authorization: `Bearer ${token}` },
@@ -55,7 +59,12 @@ export const followUser = async (
 export const fetchUserInfo = async (
     token: string,
     username: string
-): Promise<{ is_following: boolean; is_approved: boolean; username: string } | null> => {
+): Promise<{
+    is_following: boolean;
+    is_approved: boolean;
+    username: string;
+    public_key: string;
+} | null> => {
     try {
         const response = await axios.get(`${API_HOST}/api/user/${username}`, {
             headers: { Authorization: `Bearer ${token}` },

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { fetchUserInfo, fetchUserPosts, followUser, PostResource } from "../../api/user";
@@ -11,6 +11,7 @@ const User = () => {
     const [loaded, setLoaded] = useState<boolean>(false);
     const [posts, setPosts] = useState<Array<PostResource>>([]);
     const [username, setUsername] = useState<string | null>(null);
+    const [publicKey, setPublicKey] = useState<string | null>(null);
     const [isFollowing, setIsFollowing] = useState<boolean>(false);
     const [isApproved, setIsApproved] = useState<boolean>(false);
     useEffect(() => {
@@ -30,6 +31,7 @@ const User = () => {
                     setUsername(userInfo.username);
                     setIsFollowing(userInfo.is_following);
                     setIsApproved(userInfo.is_approved);
+                    setPublicKey(userInfo.public_key);
                     if (userInfo.is_approved) {
                         fetchPosts();
                     }
@@ -38,11 +40,11 @@ const User = () => {
         }
         fetchInfo();
     }, [auth.token, params.username, auth.privateKey]);
-    const followHandler = () => {
-        if (auth.token !== null) {
-            followUser(auth.token, params.username);
+    const followHandler = useCallback(() => {
+        if (auth.token !== null && publicKey != null && auth.symKey != null) {
+            followUser(auth.token, params.username, publicKey, auth.symKey);
         }
-    };
+    }, [auth.token, publicKey, auth.symKey, params.username]);
     if (loaded === false) {
         return <div>Loading</div>;
     }

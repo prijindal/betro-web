@@ -147,7 +147,11 @@ export function useFetchNotificationSettings() {
 }
 
 function createPaginatedHook<T>(
-    fetchApi: (token: string, after?: string) => Promise<PaginatedResponse<T> | null>
+    fetchApi: (
+        token: string,
+        private_key: string,
+        after?: string
+    ) => Promise<PaginatedResponse<T> | null>
 ) {
     function usePaginatedApi() {
         const auth = useSelector(getAuth);
@@ -155,9 +159,8 @@ function createPaginatedHook<T>(
         const after = response == null ? undefined : response.after;
         const [loaded, setLoaded] = useState<boolean>(false);
         const getResponse = useCallback(async () => {
-            if (auth.token !== null) {
-                console.log(after);
-                const resp = await fetchApi(auth.token, after);
+            if (auth.token !== null && auth.privateKey !== null) {
+                const resp = await fetchApi(auth.token, auth.privateKey, after);
                 setLoaded(true);
                 if (resp !== null) {
                     if (response == null) {
@@ -167,7 +170,7 @@ function createPaginatedHook<T>(
                     }
                 }
             }
-        }, [auth.token, after, response]);
+        }, [auth.token, auth.privateKey, after, response]);
         return {
             fetch: getResponse,
             response,
