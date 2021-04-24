@@ -12,14 +12,16 @@ const Post = () => {
     const [text, setText] = useState<string>("");
     const fetchGroups = useFetchGroupsHook();
     useEffect(() => {
-        fetchGroups();
         if (groupData.isLoaded) {
             const defaultGroup = groupData.data.find((a) => a.is_default);
             if (defaultGroup != null) {
                 setGroupId(defaultGroup.id);
             }
         }
-    }, [groupData, fetchGroups]);
+    }, [groupData]);
+    useEffect(() => {
+        fetchGroups();
+    }, [fetchGroups]);
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const group = groupData.data.find((a) => a.id === groupId);

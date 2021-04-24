@@ -1,5 +1,5 @@
 import axios from "axios";
-import { rsaDecrypt, rsaEncrypt, symDecrypt } from "betro-js-lib";
+import { aesDecrypt, rsaDecrypt, rsaEncrypt, symDecrypt } from "betro-js-lib";
 import { API_HOST } from "../constants";
 import { parseUserProfile } from "./profileHelper";
 
@@ -99,6 +99,46 @@ export const fetchUserInfo = async (
     }
 };
 
+const transformPostFeed = async (
+    feed: PostsFeedResponse,
+    private_key: string,
+    postToSymKey: (post: PostResponse, keys: { [key_id: string]: string }) => Promise<string>
+): Promise<Array<PostResource>> => {
+    const posts: Array<PostResource> = [];
+    for (const post of feed.posts) {
+        const sym_key = await postToSymKey(post, feed.keys);
+        let text: Buffer | null = null;
+        let media: Buffer | null = null;
+        if (post.text_content !== null) {
+            text = await symDecrypt(sym_key, post.text_content);
+        }
+        if (post.media_content !== null) {
+            media = await symDecrypt(sym_key, post.media_content);
+        }
+        let resUser: PostUserResponse = feed.users[post.user_id];
+        let user: PostResourceUser = { username: "" };
+        if (resUser != null) {
+            user = { username: resUser.username };
+            if (resUser.sym_key != null) {
+                const userProfile = await parseUserProfile(resUser.sym_key, private_key, resUser);
+                user = {
+                    username: resUser.username,
+                    ...userProfile,
+                };
+            }
+        }
+        posts.push({
+            id: post.id,
+            created_at: post.created_at,
+            text_content: text,
+            media_content: media,
+            media_encoding: post.media_encoding,
+            user: user,
+        });
+    }
+    return posts;
+};
+
 export const fetchUserPosts = async (
     token: string,
     username: string,
@@ -109,37 +149,32 @@ export const fetchUserPosts = async (
             headers: { Authorization: `Bearer ${token}` },
         });
         const data: PostsFeedResponse = response.data;
-        const posts: Array<PostResource> = [];
-        for (const post of data.posts) {
-            const symKey = await rsaDecrypt(private_key, data.keys[post.key_id]);
+        return transformPostFeed(data, private_key, async (post, keys) => {
+            const symKey = await rsaDecrypt(private_key, keys[post.key_id]);
             const sym_key = symKey.toString("base64");
-            let text: Buffer | null = null;
-            let media: Buffer | null = null;
-            if (post.text_content !== null) {
-                text = await symDecrypt(sym_key, post.text_content);
-            }
-            if (post.media_content !== null) {
-                media = await symDecrypt(sym_key, post.media_content);
-            }
-            let resUser: PostUserResponse = data.users[post.user_id];
-            let user: PostResourceUser = { username: resUser.username };
-            if (resUser.sym_key != null) {
-                const userProfile = await parseUserProfile(resUser.sym_key, private_key, resUser);
-                user = {
-                    username: resUser.username,
-                    ...userProfile,
-                };
-            }
-            posts.push({
-                id: post.id,
-                created_at: post.created_at,
-                text_content: text,
-                media_content: media,
-                media_encoding: post.media_encoding,
-                user: user,
-            });
-        }
-        return posts;
+            return sym_key;
+        });
+    } catch (e) {
+        return null;
+    }
+};
+
+export const fetchOwnPosts = async (
+    token: string,
+    private_key: string,
+    encryption_key: string,
+    encryption_mac: string
+): Promise<Array<PostResource> | null> => {
+    try {
+        const response = await axios.get(`${API_HOST}/api/account/posts`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        const data: PostsFeedResponse = response.data;
+        return transformPostFeed(data, private_key, async (post, keys) => {
+            const symKey = await aesDecrypt(encryption_key, encryption_mac, keys[post.key_id]);
+            const sym_key = symKey.data.toString("base64");
+            return sym_key;
+        });
     } catch (e) {
         return null;
     }

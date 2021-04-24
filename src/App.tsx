@@ -16,6 +16,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import User from "./pages/User";
 import Post from "./pages/Post";
+import Posts from "./pages/Posts";
 import Approvals from "./pages/Approvals";
 import Followers from "./pages/Followers";
 import Followees from "./pages/Followees";
@@ -65,6 +66,11 @@ const App: React.FC<any> = () => {
                     <PrivateRoute exact path={routes.user}>
                         <Route>
                             <User />
+                        </Route>
+                    </PrivateRoute>
+                    <PrivateRoute exact path={routes.posts}>
+                        <Route>
+                            <Posts />
                         </Route>
                     </PrivateRoute>
                     <PrivateRoute exact path={routes.groups}>

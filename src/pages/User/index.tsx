@@ -23,6 +23,10 @@ const User = () => {
                   is_following: true,
                   public_key: null,
                   ...location.state,
+                  profile_picture:
+                      typeof location.state.profile_picture == "string"
+                          ? null
+                          : location.state.profile_picture,
               }
     );
     useEffect(() => {

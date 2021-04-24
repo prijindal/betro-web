@@ -70,6 +70,12 @@ const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) 
                 <NavLink includeRouting={includeRouting} to="/post">
                     <ListItemText>Post</ListItemText>
                 </NavLink>
+                <NavLink includeRouting={includeRouting} to="/posts">
+                    <ListItemText>My Posts</ListItemText>
+                    {countData.isLoaded && countData.posts !== 0 && (
+                        <Chip className={classes.chip} size="small" label={countData.posts} />
+                    )}
+                </NavLink>
                 <Divider />
                 <NavLink includeRouting={includeRouting} to="/profile">
                     <ListItemText>

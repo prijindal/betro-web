@@ -11,7 +11,7 @@ export interface UserListItemUserProps {
     username: string;
     first_name?: string | null;
     last_name?: string | null;
-    profile_picture?: Buffer | null;
+    profile_picture?: Buffer | string | null;
 }
 
 const UserListItem: React.FunctionComponent<{
@@ -37,7 +37,14 @@ const UserListItem: React.FunctionComponent<{
         <ListItem>
             {user.profile_picture != null && (
                 <ListItemAvatar>
-                    <Avatar alt={primaryText} src={bufferToImageUrl(user.profile_picture)} />
+                    <Avatar
+                        alt={primaryText}
+                        src={
+                            typeof user.profile_picture == "string"
+                                ? user.profile_picture
+                                : bufferToImageUrl(user.profile_picture)
+                        }
+                    />
                 </ListItemAvatar>
             )}
             {routing ? (

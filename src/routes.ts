@@ -9,6 +9,7 @@ const routes = {
     followees: "/followees",
     groups: "/groups",
     post: "/post",
+    posts: "/posts",
     profile: "/profile",
     notifications: "/notifications",
     notificationSettings: "/settings/notifications",
