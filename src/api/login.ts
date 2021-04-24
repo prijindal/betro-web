@@ -3,6 +3,7 @@ import {
     aesDecrypt,
     aesEncrypt,
     generateRsaPair,
+    generateSymKey,
     getEncryptionKey,
     getMasterHash,
     getMasterKey,
@@ -28,7 +29,7 @@ export const fetchKeys = async (
     token: string,
     encryption_key: string,
     encryption_mac: string
-): Promise<{ private_key: string; sym_key?: string } | null> => {
+): Promise<{ private_key: string; sym_key: string } | null> => {
     try {
         const response = await axios.get(`${API_HOST}/api/account/keys`, {
             headers: { Authorization: `Bearer ${token}` },
@@ -41,16 +42,14 @@ export const fetchKeys = async (
         if (privateKey.isVerified) {
             const private_key = privateKey.data.toString("base64");
             let sym_key: string | undefined;
-            if (encryptedSymKey) {
-                const symKey = await aesDecrypt(encryption_key, encryption_mac, encryptedSymKey);
-                if (symKey.isVerified) {
-                    sym_key = symKey.data.toString("base64");
-                }
+            const symKey = await aesDecrypt(encryption_key, encryption_mac, encryptedSymKey);
+            if (symKey.isVerified) {
+                sym_key = symKey.data.toString("base64");
+                return {
+                    private_key,
+                    sym_key,
+                };
             }
-            return {
-                private_key,
-                sym_key,
-            };
         }
         return null;
     } catch (e) {
@@ -58,10 +57,7 @@ export const fetchKeys = async (
     }
 };
 
-export const whoAmi = async (
-    token: string,
-    symKey: string | null
-): Promise<WhoAmiResponse | null> => {
+export const whoAmi = async (token: string, symKey: string): Promise<WhoAmiResponse | null> => {
     try {
         const response = await axios.get(`${API_HOST}/api/account/whoami`, {
             headers: { Authorization: `Bearer ${token}` },
@@ -69,8 +65,11 @@ export const whoAmi = async (
         const data = response.data;
         let first_name: string | undefined;
         let last_name: string | undefined;
-        if (symKey != null) {
+        console.log(symKey);
+        if (data.first_name != null) {
             first_name = (await symDecrypt(symKey, data.first_name)).toString("utf-8");
+        }
+        if (data.last_name != null) {
             last_name = (await symDecrypt(symKey, data.last_name)).toString("utf-8");
         }
         return {
@@ -110,13 +109,20 @@ export const login = async (email: string, password: string): Promise<LoginPaylo
     });
     const encryptionKeys = await getEncryptionKey(masterKey);
     const token = response.data.token;
-    const encryptedPrivateKey = response.data.private_key;
     const privateKeyD = await aesDecrypt(
         encryptionKeys.encryption_key,
         encryptionKeys.encryption_mac,
-        encryptedPrivateKey
+        response.data.private_key
     );
     if (privateKeyD.isVerified === false) {
+        throw new Error();
+    }
+    const symKeyD = await aesDecrypt(
+        encryptionKeys.encryption_key,
+        encryptionKeys.encryption_mac,
+        response.data.sym_key
+    );
+    if (symKeyD.isVerified === false) {
         throw new Error();
     }
     const payload: LoginPayload = {
@@ -124,6 +130,7 @@ export const login = async (email: string, password: string): Promise<LoginPaylo
         encryptionMac: encryptionKeys.encryption_mac,
         token: token,
         privateKey: privateKeyD.data.toString("base64"),
+        symKey: symKeyD.data.toString("base64"),
     };
     storeLocal(payload);
     return payload;
@@ -138,10 +145,16 @@ export const register = async (
     const masterHash = await getMasterHash(masterKey, password);
     const encryptionKeys = await getEncryptionKey(masterKey);
     const { publicKey, privateKey } = await generateRsaPair();
+    const symKey = await generateSymKey();
     const encryptedPrivateKey = await aesEncrypt(
         encryptionKeys.encryption_key,
         encryptionKeys.encryption_mac,
         Buffer.from(privateKey, "base64")
+    );
+    const encryptedSymKey = await aesEncrypt(
+        encryptionKeys.encryption_key,
+        encryptionKeys.encryption_mac,
+        Buffer.from(symKey, "base64")
     );
     const response = await axios.post(`${API_HOST}/api/register`, {
         username,
@@ -150,6 +163,7 @@ export const register = async (
         inhibit_login: true,
         public_key: publicKey,
         private_key: encryptedPrivateKey,
+        sym_key: encryptedSymKey,
     });
     const token = response.data.token;
     const payload: LoginPayload = {
@@ -157,6 +171,7 @@ export const register = async (
         encryptionMac: encryptionKeys.encryption_mac,
         token: token,
         privateKey,
+        symKey,
     };
     storeLocal(payload);
     return payload;

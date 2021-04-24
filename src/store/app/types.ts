@@ -5,6 +5,7 @@ export type LoginPayload = Readonly<{
     encryptionMac: string;
     token: string;
     privateKey: string;
+    symKey: string;
 }>;
 
 export type AppState = Readonly<{

@@ -62,19 +62,25 @@ const ProfileForm: React.FunctionComponent<{
     const profileSaveHandler = useCallback(
         async (e: React.FormEvent) => {
             e.preventDefault();
-            if (auth.token !== null && auth.encryptionKey !== null && auth.encryptionMac !== null) {
+            if (
+                auth.token !== null &&
+                auth.encryptionKey !== null &&
+                auth.symKey != null &&
+                auth.encryptionMac !== null
+            ) {
                 if (props.method === "POST") {
-                    const sym_key = await generateSymKey();
                     createProfile(
                         auth.token,
-                        sym_key,
+                        auth.symKey,
                         auth.encryptionKey,
                         auth.encryptionMac,
                         firstName,
                         lastName,
                         profilePicture
                     ).then(() => {
-                        afterProfileSaved(sym_key);
+                        if (auth.symKey != null) {
+                            afterProfileSaved(auth.symKey);
+                        }
                     });
                 } else if (props.method === "PUT" && auth.symKey != null) {
                     updateProfile(

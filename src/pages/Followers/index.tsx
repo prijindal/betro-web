@@ -10,6 +10,7 @@ import { getGroup } from "../../store/app/selectors";
 import { useFetchFollowers, useFetchGroupsHook, useFollowUserHook } from "../../hooks";
 import { FollowerResponse } from "../../api/account";
 import UserListItem from "../../components/UserListItem";
+import FollowButton from "../../components/FollowButton";
 
 const FollowerComponent: React.FunctionComponent<{ follower: FollowerResponse }> = (props) => {
     const { follower } = props;
@@ -24,9 +25,11 @@ const FollowerComponent: React.FunctionComponent<{ follower: FollowerResponse }>
                             : "Follow not approved"}
                     </Typography>
                 ) : (
-                    <Button onClick={followHandler} aria-label="follow">
-                        Follow
-                    </Button>
+                    <FollowButton
+                        username={follower.username}
+                        public_key={follower.public_key}
+                        onFollow={followHandler}
+                    />
                 )}
             </ListItemSecondaryAction>
         </UserListItem>

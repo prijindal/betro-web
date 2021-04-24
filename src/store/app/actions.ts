@@ -40,7 +40,7 @@ export const resetAuth = (): Action => ({
     type: ActionTypes.AUTH_RESET,
 });
 
-export const verifedLogin = (privateKey: string, symKey?: string): Action => ({
+export const verifedLogin = (privateKey: string, symKey: string): Action => ({
     type: ActionTypes.AUTH_VERIFIED,
     payload: {
         privateKey,

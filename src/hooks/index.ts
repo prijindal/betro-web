@@ -70,15 +70,16 @@ export function useFetchWhoami() {
     const dispatch = useDispatch();
     const fetchWhoami = useCallback(
         (forceLoad: boolean = false, sym_key: string | null = null) => {
+            if (sym_key == null) {
+                sym_key = auth.symKey;
+            }
             if (
                 auth.isLoaded &&
                 auth.token != null &&
                 (profile.isLoaded === false || forceLoad) &&
-                auth.privateKey !== null
+                auth.privateKey !== null &&
+                sym_key != null
             ) {
-                if (sym_key == null) {
-                    sym_key = auth.symKey;
-                }
                 whoAmi(auth.token, sym_key).then(async (resp) => {
                     if (resp != null) {
                         dispatch(
