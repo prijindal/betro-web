@@ -49,6 +49,9 @@ export const fetchProfile = async (
         const first_name = await symDecrypt(sym_key, encrypted_first_name);
         const last_name = await symDecrypt(sym_key, encrypted_last_name);
         const profile_picture = await symDecrypt(sym_key, encrypted_profile_picture);
+        if (first_name == null || last_name == null || profile_picture == null) {
+            throw new Error("Failed decryption");
+        }
         return {
             first_name: first_name.toString("utf-8"),
             last_name: last_name.toString("utf-8"),

@@ -67,10 +67,12 @@ export const whoAmi = async (token: string, symKey: string): Promise<WhoAmiRespo
         let last_name: string | undefined;
         console.log(symKey);
         if (data.first_name != null) {
-            first_name = (await symDecrypt(symKey, data.first_name)).toString("utf-8");
+            const first_name_bytes = await symDecrypt(symKey, data.first_name);
+            first_name = first_name_bytes?.toString("utf-8");
         }
         if (data.last_name != null) {
-            last_name = (await symDecrypt(symKey, data.last_name)).toString("utf-8");
+            const last_name_bytes = await symDecrypt(symKey, data.last_name);
+            last_name = last_name_bytes?.toString("utf-8");
         }
         return {
             user_id: data.user_id,

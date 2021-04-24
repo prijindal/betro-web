@@ -151,6 +151,9 @@ export const fetchUserPosts = async (
         const data: PostsFeedResponse = response.data;
         return transformPostFeed(data, private_key, async (post, keys) => {
             const symKey = await rsaDecrypt(private_key, keys[post.key_id]);
+            if (symKey == null) {
+                throw Error("Decryption issues");
+            }
             const sym_key = symKey.toString("base64");
             return sym_key;
         });
@@ -191,6 +194,9 @@ export const fetchHomeFeed = async (
         const data: PostsFeedResponse = response.data;
         return transformPostFeed(data, private_key, async (post, keys) => {
             const symKey = await rsaDecrypt(private_key, keys[post.key_id]);
+            if (symKey == null) {
+                throw Error("Decryption issues");
+            }
             const sym_key = symKey.toString("base64");
             return sym_key;
         });

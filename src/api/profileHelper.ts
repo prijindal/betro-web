@@ -16,14 +16,18 @@ export const parseUserProfile = async (
     }
 ): Promise<UserProfile> => {
     const response: UserProfile = {};
-    const sym_key = (await rsaDecrypt(private_key, encrypted_sym_key)).toString("base64");
-    response.first_name =
-        res.first_name != null
-            ? (await symDecrypt(sym_key, res.first_name)).toString("utf-8")
-            : null;
-    response.last_name =
-        res.last_name != null ? (await symDecrypt(sym_key, res.last_name)).toString("utf-8") : null;
-    response.profile_picture =
+    const sym_key_bytes = await rsaDecrypt(private_key, encrypted_sym_key);
+    if (sym_key_bytes == null) {
+        return response;
+    }
+    const sym_key = sym_key_bytes.toString("base64");
+    const first_name_bytes =
+        res.first_name != null ? await symDecrypt(sym_key, res.first_name) : null;
+    const last_name_bytes = res.last_name != null ? await symDecrypt(sym_key, res.last_name) : null;
+    const profile_picture_bytes =
         res.profile_picture != null ? await symDecrypt(sym_key, res.profile_picture) : null;
+    response.first_name = first_name_bytes?.toString("utf-8");
+    response.last_name = last_name_bytes?.toString("utf-8");
+    response.profile_picture = profile_picture_bytes;
     return response;
 };
