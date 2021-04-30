@@ -223,22 +223,25 @@ export const useFetchHomeFeed = () => {
     const auth = useSelector(getAuth);
     const [response, setResponse] = useState<Array<PostResource> | null>(null);
     const [pageInfo, setPageInfo] = useState<FeedPageInfo | null>(null);
-    const after = pageInfo == null ? undefined : pageInfo.after;
     const [loaded, setLoaded] = useState<boolean>(false);
-    const getResponse = useCallback(async () => {
-        if (auth.token !== null && auth.privateKey !== null) {
-            const resp = await fetchHomeFeed(auth.token, auth.privateKey, after);
-            setLoaded(true);
-            if (resp !== null) {
-                setPageInfo(resp.pageInfo);
-                if (response == null) {
-                    setResponse(resp.data);
-                } else {
-                    setResponse([...response, ...resp.data]);
+    const getResponse = useCallback(
+        async (forceRefresh: boolean = false) => {
+            const after = pageInfo == null || forceRefresh ? undefined : pageInfo.after;
+            if (auth.token !== null && auth.privateKey !== null) {
+                const resp = await fetchHomeFeed(auth.token, auth.privateKey, after);
+                setLoaded(true);
+                if (resp !== null) {
+                    setPageInfo(resp.pageInfo);
+                    if (response == null || forceRefresh) {
+                        setResponse(resp.data);
+                    } else {
+                        setResponse([...response, ...resp.data]);
+                    }
                 }
             }
-        }
-    }, [auth.token, auth.privateKey, after, response]);
+        },
+        [auth.token, auth.privateKey, pageInfo, response]
+    );
     return {
         fetch: getResponse,
         response,

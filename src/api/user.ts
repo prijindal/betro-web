@@ -55,6 +55,7 @@ export interface PostUserResponse {
 }
 
 export interface FeedPageInfo {
+    updating: boolean;
     next: boolean;
     limit: number;
     total: number;

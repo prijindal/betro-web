@@ -5,6 +5,7 @@ import { wrapLayout } from "../../components/Layout";
 import UserListItem from "../../components/UserListItem";
 import { useFetchHomeFeed } from "../../hooks";
 import { throttle } from "lodash";
+import { Alert } from "@material-ui/core";
 
 const App = () => {
     const { fetch, response, pageInfo, loaded } = useFetchHomeFeed();
@@ -19,11 +20,28 @@ const App = () => {
     if (response == null) {
         return <div>Some error occurred</div>;
     }
-    console.log(pageInfo);
     return (
         <React.Fragment>
             <List>
-                {response.length === 0 && <div>No posts found. Maybe feed is still building</div>}
+                {pageInfo != null && pageInfo.updating && response.length > 0 && (
+                    <Alert severity="info">
+                        Feed is still building. The responses might not be complete
+                        <Button onClick={() => fetch(true)}>Refresh</Button>
+                    </Alert>
+                )}
+                {response.length === 0 && (
+                    <div>
+                        No posts found.{" "}
+                        {pageInfo != null && pageInfo.updating ? (
+                            <span>
+                                Feed is still building{" "}
+                                <Button onClick={() => fetch(true)}>Refresh</Button>
+                            </span>
+                        ) : (
+                            "Follow more users to build your feed"
+                        )}
+                    </div>
+                )}
                 {response.map((post) => (
                     <UserListItem key={post.id} user={post.user}>
                         <span>{post.text_content?.toString("utf-8")}</span>
