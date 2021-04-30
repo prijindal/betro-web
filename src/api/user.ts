@@ -1,6 +1,7 @@
 import axios from "axios";
 import { aesDecrypt, rsaDecrypt, rsaEncrypt, symDecrypt } from "betro-js-lib";
 import { API_HOST } from "../constants";
+import { bufferToImageUrl } from "../util/bufferToImage";
 import { parseUserProfile } from "./profileHelper";
 
 export interface PostResource {
@@ -16,7 +17,7 @@ export interface PostResourceUser {
     username: string;
     first_name?: string | null;
     last_name?: string | null;
-    profile_picture?: Buffer | null;
+    profile_picture?: string | null;
 }
 
 export interface UserInfo {
@@ -51,6 +52,13 @@ export interface PostUserResponse {
     first_name?: string | null;
     last_name?: string | null;
     profile_picture?: string | null;
+}
+
+export interface FeedPageInfo {
+    next: boolean;
+    limit: number;
+    total: number;
+    after: string;
 }
 
 export const followUser = async (
@@ -105,6 +113,24 @@ const transformPostFeed = async (
     postToSymKey: (post: PostResponse, keys: { [key_id: string]: string }) => Promise<string>
 ): Promise<Array<PostResource>> => {
     const posts: Array<PostResource> = [];
+    const users: { [user_id: string]: PostResourceUser } = {};
+    for (const user_id in feed.users) {
+        if (Object.prototype.hasOwnProperty.call(feed.users, user_id)) {
+            const user = feed.users[user_id];
+            if (user.sym_key != null) {
+                const userProfile = await parseUserProfile(user.sym_key, private_key, user);
+                users[user_id] = {
+                    username: user.username,
+                    first_name: userProfile.first_name,
+                    last_name: userProfile.last_name,
+                    profile_picture:
+                        userProfile.profile_picture != null
+                            ? bufferToImageUrl(userProfile.profile_picture)
+                            : null,
+                };
+            }
+        }
+    }
     for (const post of feed.posts) {
         const sym_key = await postToSymKey(post, feed.keys);
         let text: Buffer | null = null;
@@ -115,25 +141,13 @@ const transformPostFeed = async (
         if (post.media_content !== null) {
             media = await symDecrypt(sym_key, post.media_content);
         }
-        let resUser: PostUserResponse = feed.users[post.user_id];
-        let user: PostResourceUser = { username: "" };
-        if (resUser != null) {
-            user = { username: resUser.username };
-            if (resUser.sym_key != null) {
-                const userProfile = await parseUserProfile(resUser.sym_key, private_key, resUser);
-                user = {
-                    username: resUser.username,
-                    ...userProfile,
-                };
-            }
-        }
         posts.push({
             id: post.id,
             created_at: post.created_at,
             text_content: text,
             media_content: media,
             media_encoding: post.media_encoding,
-            user: user,
+            user: users[post.user_id],
         });
     }
     return posts;
@@ -185,14 +199,19 @@ export const fetchOwnPosts = async (
 
 export const fetchHomeFeed = async (
     token: string,
-    private_key: string
-): Promise<Array<PostResource> | null> => {
+    private_key: string,
+    after: string | undefined
+): Promise<{ data: Array<PostResource>; pageInfo: FeedPageInfo } | null> => {
+    const limit = 20;
+    if (after == null) {
+        after = Buffer.from(new Date().toISOString(), "utf-8").toString("base64");
+    }
     try {
-        const response = await axios.get(`${API_HOST}/api/feed`, {
+        const response = await axios.get(`${API_HOST}/api/feed?limit=${limit}&after=${after}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
-        const data: PostsFeedResponse = response.data;
-        return transformPostFeed(data, private_key, async (post, keys) => {
+        const posts: PostsFeedResponse = response.data;
+        const data = await transformPostFeed(posts, private_key, async (post, keys) => {
             const symKey = await rsaDecrypt(private_key, keys[post.key_id]);
             if (symKey == null) {
                 throw Error("Decryption issues");
@@ -200,6 +219,10 @@ export const fetchHomeFeed = async (
             const sym_key = symKey.toString("base64");
             return sym_key;
         });
+        return {
+            data,
+            pageInfo: response.data.pageInfo,
+        };
     } catch (e) {
         return null;
     }

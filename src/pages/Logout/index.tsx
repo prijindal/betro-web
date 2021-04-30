@@ -1,25 +1,20 @@
 import React, { useCallback, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
-import { wrapLayout } from "../../components/Layout";
-import { getAuth } from "../../store/app/selectors";
+import { resetAuth } from "../../store/app/actions";
 
 const Logout = () => {
-    const auth = useSelector(getAuth);
     const history = useHistory();
+    const dispatch = useDispatch();
     const logoutFunction = useCallback(async () => {
-        async function fetchgr() {
-            if (auth.token !== null) {
-                localStorage.clear();
-                history.push("/login");
-            }
-        }
-        fetchgr();
-    }, [auth.token, history]);
+        localStorage.clear();
+        history.push("/login");
+        dispatch(resetAuth());
+    }, [history, dispatch]);
     useEffect(() => {
         logoutFunction();
     }, [logoutFunction]);
-    return <div>Loading...</div>;
+    return <div>Logging Out...</div>;
 };
 
-export default wrapLayout(Logout);
+export default Logout;

@@ -65,12 +65,7 @@ const appReducer = (state: AppState = initialState, action: Action): AppState =>
                 return draft;
             }
             case ActionTypes.AUTH_RESET: {
-                draft.auth.isLoaded = false;
-                draft.auth.isVerified = false;
-                draft.auth.encryptionKey = null;
-                draft.auth.encryptionMac = null;
-                draft.auth.token = null;
-                draft.auth.privateKey = null;
+                draft = initialState;
                 return draft;
             }
             case ActionTypes.AUTH_VERIFIED: {

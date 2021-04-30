@@ -39,6 +39,57 @@ const LoadingSuspense = () => {
     }
 };
 
+const APP_ROUTES = [
+    {
+        route: routes.home,
+        Component: Home,
+    },
+    {
+        route: routes.user,
+        Component: User,
+    },
+    {
+        route: routes.posts,
+        Component: Posts,
+    },
+    {
+        route: routes.groups,
+        Component: Groups,
+    },
+    {
+        route: routes.approvals,
+        Component: Approvals,
+    },
+    {
+        route: routes.approvals,
+        Component: Approvals,
+    },
+    {
+        route: routes.followers,
+        Component: Followers,
+    },
+    {
+        route: routes.followees,
+        Component: Followees,
+    },
+    {
+        route: routes.post,
+        Component: Post,
+    },
+    {
+        route: routes.profile,
+        Component: Profile,
+    },
+    {
+        route: routes.notifications,
+        Component: Notifications,
+    },
+    {
+        route: routes.settings,
+        Component: UserSettings,
+    },
+];
+
 const App: React.FC<any> = () => {
     return (
         <React.Suspense fallback={<LoadingSuspense />}>
@@ -58,66 +109,16 @@ const App: React.FC<any> = () => {
                     <Route exact path={routes.register}>
                         <Register />
                     </Route>
-                    <PrivateRoute exact path={routes.home}>
-                        <Route>
-                            <Home />
-                        </Route>
-                    </PrivateRoute>
-                    <PrivateRoute exact path={routes.user}>
-                        <Route>
-                            <User />
-                        </Route>
-                    </PrivateRoute>
-                    <PrivateRoute exact path={routes.posts}>
-                        <Route>
-                            <Posts />
-                        </Route>
-                    </PrivateRoute>
-                    <PrivateRoute exact path={routes.groups}>
-                        <Route>
-                            <Groups />
-                        </Route>
-                    </PrivateRoute>
-                    <PrivateRoute exact path={routes.approvals}>
-                        <Route>
-                            <Approvals />
-                        </Route>
-                    </PrivateRoute>
-                    <PrivateRoute exact path={routes.followers}>
-                        <Route>
-                            <Followers />
-                        </Route>
-                    </PrivateRoute>
-                    <PrivateRoute exact path={routes.followees}>
-                        <Route>
-                            <Followees />
-                        </Route>
-                    </PrivateRoute>
-                    <PrivateRoute exact path={routes.post}>
-                        <Route>
-                            <Post />
-                        </Route>
-                    </PrivateRoute>
-                    <PrivateRoute exact path={routes.profile}>
-                        <Route>
-                            <Profile />
-                        </Route>
-                    </PrivateRoute>
-                    <PrivateRoute exact path={routes.notifications}>
-                        <Route>
-                            <Notifications />
-                        </Route>
-                    </PrivateRoute>
-                    <PrivateRoute exact path={routes.settings}>
-                        <Route>
-                            <UserSettings />
-                        </Route>
-                    </PrivateRoute>
-                    <PrivateRoute exact path={routes.logout}>
-                        <Route>
-                            <Logout />
-                        </Route>
-                    </PrivateRoute>
+                    {APP_ROUTES.map(({ route, Component }) => (
+                        <PrivateRoute exact path={route}>
+                            <Route>
+                                <Component />
+                            </Route>
+                        </PrivateRoute>
+                    ))}
+                    <Route exact path={routes.logout}>
+                        <Logout />
+                    </Route>
                     <Route>404</Route>
                 </Switch>
             </Router>

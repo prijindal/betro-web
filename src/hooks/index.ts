@@ -22,7 +22,15 @@ import { fetchProfilePicture, whoAmi } from "../api/login";
 import { bufferToImageUrl } from "../util/bufferToImage";
 import { fetchUserSettings, UserSettingResponse } from "../api/settings";
 import { UserListItemUserProps } from "../components/UserListItem";
-import { fetchUserInfo, fetchUserPosts, followUser, PostResource, UserInfo } from "../api/user";
+import {
+    FeedPageInfo,
+    fetchHomeFeed,
+    fetchUserInfo,
+    fetchUserPosts,
+    followUser,
+    PostResource,
+    UserInfo,
+} from "../api/user";
 import { createPaginatedHook } from "./paginated";
 
 export function useFetchGroupsHook() {
@@ -209,6 +217,34 @@ export const useFollowUserHook = (username?: string, public_key?: string | null)
         }
     }, [auth.token, username, public_key, auth.symKey]);
     return followHandler;
+};
+
+export const useFetchHomeFeed = () => {
+    const auth = useSelector(getAuth);
+    const [response, setResponse] = useState<Array<PostResource> | null>(null);
+    const [pageInfo, setPageInfo] = useState<FeedPageInfo | null>(null);
+    const after = pageInfo == null ? undefined : pageInfo.after;
+    const [loaded, setLoaded] = useState<boolean>(false);
+    const getResponse = useCallback(async () => {
+        if (auth.token !== null && auth.privateKey !== null) {
+            const resp = await fetchHomeFeed(auth.token, auth.privateKey, after);
+            setLoaded(true);
+            if (resp !== null) {
+                setPageInfo(resp.pageInfo);
+                if (response == null) {
+                    setResponse(resp.data);
+                } else {
+                    setResponse([...response, ...resp.data]);
+                }
+            }
+        }
+    }, [auth.token, auth.privateKey, after, response]);
+    return {
+        fetch: getResponse,
+        response,
+        pageInfo,
+        loaded,
+    };
 };
 
 export const useFetchApprovals = createPaginatedHook<ApprovalResponse>(fetchPendingApprovals);
