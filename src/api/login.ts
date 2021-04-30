@@ -65,7 +65,6 @@ export const whoAmi = async (token: string, symKey: string): Promise<WhoAmiRespo
         const data = response.data;
         let first_name: string | undefined;
         let last_name: string | undefined;
-        console.log(symKey);
         if (data.first_name != null) {
             const first_name_bytes = await symDecrypt(symKey, data.first_name);
             first_name = first_name_bytes?.toString("utf-8");

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import List from "@material-ui/core/List";
 import Button from "@material-ui/core/Button";
 import { wrapLayout } from "../../components/Layout";
-import UserListItem from "../../components/UserListItem";
+import PostListItem from "../../components/PostListItem";
 import { useFetchHomeFeed } from "../../hooks";
 import { throttle } from "lodash";
 import { Alert } from "@material-ui/core";
@@ -43,9 +43,7 @@ const App = () => {
                     </div>
                 )}
                 {response.map((post) => (
-                    <UserListItem key={post.id} user={post.user}>
-                        <span>{post.text_content?.toString("utf-8")}</span>
-                    </UserListItem>
+                    <PostListItem key={post.id} post={post} />
                 ))}
                 {pageInfo != null && pageInfo.next && (
                     <Button onClick={() => fetch()}>

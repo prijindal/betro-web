@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { fetchOwnPosts, PostResource } from "../../api/user";
 import { wrapLayout } from "../../components/Layout";
 import { getAuth, getProfile } from "../../store/app/selectors";
-import UserListItem from "../../components/UserListItem";
+import PostListItem from "../../components/PostListItem";
 
 const Posts = () => {
     const auth = useSelector(getAuth);
@@ -38,16 +38,16 @@ const Posts = () => {
                     {posts.length === 0 && <div>No posts found</div>}
                     {posts.map((post) => (
                         <div key={post.id} style={{ margin: "20px 0" }}>
-                            <UserListItem
-                                user={{
-                                    ...profile,
-                                    username: profile.username == null ? "" : profile.username,
+                            <PostListItem
+                                key={post.id}
+                                post={{
+                                    ...post,
+                                    user: {
+                                        ...profile,
+                                        username: profile.username == null ? "" : profile.username,
+                                    },
                                 }}
-                            >
-                                <div style={{ marginLeft: "10px" }}>
-                                    {post.text_content !== null && post.text_content.toString()}
-                                </div>
-                            </UserListItem>
+                            />
                         </div>
                     ))}
                 </div>

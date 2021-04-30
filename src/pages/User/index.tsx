@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { Redirect, useLocation, useParams } from "react-router";
 import { wrapLayout } from "../../components/Layout";
 import { getProfile } from "../../store/app/selectors";
+import PostListItem from "../../components/PostListItem";
 import UserListItem, { UserListItemUserProps } from "../../components/UserListItem";
 import { useFetchUserInfoHook } from "../../hooks";
 import FollowButton from "../../components/FollowButton";
@@ -54,12 +55,7 @@ const User = () => {
                             {posts.length === 0 && <div>No posts found</div>}
                             {posts.map((post) => (
                                 <div key={post.id} style={{ margin: "20px 0" }}>
-                                    <UserListItem user={post.user}>
-                                        <div style={{ marginLeft: "10px" }}>
-                                            {post.text_content !== null &&
-                                                post.text_content.toString()}
-                                        </div>
-                                    </UserListItem>
+                                    <PostListItem key={post.id} post={post} />
                                 </div>
                             ))}
                         </div>

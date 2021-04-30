@@ -6,9 +6,9 @@ import { parseUserProfile } from "./profileHelper";
 
 export interface PostResource {
     id: string;
-    text_content: Buffer | null;
-    media_content: Buffer | null;
-    media_encoding: string;
+    text_content: string | null;
+    media_content: string | null;
+    media_encoding: string | null;
     user: PostResourceUser;
     created_at: Date;
 }
@@ -134,19 +134,25 @@ const transformPostFeed = async (
     }
     for (const post of feed.posts) {
         const sym_key = await postToSymKey(post, feed.keys);
-        let text: Buffer | null = null;
-        let media: Buffer | null = null;
+        let text_content: string | null = null;
+        let media_content: string | null = null;
         if (post.text_content !== null) {
-            text = await symDecrypt(sym_key, post.text_content);
+            const text = await symDecrypt(sym_key, post.text_content);
+            if (text != null) {
+                text_content = text.toString("utf-8");
+            }
         }
         if (post.media_content !== null) {
-            media = await symDecrypt(sym_key, post.media_content);
+            const media = await symDecrypt(sym_key, post.media_content);
+            if (media != null) {
+                media_content = bufferToImageUrl(media);
+            }
         }
         posts.push({
             id: post.id,
             created_at: post.created_at,
-            text_content: text,
-            media_content: media,
+            text_content: text_content,
+            media_content: media_content,
             media_encoding: post.media_encoding,
             user: users[post.user_id],
         });
