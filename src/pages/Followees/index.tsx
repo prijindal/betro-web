@@ -9,7 +9,7 @@ import { wrapLayout } from "../../components/Layout";
 import { getGroup } from "../../store/app/selectors";
 import { useFetchFollowees, useFetchGroupsHook } from "../../hooks";
 import UserListItem from "../../components/UserListItem";
-import { FolloweeResponse } from "../../api/follow";
+import { FolloweeResponse } from "../../api";
 
 const FolloweeComponent: React.FunctionComponent<{ follower: FolloweeResponse }> = (props) => {
     const { follower } = props;

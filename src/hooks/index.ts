@@ -7,12 +7,18 @@ import {
     profileLoaded,
     profilePictureLoaded,
 } from "../store/app/actions";
-import { ApprovalResponse, FolloweeResponse, FollowerResponse, UserInfo } from "../api/follow";
+import {
+    FeedPageInfo,
+    PostResource,
+    ApprovalResponse,
+    FolloweeResponse,
+    FollowerResponse,
+    UserInfo,
+    UserSettingResponse,
+} from "../api";
 import throttle from "lodash/throttle";
 import { bufferToImageUrl } from "../util/bufferToImage";
-import { UserSettingResponse } from "../api/settings";
 import { UserListItemUserProps } from "../components/UserListItem";
-import { FeedPageInfo, PostResource } from "../api/feed";
 import { createPaginatedHook } from "./paginated";
 import BetroApiObject from "../api/context";
 

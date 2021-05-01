@@ -1,4 +1,4 @@
-import { CountResponse } from "../../api/account";
+import { CountResponse } from "../../api";
 import { Action, Group, Locale } from "./types";
 
 export const ActionTypes = {

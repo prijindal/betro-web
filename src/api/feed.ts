@@ -3,54 +3,13 @@ import { aesDecrypt, rsaDecrypt, symDecrypt } from "betro-js-lib";
 import { bufferToImageUrl } from "../util/bufferToImage";
 import AuthController from "./auth";
 import { parseUserProfile } from "./profileHelper";
-
-export interface PostResource {
-    id: string;
-    text_content: string | null;
-    media_content: string | null;
-    media_encoding: string | null;
-    user: PostResourceUser;
-    created_at: Date;
-}
-
-export interface PostResourceUser {
-    username: string;
-    first_name?: string | null;
-    last_name?: string | null;
-    profile_picture?: string | null;
-}
-
-export interface PostsFeedResponse {
-    posts: Array<PostResponse>;
-    users: { [user_id: string]: PostUserResponse };
-    keys: { [key_id: string]: string };
-}
-
-export interface PostResponse {
-    id: string;
-    user_id: string;
-    media_content: string;
-    media_encoding: string;
-    text_content: string;
-    key_id: string;
-    created_at: Date;
-}
-
-export interface PostUserResponse {
-    username: string;
-    sym_key?: string | null;
-    first_name?: string | null;
-    last_name?: string | null;
-    profile_picture?: string | null;
-}
-
-export interface FeedPageInfo {
-    updating: boolean;
-    next: boolean;
-    limit: number;
-    total: number;
-    after: string;
-}
+import {
+    FeedPageInfo,
+    PostResource,
+    PostResourceUser,
+    PostResponse,
+    PostsFeedResponse,
+} from "./types";
 
 class FeedController {
     auth: AuthController;

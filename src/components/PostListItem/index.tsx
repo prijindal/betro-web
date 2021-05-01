@@ -1,5 +1,5 @@
 import React from "react";
-import { PostResource } from "../../api/feed";
+import { PostResource } from "../../api";
 import UserListItem from "../UserListItem";
 
 const PostListItem: React.FunctionComponent<{ post: PostResource }> = (props) => {

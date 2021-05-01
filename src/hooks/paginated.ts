@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { PaginatedResponse } from "../api/PaginatedResponse";
+import { PaginatedResponse } from "../api";
 
 export function createPaginatedHook<T>(
     fetchApi: (after?: string) => Promise<PaginatedResponse<T> | null>

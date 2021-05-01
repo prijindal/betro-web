@@ -1,44 +1,13 @@
 import axios, { AxiosResponse } from "axios";
 import { aesDecrypt, aesEncrypt, symDecrypt, symEncrypt } from "betro-js-lib";
 import AuthController from "./auth";
-
-export interface WhoAmiResponse {
-    user_id: string;
-    username: string;
-    email: string;
-    first_name?: string;
-    last_name?: string;
-}
-
-export interface CountResponse {
-    notifications: number;
-    settings: number;
-    groups: number;
-    followers: number;
-    followees: number;
-    approvals: number;
-    posts: number;
-}
-
-export interface UserProfileResponse {
-    first_name: string;
-    last_name: string;
-    profile_picture: Buffer;
-    sym_key: string;
-}
-
-export interface UserProfilePostRequest {
-    sym_key: string;
-    first_name: string;
-    last_name: string;
-    profile_picture?: string;
-}
-
-export interface UserProfilePutRequest {
-    first_name?: string;
-    last_name?: string;
-    profile_picture?: string;
-}
+import {
+    CountResponse,
+    UserProfilePostRequest,
+    UserProfilePutRequest,
+    UserProfileResponse,
+    WhoAmiResponse,
+} from "./types";
 
 class AccountController {
     auth: AuthController;

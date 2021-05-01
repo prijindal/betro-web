@@ -10,7 +10,7 @@ import { getGroup } from "../../store/app/selectors";
 import { useFetchFollowers, useFetchGroupsHook, useFollowUserHook } from "../../hooks";
 import UserListItem from "../../components/UserListItem";
 import FollowButton from "../../components/FollowButton";
-import { FollowerResponse } from "../../api/follow";
+import { FollowerResponse } from "../../api";
 
 const FollowerComponent: React.FunctionComponent<{ follower: FollowerResponse }> = (props) => {
     const { follower } = props;

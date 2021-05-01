@@ -5,6 +5,7 @@ import GroupController from "./group";
 import FeedController from "./feed";
 import NotificationController from "./notifications";
 import SettingsController from "./settings";
+export * from "./types";
 
 class BetroApi {
     private host: string;

@@ -9,7 +9,7 @@ import { getGroup } from "../../store/app/selectors";
 import UserListItem from "../../components/UserListItem";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import BetroApiObject from "../../api/context";
-import { ApprovalResponse } from "../../api/follow";
+import { ApprovalResponse } from "../../api";
 
 const ApprovalComponent: React.FunctionComponent<{
     approval: ApprovalResponse;

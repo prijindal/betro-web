@@ -2,13 +2,7 @@ import axios from "axios";
 import { aesEncrypt, generateSymKey } from "betro-js-lib";
 
 import AuthController from "./auth";
-
-export interface GroupResponse {
-    id: string;
-    sym_key: string;
-    name: string;
-    is_default: boolean;
-}
+import { GroupResponse } from "./types";
 
 class GroupController {
     auth: AuthController;

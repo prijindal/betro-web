@@ -3,7 +3,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Switch from "@material-ui/core/Switch";
-import { UserSettingResponse, UserSettingsAction } from "../../api/settings";
+import { UserSettingResponse, UserSettingsAction } from "../../api";
 import { wrapLayout } from "../../components/Layout";
 import { useFetchUserSettings, useFetchCountHook } from "../../hooks";
 import BetroApiObject from "../../api/context";

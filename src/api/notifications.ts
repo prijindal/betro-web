@@ -1,16 +1,6 @@
 import axios from "axios";
 import AuthController from "./auth";
-
-export type UserSettingsAction = "notification_on_approved" | "notification_on_followed";
-
-export interface NotificationResponse {
-    id: string;
-    user_id: string;
-    action: UserSettingsAction;
-    content: string;
-    payload: Record<string, unknown>;
-    created_at: string;
-}
+import { NotificationResponse } from "./types";
 
 class NotificationController {
     auth: AuthController;

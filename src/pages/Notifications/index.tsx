@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import BetroApiObject from "../../api/context";
-import { NotificationResponse } from "../../api/notifications";
+import { NotificationResponse } from "../../api";
 import { wrapLayout } from "../../components/Layout";
 import { fromNow } from "../../util/fromNow";
 

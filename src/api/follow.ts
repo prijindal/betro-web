@@ -1,54 +1,15 @@
 import axios from "axios";
 import { aesDecrypt, rsaEncrypt } from "betro-js-lib";
-import { PaginatedResponse } from "./PaginatedResponse";
 import { parseUserProfile } from "./profileHelper";
 
 import AuthController from "./auth";
-
-export interface ApprovalResponse {
-    id: string;
-    follower_id: string;
-    public_key: string;
-    username: string;
-    first_name?: string | null;
-    last_name?: string | null;
-    profile_picture?: Buffer | null;
-}
-
-export interface FollowerResponse {
-    follow_id: string;
-    group_id: string;
-    group_is_default: boolean;
-    group_name: string;
-    user_id: string;
-    username: string;
-    is_following: boolean;
-    is_following_approved: boolean;
-    public_key: string | null;
-    first_name?: string | null;
-    last_name?: string | null;
-    profile_picture?: Buffer | null;
-}
-
-export interface FolloweeResponse {
-    follow_id: string;
-    is_approved: boolean;
-    user_id: string;
-    username: string;
-    first_name?: string | null;
-    last_name?: string | null;
-    profile_picture?: Buffer | null;
-}
-
-export interface UserInfo {
-    is_following: boolean;
-    is_approved: boolean;
-    username: string;
-    public_key: string | null;
-    first_name?: string | null;
-    last_name?: string | null;
-    profile_picture?: Buffer | null;
-}
+import {
+    ApprovalResponse,
+    FolloweeResponse,
+    FollowerResponse,
+    UserInfo,
+    PaginatedResponse,
+} from "./types";
 
 class FollowController {
     auth: AuthController;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { PostResource } from "../../api/feed";
+import { PostResource } from "../../api";
 import { wrapLayout } from "../../components/Layout";
 import { getProfile } from "../../store/app/selectors";
 import PostListItem from "../../components/PostListItem";
