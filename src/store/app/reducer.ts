@@ -8,11 +8,6 @@ export const initialState = Object.freeze<AppState>({
         isLoaded: false,
         isVerified: false,
         isLoggedIn: false,
-        encryptionKey: null,
-        encryptionMac: null,
-        privateKey: null,
-        symKey: null,
-        token: null,
     },
     profile: {
         isLoaded: false,
@@ -49,19 +44,13 @@ const appReducer = (state: AppState = initialState, action: Action): AppState =>
             }
             case ActionTypes.AUTH_LOADED: {
                 draft.auth.isLoaded = true;
-                draft.auth.encryptionKey = action.payload.encryptionKey;
-                draft.auth.encryptionMac = action.payload.encryptionMac;
-                draft.auth.token = action.payload.token;
-                draft.auth.isLoggedIn = action.payload.token !== null;
+                draft.auth.isLoggedIn = action.payload;
                 return draft;
             }
             case ActionTypes.AUTH_LOGIN: {
                 draft.auth.isLoaded = true;
                 draft.auth.isLoggedIn = true;
                 draft.auth.isVerified = true;
-                draft.auth.encryptionKey = action.payload.encryptionKey;
-                draft.auth.encryptionMac = action.payload.encryptionMac;
-                draft.auth.token = action.payload.token;
                 return draft;
             }
             case ActionTypes.AUTH_RESET: {
@@ -71,8 +60,6 @@ const appReducer = (state: AppState = initialState, action: Action): AppState =>
             case ActionTypes.AUTH_VERIFIED: {
                 draft.auth.isVerified = true;
                 draft.auth.isLoggedIn = true;
-                draft.auth.privateKey = action.payload.privateKey;
-                draft.auth.symKey = action.payload.symKey;
                 return draft;
             }
             case ActionTypes.PROFILE_LOADED: {

@@ -8,9 +8,9 @@ import throttle from "lodash/throttle";
 import { wrapLayout } from "../../components/Layout";
 import { getGroup } from "../../store/app/selectors";
 import { useFetchFollowers, useFetchGroupsHook, useFollowUserHook } from "../../hooks";
-import { FollowerResponse } from "../../api/account";
 import UserListItem from "../../components/UserListItem";
 import FollowButton from "../../components/FollowButton";
+import { FollowerResponse } from "../../api/follow";
 
 const FollowerComponent: React.FunctionComponent<{ follower: FollowerResponse }> = (props) => {
     const { follower } = props;

@@ -1,27 +1,23 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { fetchNotifications, NotificationResponse } from "../../api/notifications";
+import BetroApiObject from "../../api/context";
+import { NotificationResponse } from "../../api/notifications";
 import { wrapLayout } from "../../components/Layout";
-import { getAuth } from "../../store/app/selectors";
 import { fromNow } from "../../util/fromNow";
 
 const Notifications = () => {
-    const auth = useSelector(getAuth);
     const [loaded, setLoaded] = useState<boolean>(false);
     const [notifications, setNotifications] = useState<Array<NotificationResponse> | null>(null);
     const fetchGrps = useCallback(async () => {
         async function fetchgr() {
-            if (auth.token !== null) {
-                const resp = await fetchNotifications(auth.token);
-                setLoaded(true);
-                if (resp !== null) {
-                    setNotifications(resp);
-                }
+            const resp = await BetroApiObject.notifications.fetchNotifications();
+            setLoaded(true);
+            if (resp !== null) {
+                setNotifications(resp);
             }
         }
         fetchgr();
-    }, [auth.token]);
+    }, []);
     useEffect(() => {
         fetchGrps();
     }, [fetchGrps]);

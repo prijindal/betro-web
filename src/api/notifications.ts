@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_HOST } from "../constants";
+import AuthController from "./auth";
 
 export type UserSettingsAction = "notification_on_approved" | "notification_on_followed";
 
@@ -12,16 +12,23 @@ export interface NotificationResponse {
     created_at: string;
 }
 
-export const fetchNotifications = async (
-    token: string
-): Promise<Array<NotificationResponse> | null> => {
-    try {
-        const response = await axios.get(`${API_HOST}/api/notifications`, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = response.data;
-        return data;
-    } catch (e) {
-        return null;
+class NotificationController {
+    auth: AuthController;
+    constructor(auth: AuthController) {
+        this.auth = auth;
     }
-};
+
+    fetchNotifications = async (): Promise<Array<NotificationResponse> | null> => {
+        try {
+            const response = await axios.get(`${this.auth.host}/api/notifications`, {
+                headers: { Authorization: `Bearer ${this.auth.token}` },
+            });
+            const data = response.data;
+            return data;
+        } catch (e) {
+            return null;
+        }
+    };
+}
+
+export default NotificationController;

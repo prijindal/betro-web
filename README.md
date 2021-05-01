@@ -6,6 +6,7 @@
 [![CircleCI](https://circleci.com/gh/betro-app/betro-web/tree/master.svg?style=svg)](https://circleci.com/gh/betro-app/betro-web/tree/master)
 [![codecov](https://codecov.io/gh/betro-app/betro-web/branch/master/graph/badge.svg)](https://codecov.io/gh/betro-app/betro-web)
 [![CodeQL Analysis](https://github.com/betro-app/betro-web/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/betro-app/betro-web/actions/workflows/codeql-analysis.yml)
+[![Gitter](https://badges.gitter.im/betroapp/community.svg)](https://gitter.im/betroapp/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 ## Available Scripts
 

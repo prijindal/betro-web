@@ -1,41 +1,13 @@
-import axios from "axios";
-import { aesDecrypt, rsaEncrypt } from "betro-js-lib";
-import { API_HOST } from "../constants";
-import { PaginatedResponse } from "./PaginatedResponse";
-import { parseUserProfile } from "./profileHelper";
-export interface ApprovalResponse {
-    id: string;
-    follower_id: string;
-    public_key: string;
-    username: string;
-    first_name?: string | null;
-    last_name?: string | null;
-    profile_picture?: Buffer | null;
-}
+import axios, { AxiosResponse } from "axios";
+import { aesDecrypt, aesEncrypt, symDecrypt, symEncrypt } from "betro-js-lib";
+import AuthController from "./auth";
 
-export interface FollowerResponse {
-    follow_id: string;
-    group_id: string;
-    group_is_default: boolean;
-    group_name: string;
+export interface WhoAmiResponse {
     user_id: string;
     username: string;
-    is_following: boolean;
-    is_following_approved: boolean;
-    public_key: string | null;
-    first_name?: string | null;
-    last_name?: string | null;
-    profile_picture?: Buffer | null;
-}
-
-export interface FolloweeResponse {
-    follow_id: string;
-    is_approved: boolean;
-    user_id: string;
-    username: string;
-    first_name?: string | null;
-    last_name?: string | null;
-    profile_picture?: Buffer | null;
+    email: string;
+    first_name?: string;
+    last_name?: string;
 }
 
 export interface CountResponse {
@@ -48,164 +20,272 @@ export interface CountResponse {
     posts: number;
 }
 
-export const fetchCounts = async (token: string): Promise<CountResponse | null> => {
-    try {
-        const include_fields = [
-            "notifications",
-            "settings",
-            "groups",
-            "followers",
-            "followees",
-            "approvals",
-            "posts",
-        ];
-        const response = await axios.get(
-            `${API_HOST}/api/account/count?include_fields=${include_fields.join(",")}`,
-            {
-                headers: { Authorization: `Bearer ${token}` },
-            }
-        );
+export interface UserProfileResponse {
+    first_name: string;
+    last_name: string;
+    profile_picture: Buffer;
+    sym_key: string;
+}
+
+export interface UserProfilePostRequest {
+    sym_key: string;
+    first_name: string;
+    last_name: string;
+    profile_picture?: string;
+}
+
+export interface UserProfilePutRequest {
+    first_name?: string;
+    last_name?: string;
+    profile_picture?: string;
+}
+
+class AccountController {
+    auth: AuthController;
+    constructor(auth: AuthController) {
+        this.auth = auth;
+    }
+
+    fetchProfilePicture = async (): Promise<Buffer | null> => {
+        if (!this.auth.isAuthenticated()) return null;
+        try {
+            const response = await axios.get(`${this.auth.host}/api/account/profile_picture`, {
+                headers: { Authorization: `Bearer ${this.auth.token}` },
+            });
+            const data = response.data;
+            const profile_picture = await symDecrypt(this.auth.symKey, data);
+            return profile_picture;
+        } catch (e) {
+            return null;
+        }
+    };
+
+    fetchKeys = async (): Promise<boolean> => {
+        if (!this.auth.isAuthenticated()) return false;
+        const response = await axios.get(`${this.auth.host}/api/account/keys`, {
+            headers: { Authorization: `Bearer ${this.auth.token}` },
+        });
         const data = response.data;
-        return data;
-    } catch (e) {
-        return null;
-    }
-};
 
-export const fetchPendingApprovals = async (
-    token: string,
-    private_key: string,
-    after?: string
-): Promise<PaginatedResponse<ApprovalResponse> | null> => {
-    const limit = 50;
-    try {
-        const response = await axios.get(
-            `${API_HOST}/api/follow/approvals?limit=${limit}&after=${after}`,
-            {
-                headers: { Authorization: `Bearer ${token}` },
-            }
+        const encryptedPrivateKey = data.private_key;
+        const encryptedSymKey = data.sym_key;
+        const privateKey = await aesDecrypt(
+            this.auth.encryptionKey,
+            this.auth.encryptionMac,
+            encryptedPrivateKey
         );
-        const resp = response.data;
-        const data: Array<ApprovalResponse> = [];
-        for (const res of resp.data) {
-            const userResponse = await parseUserProfile(res.sym_key, private_key, res);
-            data.push({
-                id: res.id,
-                follower_id: res.follower_id,
-                public_key: res.public_key,
-                username: res.username,
-                ...userResponse,
-            });
+        if (privateKey.isVerified) {
+            const private_key = privateKey.data.toString("base64");
+            let sym_key: string | undefined;
+            const symKey = await aesDecrypt(
+                this.auth.encryptionKey,
+                this.auth.encryptionMac,
+                encryptedSymKey
+            );
+            if (symKey.isVerified) {
+                sym_key = symKey.data.toString("base64");
+                this.auth.privateKey = private_key;
+                this.auth.symKey = sym_key;
+                return true;
+            }
         }
-        return { ...resp, data };
-    } catch (e) {
-        return null;
-    }
-};
+        return false;
+    };
 
-export const fetchFollowers = async (
-    token: string,
-    private_key: string,
-    after?: string
-): Promise<PaginatedResponse<FollowerResponse> | null> => {
-    const limit = 50;
-    try {
-        const response = await axios.get(
-            `${API_HOST}/api/follow/followers?limit=${limit}&after=${after}`,
-            {
-                headers: { Authorization: `Bearer ${token}` },
-            }
-        );
-        const resp = response.data;
-        const data: Array<FollowerResponse> = [];
-        for (const res of resp.data) {
-            const userResponse = await parseUserProfile(res.sym_key, private_key, res);
-            data.push({
-                follow_id: res.follow_id,
-                group_id: res.group_id,
-                group_is_default: res.group_is_default,
-                group_name: res.group_name,
-                user_id: res.user_id,
-                username: res.username,
-                is_following: res.is_following,
-                is_following_approved: res.is_following_approved,
-                public_key: res.public_key,
-                ...userResponse,
-            });
+    whoAmi = async (): Promise<WhoAmiResponse | null> => {
+        if (!this.auth.isAuthenticated()) return null;
+        const response = await axios.get(`${this.auth.host}/api/account/whoami`, {
+            headers: { Authorization: `Bearer ${this.auth.token}` },
+        });
+        const data = response.data;
+        let first_name: string | undefined;
+        let last_name: string | undefined;
+        if (data.first_name != null) {
+            const first_name_bytes = await symDecrypt(this.auth.symKey, data.first_name);
+            first_name = first_name_bytes?.toString("utf-8");
         }
-        return { ...resp, data };
-    } catch (e) {
-        return null;
-    }
-};
+        if (data.last_name != null) {
+            const last_name_bytes = await symDecrypt(this.auth.symKey, data.last_name);
+            last_name = last_name_bytes?.toString("utf-8");
+        }
+        return {
+            user_id: data.user_id,
+            username: data.username,
+            email: data.email,
+            first_name: first_name,
+            last_name: last_name,
+        };
+    };
 
-export const fetchFollowees = async (
-    token: string,
-    private_key: string,
-    after?: string
-): Promise<PaginatedResponse<FolloweeResponse> | null> => {
-    const limit = 50;
-    try {
-        const response = await axios.get(
-            `${API_HOST}/api/follow/followees?limit=${limit}&after=${after}`,
-            {
-                headers: { Authorization: `Bearer ${token}` },
+    fetchCounts = async (): Promise<CountResponse | null> => {
+        try {
+            const include_fields = [
+                "notifications",
+                "settings",
+                "groups",
+                "followers",
+                "followees",
+                "approvals",
+                "posts",
+            ];
+            const response = await axios.get(
+                `${this.auth.host}/api/account/count?include_fields=${include_fields.join(",")}`,
+                {
+                    headers: { Authorization: `Bearer ${this.auth.token}` },
+                }
+            );
+            const data = response.data;
+            return data;
+        } catch (e) {
+            return null;
+        }
+    };
+
+    fetchProfile = async (): Promise<UserProfileResponse | null> => {
+        try {
+            const response = await axios.get<
+                null,
+                AxiosResponse<{
+                    first_name: string;
+                    last_name: string;
+                    profile_picture: string;
+                    sym_key: string;
+                }>
+            >(`${this.auth.host}/api/account/profile`, {
+                headers: { Authorization: `Bearer ${this.auth.token}` },
+            });
+            const data = response.data;
+            const encrypted_first_name = data.first_name;
+            const encrypted_last_name = data.last_name;
+            const encrypted_profile_picture = data.profile_picture;
+            const encrypted_sym_key = data.sym_key;
+            const aesDecrypted = await aesDecrypt(
+                this.auth.encryptionKey,
+                this.auth.encryptionMac,
+                encrypted_sym_key
+            );
+            const sym_key = aesDecrypted.data.toString("base64");
+            const first_name = await symDecrypt(sym_key, encrypted_first_name);
+            const last_name = await symDecrypt(sym_key, encrypted_last_name);
+            const profile_picture = await symDecrypt(sym_key, encrypted_profile_picture);
+            if (first_name == null || last_name == null || profile_picture == null) {
+                throw new Error("Failed decryption");
             }
-        );
-        const resp = response.data;
-        const data: Array<FolloweeResponse> = [];
-        for (const res of resp.data) {
-            let row: FolloweeResponse = {
-                follow_id: res.follow_id,
-                is_approved: res.is_approved,
-                user_id: res.user_id,
-                username: res.username,
+            return {
+                first_name: first_name.toString("utf-8"),
+                last_name: last_name.toString("utf-8"),
+                profile_picture: profile_picture,
+                sym_key: sym_key,
             };
-            if (res.sym_key != null) {
-                const userResponse = await parseUserProfile(res.sym_key, private_key, res);
-                row = { ...row, ...userResponse };
-            }
-            data.push(row);
+        } catch (e) {
+            return null;
         }
-        return { ...resp, data };
-    } catch (e) {
-        return null;
-    }
-};
+    };
 
-export const approveUser = async (
-    token: string,
-    followId: string,
-    publicKey: string,
-    group_id: string,
-    encryption_key: string,
-    encryption_mac: string,
-    encrypted_group_sym_key: string,
-    symKey: string
-): Promise<{ is_following: boolean; is_approved: boolean; email: string } | null> => {
-    const decryptedGroupSymKey = await aesDecrypt(
-        encryption_key,
-        encryption_mac,
-        encrypted_group_sym_key
-    );
-    const groupSymKey = await rsaEncrypt(publicKey, decryptedGroupSymKey.data);
-    const userSymKey = await rsaEncrypt(publicKey, Buffer.from(symKey, "base64"));
-    try {
-        const response = await axios.post(
-            `${API_HOST}/api/follow/approve`,
-            {
-                follow_id: followId,
-                group_id: group_id,
-                group_sym_key: groupSymKey,
-                followee_sym_key: userSymKey,
-            },
-            {
-                headers: { Authorization: `Bearer ${token}` },
+    createProfile = async (
+        first_name: string,
+        last_name: string,
+        profile_picture: Buffer | null
+    ): Promise<UserProfileResponse | null> => {
+        try {
+            const encrypted_sym_key = await aesEncrypt(
+                this.auth.encryptionKey,
+                this.auth.encryptionMac,
+                Buffer.from(this.auth.symKey, "base64")
+            );
+            const encrypted_first_name = await symEncrypt(
+                this.auth.symKey,
+                Buffer.from(first_name)
+            );
+            const encrypted_last_name = await symEncrypt(this.auth.symKey, Buffer.from(last_name));
+            const request: UserProfilePostRequest = {
+                sym_key: encrypted_sym_key,
+                first_name: encrypted_first_name,
+                last_name: encrypted_last_name,
+            };
+            if (profile_picture != null) {
+                const encrypted_profile_picture = await symEncrypt(
+                    this.auth.symKey,
+                    profile_picture
+                );
+                request.profile_picture = encrypted_profile_picture;
             }
-        );
-        const data = response.data;
-        return data;
-    } catch (e) {
-        return null;
-    }
-};
+            const response = await axios.post(`${this.auth.host}/api/account/profile`, request, {
+                headers: { Authorization: `Bearer ${this.auth.token}` },
+            });
+            const data = response.data;
+            return data;
+        } catch (e) {
+            return null;
+        }
+    };
+
+    updateProfile = async (
+        first_name?: string,
+        last_name?: string,
+        profile_picture?: Buffer | null
+    ): Promise<UserProfileResponse | null> => {
+        try {
+            const request: UserProfilePutRequest = {};
+            if (first_name != null) {
+                request.first_name = await symEncrypt(this.auth.symKey, Buffer.from(first_name));
+            }
+            if (last_name != null) {
+                request.last_name = await symEncrypt(this.auth.symKey, Buffer.from(last_name));
+            }
+            if (profile_picture != null) {
+                request.profile_picture = await symEncrypt(this.auth.symKey, profile_picture);
+            }
+            const response = await axios.put(`${this.auth.host}/api/account/profile`, request, {
+                headers: { Authorization: `Bearer ${this.auth.token}` },
+            });
+            const data = response.data;
+            return data;
+        } catch (e) {
+            return null;
+        }
+    };
+
+    createPost = async (
+        group_id: string,
+        encrypted_sym_key: string,
+        text: string | null,
+        media_encoding: string | null,
+        media: Buffer | null
+    ): Promise<null> => {
+        try {
+            const sym_key = await aesDecrypt(
+                this.auth.encryptionKey,
+                this.auth.encryptionMac,
+                encrypted_sym_key
+            );
+            let encryptedText: string | null = null;
+            if (text != null) {
+                encryptedText = await symEncrypt(
+                    sym_key.data.toString("base64"),
+                    Buffer.from(text)
+                );
+            }
+            let encryptedMedia: string | null = null;
+            if (media != null) {
+                encryptedMedia = await symEncrypt(sym_key.data.toString("base64"), media);
+            }
+            const response = await axios.post(
+                `${this.auth.host}/api/post`,
+                {
+                    group_id: group_id,
+                    text_content: encryptedText,
+                    media_content: encryptedMedia,
+                },
+                {
+                    headers: { Authorization: `Bearer ${this.auth.token}` },
+                }
+            );
+            return response.data;
+        } catch (e) {
+            return null;
+        }
+    };
+}
+
+export default AccountController;

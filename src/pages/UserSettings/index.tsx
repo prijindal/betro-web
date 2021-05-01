@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Switch from "@material-ui/core/Switch";
-import { UserSettingResponse, UserSettingsAction, changeUserSettings } from "../../api/settings";
+import { UserSettingResponse, UserSettingsAction } from "../../api/settings";
 import { wrapLayout } from "../../components/Layout";
-import { getAuth } from "../../store/app/selectors";
 import { useFetchUserSettings, useFetchCountHook } from "../../hooks";
+import BetroApiObject from "../../api/context";
 
 interface SettingNotification {
     action: UserSettingsAction;
@@ -41,24 +40,22 @@ const parseUserSettings = (settings: Array<UserSettingResponse>): Array<SettingN
 };
 
 const UserSetting = (params: { userSetting: SettingNotification }) => {
-    const auth = useSelector(getAuth);
     const userSetting = params.userSetting;
     const [enabled, setEnabled] = useState<boolean>(userSetting.enabled);
     const [saving, setSaving] = useState<boolean>(false);
     const fetchCount = useFetchCountHook();
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.checked;
-        if (auth.token !== null) {
-            setEnabled(value);
-            setSaving(true);
-            changeUserSettings(auth.token, userSetting.action, value)
-                .then(() => {
-                    fetchCount(true);
-                })
-                .finally(() => {
-                    setSaving(false);
-                });
-        }
+        setEnabled(value);
+        setSaving(true);
+        BetroApiObject.settings
+            .changeUserSettings(userSetting.action, value)
+            .then(() => {
+                fetchCount(true);
+            })
+            .finally(() => {
+                setSaving(false);
+            });
     };
     return (
         <ListItem>

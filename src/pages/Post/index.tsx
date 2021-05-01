@@ -5,14 +5,13 @@ import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
 import Typography from "@material-ui/core/Typography";
 import MenuItem from "@material-ui/core/MenuItem";
-import { createPost } from "../../api/post";
 import { wrapLayout } from "../../components/Layout";
-import { getAuth, getGroup } from "../../store/app/selectors";
+import { getGroup } from "../../store/app/selectors";
 import { useFetchGroupsHook } from "../../hooks";
 import { bufferToImageUrl } from "../../util/bufferToImage";
+import BetroApiObject from "../../api/context";
 
 const Post = () => {
-    const auth = useSelector(getAuth);
     const [groupId, setGroupId] = useState<string>("");
     const groupData = useSelector(getGroup);
     const [text, setText] = useState<string | null>(null);
@@ -33,23 +32,9 @@ const Post = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const group = groupData.data.find((a) => a.id === groupId);
-        if (
-            auth.token !== null &&
-            auth.encryptionKey !== null &&
-            auth.encryptionMac !== null &&
-            group !== undefined
-        ) {
+        if (group !== undefined) {
             setLoading(true);
-            await createPost(
-                auth.token,
-                groupId,
-                group?.sym_key,
-                auth.encryptionKey,
-                auth.encryptionMac,
-                text,
-                null,
-                media
-            );
+            await BetroApiObject.account.createPost(groupId, group?.sym_key, text, null, media);
             setText(null);
             setMedia(null);
             setLoading(false);

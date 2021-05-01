@@ -1,35 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { fetchOwnPosts, PostResource } from "../../api/user";
+import { PostResource } from "../../api/feed";
 import { wrapLayout } from "../../components/Layout";
-import { getAuth, getProfile } from "../../store/app/selectors";
+import { getProfile } from "../../store/app/selectors";
 import PostListItem from "../../components/PostListItem";
+import BetroApiObject from "../../api/context";
 
 const Posts = () => {
-    const auth = useSelector(getAuth);
     const [posts, setPosts] = useState<Array<PostResource> | null>(null);
     const profile = useSelector(getProfile);
     useEffect(() => {
         async function fetchPosts() {
-            if (
-                auth.token !== null &&
-                auth.privateKey !== null &&
-                auth.encryptionKey !== null &&
-                auth.encryptionMac !== null
-            ) {
-                const resp = await fetchOwnPosts(
-                    auth.token,
-                    auth.privateKey,
-                    auth.encryptionKey,
-                    auth.encryptionMac
-                );
-                if (resp !== null) {
-                    setPosts(resp);
-                }
+            const resp = await BetroApiObject.feed.fetchOwnPosts();
+            if (resp !== null) {
+                setPosts(resp);
             }
         }
         fetchPosts();
-    }, [auth.token, auth.privateKey, auth.encryptionKey, auth.encryptionMac]);
+    }, []);
     return (
         <div>
             {posts == null && <div>Loading...</div>}

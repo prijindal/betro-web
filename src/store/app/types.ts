@@ -1,13 +1,5 @@
 export type Locale = "en_US" | "de_DE";
 
-export type LoginPayload = Readonly<{
-    encryptionKey: string;
-    encryptionMac: string;
-    token: string;
-    privateKey: string;
-    symKey: string;
-}>;
-
 export type AppState = Readonly<{
     locale: Locale;
     auth: AuthState;
@@ -25,11 +17,6 @@ export type AuthState = Readonly<{
     isLoaded: boolean;
     isVerified: boolean;
     isLoggedIn: boolean;
-    encryptionKey: string | null;
-    encryptionMac: string | null;
-    privateKey: string | null;
-    symKey: string | null;
-    token: string | null;
 }>;
 
 export type ProfileState = Readonly<{

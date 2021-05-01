@@ -1,5 +1,5 @@
 import { CountResponse } from "../../api/account";
-import { Action, Group, Locale, LoginPayload } from "./types";
+import { Action, Group, Locale } from "./types";
 
 export const ActionTypes = {
     SETLOCALE: "app/set-locale",
@@ -18,34 +18,21 @@ export const setLocale = (locale: Locale): Action => ({
     payload: locale,
 });
 
-export const authLoaded = (
-    encryptionKey: string | null,
-    encryptionMac: string | null,
-    token: string | null
-): Action => ({
+export const authLoaded = (isLoggedIn: boolean): Action => ({
     type: ActionTypes.AUTH_LOADED,
-    payload: {
-        encryptionKey,
-        encryptionMac,
-        token,
-    },
+    payload: isLoggedIn,
 });
 
-export const loggedIn = (payload: LoginPayload): Action => ({
+export const loggedIn = (): Action => ({
     type: ActionTypes.AUTH_LOGIN,
-    payload,
 });
 
 export const resetAuth = (): Action => ({
     type: ActionTypes.AUTH_RESET,
 });
 
-export const verifedLogin = (privateKey: string, symKey: string): Action => ({
+export const verifedLogin = (): Action => ({
     type: ActionTypes.AUTH_VERIFIED,
-    payload: {
-        privateKey,
-        symKey,
-    },
 });
 
 export const profileLoaded = (

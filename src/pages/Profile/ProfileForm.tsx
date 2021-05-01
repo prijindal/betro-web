@@ -2,13 +2,11 @@ import React, { useCallback, useState } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchKeys } from "../../api/login";
-import { createProfile, updateProfile } from "../../api/profile";
+import { useDispatch } from "react-redux";
 import { profilePictureLoaded, verifedLogin } from "../../store/app/actions";
-import { getAuth } from "../../store/app/selectors";
 import { bufferToImageUrl } from "../../util/bufferToImage";
 import { useFetchWhoami } from "../../hooks";
+import BetroApiObject from "../../api/context";
 
 const ProfileForm: React.FunctionComponent<{
     method: "POST" | "PUT";
@@ -16,7 +14,6 @@ const ProfileForm: React.FunctionComponent<{
     lastName?: string | null;
     profilePicture?: Buffer | null;
 }> = (props) => {
-    const auth = useSelector(getAuth);
     const [firstName, setFirstName] = useState<string>(props.firstName || "");
     const [lastName, setLastName] = useState<string>(props.lastName || "");
     const [profilePicture, setProfilePicture] = useState<Buffer | null>(
@@ -40,75 +37,37 @@ const ProfileForm: React.FunctionComponent<{
             }
         }
     };
-    const afterProfileSaved = useCallback(
-        (sym_key: string) => {
-            if (auth.token != null) {
-                if (auth.encryptionKey !== null && auth.encryptionMac !== null) {
-                    fetchKeys(auth.token, auth.encryptionKey, auth.encryptionMac).then((resp) => {
-                        if (resp != null) {
-                            dispatch(verifedLogin(resp.private_key, sym_key));
-                        }
-                    });
-                }
-                fetchWhoami(true, sym_key);
-                if (profilePicture != null) {
-                    dispatch(profilePictureLoaded(bufferToImageUrl(profilePicture)));
-                }
+    const afterProfileSaved = useCallback(() => {
+        BetroApiObject.account.fetchKeys().then((resp) => {
+            if (resp != null) {
+                dispatch(verifedLogin());
             }
-        },
-        [dispatch, profilePicture, auth.token, auth.encryptionKey, auth.encryptionMac, fetchWhoami]
-    );
+        });
+        fetchWhoami(true);
+        if (profilePicture != null) {
+            dispatch(profilePictureLoaded(bufferToImageUrl(profilePicture)));
+        }
+    }, [dispatch, profilePicture, fetchWhoami]);
     const profileSaveHandler = useCallback(
         async (e: React.FormEvent) => {
             e.preventDefault();
-            if (
-                auth.token !== null &&
-                auth.encryptionKey !== null &&
-                auth.symKey != null &&
-                auth.encryptionMac !== null
-            ) {
-                if (props.method === "POST") {
-                    createProfile(
-                        auth.token,
-                        auth.symKey,
-                        auth.encryptionKey,
-                        auth.encryptionMac,
-                        firstName,
-                        lastName,
-                        profilePicture
-                    ).then(() => {
-                        if (auth.symKey != null) {
-                            afterProfileSaved(auth.symKey);
-                        }
+            if (props.method === "POST") {
+                BetroApiObject.account
+                    .createProfile(firstName, lastName, profilePicture)
+                    .then(() => {
+                        afterProfileSaved();
                     });
-                } else if (props.method === "PUT" && auth.symKey != null) {
-                    updateProfile(
-                        auth.token,
-                        auth.symKey,
-                        firstName,
-                        lastName,
-                        profilePicture
-                    ).then(() => {
-                        if (auth.symKey != null) {
-                            afterProfileSaved(auth.symKey);
-                        }
+            } else if (props.method === "PUT") {
+                BetroApiObject.account
+                    .updateProfile(firstName, lastName, profilePicture)
+                    .then(() => {
+                        afterProfileSaved();
                     });
-                } else {
-                    console.error("Issue occurred");
-                }
+            } else {
+                console.error("Issue occurred");
             }
         },
-        [
-            auth.encryptionKey,
-            auth.encryptionMac,
-            auth.symKey,
-            auth.token,
-            firstName,
-            lastName,
-            profilePicture,
-            afterProfileSaved,
-            props.method,
-        ]
+        [firstName, lastName, profilePicture, afterProfileSaved, props.method]
     );
 
     return (

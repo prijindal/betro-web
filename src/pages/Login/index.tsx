@@ -9,9 +9,8 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import { loggedIn, resetAuth, verifedLogin } from "../../store/app/actions";
-import { fetchKeys, login } from "../../api/login";
 import classes from "./Login.module.scss";
-import isEmpty from "lodash/isEmpty";
+import BetroApiObject from "../../api/context";
 
 const App: React.FC<any> = () => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -24,16 +23,16 @@ const App: React.FC<any> = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        login(email, password)
+        BetroApiObject.auth
+            .login(email, password)
             .then((payload) => {
-                dispatch(loggedIn(payload));
-                fetchKeys(payload.token, payload.encryptionKey, payload.encryptionMac)
+                dispatch(loggedIn());
+                BetroApiObject.account
+                    .fetchKeys()
                     .then(async (resp) => {
                         setLoading(false);
-                        if (!isEmpty(resp) && resp !== null) {
-                            const private_key = resp.private_key;
-                            const sym_key = resp.sym_key;
-                            dispatch(verifedLogin(private_key, sym_key));
+                        if (resp === true) {
+                            dispatch(verifedLogin());
                             const state = location.state || { from: { pathname: "/home" } };
                             history.replace((state as any).from);
                         } else {

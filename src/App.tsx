@@ -32,7 +32,7 @@ const LayoutLoading = wrapLayout(() => <p>Loading...</p>, { includeRouting: fals
 
 const LoadingSuspense = () => {
     const auth = useSelector(getAuth);
-    if (auth.token === null) {
+    if (auth.isLoaded === false) {
         return <p>Loading...</p>;
     } else {
         return <LayoutLoading />;
@@ -110,7 +110,7 @@ const App: React.FC<any> = () => {
                         <Register />
                     </Route>
                     {APP_ROUTES.map(({ route, Component }) => (
-                        <PrivateRoute exact path={route}>
+                        <PrivateRoute key={route} exact path={route}>
                             <Route>
                                 <Component />
                             </Route>

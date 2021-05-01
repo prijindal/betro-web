@@ -5,7 +5,6 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { loggedIn } from "../../store/app/actions";
-import { register, isAvailableUsername, isAvailableEmail } from "../../api/login";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
@@ -17,6 +16,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import CheckIcon from "@material-ui/icons/Check";
 import ErrorIcon from "@material-ui/icons/Error";
 import classes from "../Login/Login.module.scss";
+import BetroApiObject from "../../api/context";
 
 const UsernameField: React.FunctionComponent<{
     value: string;
@@ -98,11 +98,14 @@ const App: React.FC<any> = () => {
             return;
         }
         setLoading(true);
-        register(username, email, password)
+        BetroApiObject.auth
+            .register(username, email, password)
             .then((payload) => {
                 setLoading(false);
-                dispatch(loggedIn(payload));
                 history.push("/");
+                if (payload) {
+                    dispatch(loggedIn());
+                }
             })
             .catch((error) => {
                 const errorMessage = error.response?.data?.data || "Registration error";
@@ -124,7 +127,7 @@ const App: React.FC<any> = () => {
                                 value={username}
                                 onChange={setUsername}
                                 errorMessage="Username is not available"
-                                checkFunction={isAvailableUsername}
+                                checkFunction={BetroApiObject.auth.isAvailableUsername}
                                 name="username"
                                 label="Username"
                                 placeholder="Username"
@@ -136,7 +139,7 @@ const App: React.FC<any> = () => {
                                 value={email}
                                 onChange={setEmail}
                                 errorMessage="Email is not available"
-                                checkFunction={isAvailableEmail}
+                                checkFunction={BetroApiObject.auth.isAvailableEmail}
                                 name="email"
                                 label="Email"
                                 placeholder="Email"

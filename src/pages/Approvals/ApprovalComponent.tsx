@@ -4,11 +4,12 @@ import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import isEmpty from "lodash/isEmpty";
-import { ApprovalResponse, approveUser } from "../../api/account";
-import { getAuth, getGroup } from "../../store/app/selectors";
+import { getGroup } from "../../store/app/selectors";
 
 import UserListItem from "../../components/UserListItem";
 import ConfirmDialog from "../../components/ConfirmDialog";
+import BetroApiObject from "../../api/context";
+import { ApprovalResponse } from "../../api/follow";
 
 const ApprovalComponent: React.FunctionComponent<{
     approval: ApprovalResponse;
@@ -26,27 +27,12 @@ const ApprovalComponent: React.FunctionComponent<{
             }
         }
     }, [groupId, groupData]);
-    const auth = useSelector(getAuth);
     const approveHandler = () => {
-        if (
-            auth.token !== null &&
-            auth.encryptionKey !== null &&
-            auth.encryptionMac !== null &&
-            auth.symKey != null
-        ) {
-            const group = groupData.data.find((a) => a.id === groupId);
-            if (group !== undefined) {
-                approveUser(
-                    auth.token,
-                    approval.id,
-                    approval.public_key,
-                    groupId,
-                    auth.encryptionKey,
-                    auth.encryptionMac,
-                    group?.sym_key,
-                    auth.symKey
-                ).then(onApproved);
-            }
+        const group = groupData.data.find((a) => a.id === groupId);
+        if (group !== undefined) {
+            BetroApiObject.follow
+                .approveUser(approval.id, approval.public_key, groupId, group.sym_key)
+                .then(onApproved);
         }
     };
     return (
