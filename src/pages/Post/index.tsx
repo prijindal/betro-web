@@ -42,7 +42,7 @@ const Post = () => {
     };
     const handleUploadClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files != null) {
-            var file = event.target.files[0];
+            const file = event.target.files[0];
             if (file != null) {
                 const reader = new FileReader();
                 reader.onloadend = function (e) {

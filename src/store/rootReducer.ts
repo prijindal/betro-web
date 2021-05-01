@@ -1,7 +1,8 @@
-import { combineReducers } from 'redux';
-import app from './app/reducer';
+import { combineReducers, Reducer } from "redux";
+import app from "./app/reducer";
+import { RootState } from "./types";
 
-const createRootReducer = () =>
+const createRootReducer = (): Reducer<RootState> =>
     combineReducers({
         app,
     });

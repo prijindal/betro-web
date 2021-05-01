@@ -43,12 +43,6 @@
     "eject": "react-scripts eject",
     "tsc": "tsc --noEmit"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "devDependencies": {
     "@babel/core": "^7.13.16",
     "@testing-library/dom": "^7.30.4",

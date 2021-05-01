@@ -11,11 +11,11 @@ import {
 
 class AuthController {
     public host: string;
-    public encryptionKey: string = "";
-    public encryptionMac: string = "";
-    public token: string = "";
-    public privateKey: string = "";
-    public symKey: string = "";
+    public encryptionKey = "";
+    public encryptionMac = "";
+    public token = "";
+    public privateKey = "";
+    public symKey = "";
     constructor(host: string) {
         this.host = host;
     }

@@ -20,7 +20,7 @@ export const getRoute = (
     path: string,
     params?: { [key: string]: string | number },
     routesConfig: any = routes
-) =>
+): string | undefined =>
     path.split(".").reduce((routeBranch: any, pathItem: string) => {
         if (routeBranch && routeBranch[pathItem]) {
             const route = routeBranch[pathItem];

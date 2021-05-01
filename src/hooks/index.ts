@@ -26,7 +26,7 @@ export function useFetchGroupsHook() {
     const groupData = useSelector(getGroup);
     const dispatch = useDispatch();
     const refreshGroup = useCallback(
-        (forceLoad: boolean = false) => {
+        (forceLoad = false) => {
             if (!groupData.isLoaded || forceLoad) {
                 BetroApiObject.group.fetchGroups().then((resp) => {
                     if (resp !== null) {
@@ -45,7 +45,7 @@ export function useFetchCountHook() {
     const countData = useSelector(getCount);
     const dispatch = useDispatch();
     const refreshCount = useCallback(
-        async (forceLoad: boolean = false) => {
+        async (forceLoad = false) => {
             if (!countData.isLoaded || forceLoad) {
                 const resp = await BetroApiObject.account.fetchCounts();
                 if (resp !== null) {
@@ -64,7 +64,7 @@ export function useFetchWhoami() {
     const profile = useSelector(getProfile);
     const dispatch = useDispatch();
     const fetchWhoami = useCallback(
-        (forceLoad: boolean = false) => {
+        (forceLoad = false) => {
             if (auth.isLoaded && (profile.isLoaded === false || forceLoad)) {
                 BetroApiObject.account.whoAmi().then(async (resp) => {
                     if (resp != null) {
@@ -93,7 +93,7 @@ export function useFetchProfilePicture() {
     const dispatch = useDispatch();
 
     const getProfilePicture = useCallback(
-        (forceLoad: boolean = false) => {
+        (forceLoad = false) => {
             if (auth.isLoaded && (profile.isProfilePictureLoaded === false || forceLoad)) {
                 BetroApiObject.account.fetchProfilePicture().then(async (resp) => {
                     dispatch(profilePictureLoaded(resp == null ? null : bufferToImageUrl(resp)));
@@ -192,7 +192,7 @@ export const useFetchHomeFeed = () => {
     const [pageInfo, setPageInfo] = useState<FeedPageInfo | null>(null);
     const [loaded, setLoaded] = useState<boolean>(false);
     const getResponse = useCallback(
-        async (forceRefresh: boolean = false) => {
+        async (forceRefresh = false) => {
             const after = pageInfo == null || forceRefresh ? undefined : pageInfo.after;
             const resp = await BetroApiObject.feed.fetchHomeFeed(after);
             setLoaded(true);

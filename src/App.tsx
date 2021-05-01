@@ -90,7 +90,7 @@ const APP_ROUTES = [
     },
 ];
 
-const App: React.FC<any> = () => {
+const App: React.FC = () => {
     return (
         <React.Suspense fallback={<LoadingSuspense />}>
             <Router history={history}>

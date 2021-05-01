@@ -1,9 +1,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Redirect, Route } from "react-router";
+import { Redirect, Route, RouteProps } from "react-router";
 import { getAuth } from "../../store/app/selectors";
 
-const PrivateRoute: React.FC<any> = ({ children, ...rest }) => {
+const PrivateRoute: React.FC<RouteProps<string>> = ({ children, ...rest }) => {
     const auth = useSelector(getAuth);
     return (
         <Route

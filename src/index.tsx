@@ -27,12 +27,8 @@ ReactDOM.render(
 );
 
 if (process.env.NODE_ENV === "development") {
-    if ((module as any).hot) {
-        (module as any).hot.accept();
-    }
-
-    if (!window.store) {
-        window.store = store;
+    if (module.hot) {
+        module.hot.accept();
     }
     serviceWorkerRegistration.unregister();
 } else if (process.env.NODE_ENV === "production") {

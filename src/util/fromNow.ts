@@ -15,10 +15,10 @@
  * @return {string}
  */
 export function fromNow(date: Date): string {
-    var seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
-    var years = Math.floor(seconds / 31536000);
-    var months = Math.floor(seconds / 2592000);
-    var days = Math.floor(seconds / 86400);
+    const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+    const years = Math.floor(seconds / 31536000);
+    const months = Math.floor(seconds / 2592000);
+    const days = Math.floor(seconds / 86400);
 
     if (days > 548) {
         return years + " years ago";
@@ -33,7 +33,7 @@ export function fromNow(date: Date): string {
         return "a month ago";
     }
 
-    var hours = Math.floor(seconds / 3600);
+    const hours = Math.floor(seconds / 3600);
 
     if (hours >= 36 && days <= 25) {
         return days + " days ago";
@@ -42,7 +42,7 @@ export function fromNow(date: Date): string {
         return "a day ago";
     }
 
-    var minutes = Math.floor(seconds / 60);
+    const minutes = Math.floor(seconds / 60);
 
     if (minutes >= 90 && hours <= 21) {
         return hours + " hours ago";
