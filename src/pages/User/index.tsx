@@ -1,6 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import List from "@material-ui/core/List";
+import Button from "@material-ui/core/Button";
 import { useSelector } from "react-redux";
+import throttle from "lodash/throttle";
 import { Redirect, useLocation, useParams } from "react-router";
 import { wrapLayout } from "../../components/Layout";
 import { getProfile } from "../../store/app/selectors";
@@ -14,13 +16,20 @@ const User = () => {
     const location = useLocation<UserListItemUserProps | undefined>();
     const profile = useSelector(getProfile);
     const ownProfile = params.username === profile.username;
-    const { fetch, userInfo, loaded, posts, postsLoading } = useFetchUserInfoHook(
-        params.username,
-        location.state
-    );
+    const {
+        fetchInfo,
+        fetchPosts,
+        userInfo,
+        loaded,
+        response,
+        pageInfo,
+        postsLoading,
+    } = useFetchUserInfoHook(params.username, location.state);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const fetchInfoThrottled = useCallback(throttle(fetchInfo, 2000), []);
     useEffect(() => {
-        fetch();
-    }, [fetch]);
+        fetchInfoThrottled();
+    }, [fetchInfoThrottled]);
     if (ownProfile) {
         return <Redirect to="/posts" />;
     }
@@ -35,7 +44,7 @@ const User = () => {
                         <React.Fragment>
                             {!userInfo.is_following && (
                                 <FollowButton
-                                    onFollow={() => fetch()}
+                                    onFollow={() => fetchInfo()}
                                     username={userInfo.username}
                                     public_key={userInfo.public_key}
                                 />
@@ -50,15 +59,20 @@ const User = () => {
             {loaded && (
                 <React.Fragment>
                     {postsLoading === true && <div>Loading...</div>}
-                    {userInfo.is_approved && posts != null && (
-                        <div>
-                            {posts.length === 0 && <div>No posts found</div>}
-                            {posts.map((post) => (
+                    {userInfo.is_approved && response != null && (
+                        <List>
+                            {response.length === 0 && <div>No posts found</div>}
+                            {response.map((post) => (
                                 <div key={post.id} style={{ margin: "20px 0" }}>
                                     <PostListItem key={post.id} post={post} />
                                 </div>
                             ))}
-                        </div>
+                            {pageInfo != null && pageInfo.next && (
+                                <Button onClick={() => fetchPosts()}>
+                                    Load More (Loaded {response.length} out of {pageInfo.total})
+                                </Button>
+                            )}
+                        </List>
                     )}
                 </React.Fragment>
             )}

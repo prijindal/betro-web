@@ -1,30 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { PostResource } from "../../api";
+import throttle from "lodash/throttle";
+import List from "@material-ui/core/List";
+import Button from "@material-ui/core/Button";
 import { wrapLayout } from "../../components/Layout";
 import { getProfile } from "../../store/app/selectors";
 import PostListItem from "../../components/PostListItem";
-import BetroApiObject from "../../api/context";
+import { useFetchOwnFeed } from "../../hooks";
 
 const Posts = () => {
-    const [posts, setPosts] = useState<Array<PostResource> | null>(null);
+    const { fetch, response, pageInfo, loaded } = useFetchOwnFeed();
     const profile = useSelector(getProfile);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const fetchThrottled = useCallback(throttle(fetch, 2000), []);
     useEffect(() => {
-        async function fetchPosts() {
-            const resp = await BetroApiObject.feed.fetchOwnPosts();
-            if (resp !== null) {
-                setPosts(resp);
-            }
-        }
-        fetchPosts();
-    }, []);
+        fetchThrottled();
+    }, [fetchThrottled]);
+    if (!loaded) {
+        return <div>Loading</div>;
+    }
+    if (response == null) {
+        return <div>Some error occurred</div>;
+    }
     return (
         <div>
-            {posts == null && <div>Loading...</div>}
-            {posts != null && (
-                <div>
-                    {posts.length === 0 && <div>No posts found</div>}
-                    {posts.map((post) => (
+            {response == null && <div>Loading...</div>}
+            {response != null && (
+                <List>
+                    {response.length === 0 && <div>No posts found</div>}
+                    {response.map((post) => (
                         <div key={post.id} style={{ margin: "20px 0" }}>
                             <PostListItem
                                 key={post.id}
@@ -38,7 +42,12 @@ const Posts = () => {
                             />
                         </div>
                     ))}
-                </div>
+                    {pageInfo != null && pageInfo.next && (
+                        <Button onClick={() => fetch()}>
+                            Load More (Loaded {response.length} out of {pageInfo.total})
+                        </Button>
+                    )}
+                </List>
             )}
         </div>
     );

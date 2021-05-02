@@ -128,10 +128,10 @@ export const useFetchUserInfoHook = (
     username: string,
     state: UserListItemUserProps | undefined
 ) => {
-    const profile = useSelector(getProfile);
     const [loaded, setLoaded] = useState<boolean>(false);
     const [postsLoading, setPostsLoading] = useState<boolean>(false);
-    const [posts, setPosts] = useState<Array<PostResource> | null>(null);
+    const [response, setResponse] = useState<Array<PostResource> | null>(null);
+    const [pageInfo, setPageInfo] = useState<FeedPageInfo | null>(null);
     const [userInfo, setUserInfo] = useState<UserInfo | null>(
         state == null
             ? null
@@ -144,35 +144,39 @@ export const useFetchUserInfoHook = (
                       typeof state.profile_picture == "string" ? null : state.profile_picture,
               }
     );
-    const fetchUser = useCallback(() => {
-        async function fetchPosts() {
-            if (profile.isLoaded) {
-                setPostsLoading(true);
-                const resp = await BetroApiObject.feed.fetchUserPosts(username);
-                setPostsLoading(false);
-                if (resp !== null) {
-                    setPosts(resp);
+    const fetchPosts = useCallback(
+        async (forceRefresh = false) => {
+            const after = pageInfo == null || forceRefresh ? undefined : pageInfo.after;
+            setPostsLoading(true);
+            const resp = await BetroApiObject.feed.fetchUserPosts(username, after);
+            setPostsLoading(false);
+            if (resp !== null) {
+                setPageInfo(resp.pageInfo);
+                if (response == null || forceRefresh) {
+                    setResponse(resp.data);
+                } else {
+                    setResponse([...response, ...resp.data]);
                 }
             }
-        }
-        async function fetchInfo() {
-            if (profile.isLoaded) {
-                const userInfo = await BetroApiObject.follow.fetchUserInfo(username);
-                setLoaded(true);
-                if (userInfo !== null) {
-                    setUserInfo(userInfo);
-                    if (userInfo.is_approved) {
-                        fetchPosts();
-                    }
-                }
+        },
+        [response, username, pageInfo]
+    );
+    const fetchInfo = useCallback(async () => {
+        const userInfo = await BetroApiObject.follow.fetchUserInfo(username);
+        setLoaded(true);
+        if (userInfo !== null) {
+            setUserInfo(userInfo);
+            if (userInfo.is_approved) {
+                fetchPosts();
             }
         }
-        fetchInfo();
-    }, [username, profile.isLoaded]);
+    }, [username, fetchPosts]);
     return {
-        fetch: fetchUser,
+        fetchInfo,
+        fetchPosts,
         loaded,
-        posts,
+        response,
+        pageInfo,
         userInfo,
         postsLoading,
     };
@@ -187,33 +191,47 @@ export const useFollowUserHook = (username?: string, public_key?: string | null)
     return followHandler;
 };
 
-export const useFetchHomeFeed = () => {
-    const [response, setResponse] = useState<Array<PostResource> | null>(null);
-    const [pageInfo, setPageInfo] = useState<FeedPageInfo | null>(null);
-    const [loaded, setLoaded] = useState<boolean>(false);
-    const getResponse = useCallback(
-        async (forceRefresh = false) => {
-            const after = pageInfo == null || forceRefresh ? undefined : pageInfo.after;
-            const resp = await BetroApiObject.feed.fetchHomeFeed(after);
-            setLoaded(true);
-            if (resp !== null) {
-                setPageInfo(resp.pageInfo);
-                if (response == null || forceRefresh) {
-                    setResponse(resp.data);
-                } else {
-                    setResponse([...response, ...resp.data]);
+const createFeedHook = (
+    fetchFunction: (
+        after: string | undefined
+    ) => Promise<{
+        data: Array<PostResource>;
+        pageInfo: FeedPageInfo;
+    } | null>
+) => {
+    const useFeedHook = () => {
+        const [response, setResponse] = useState<Array<PostResource> | null>(null);
+        const [pageInfo, setPageInfo] = useState<FeedPageInfo | null>(null);
+        const [loaded, setLoaded] = useState<boolean>(false);
+        const getResponse = useCallback(
+            async (forceRefresh = false) => {
+                const after = pageInfo == null || forceRefresh ? undefined : pageInfo.after;
+                const resp = await fetchFunction(after);
+                setLoaded(true);
+                if (resp !== null) {
+                    setPageInfo(resp.pageInfo);
+                    if (response == null || forceRefresh) {
+                        setResponse(resp.data);
+                    } else {
+                        setResponse([...response, ...resp.data]);
+                    }
                 }
-            }
-        },
-        [pageInfo, response]
-    );
-    return {
-        fetch: getResponse,
-        response,
-        pageInfo,
-        loaded,
+            },
+            [pageInfo, response]
+        );
+        return {
+            fetch: getResponse,
+            response,
+            pageInfo,
+            loaded,
+        };
     };
+
+    return useFeedHook;
 };
+
+export const useFetchHomeFeed = createFeedHook(BetroApiObject.feed.fetchHomeFeed);
+export const useFetchOwnFeed = createFeedHook(BetroApiObject.feed.fetchOwnPosts);
 
 export const useFetchApprovals = createPaginatedHook<ApprovalResponse>(
     BetroApiObject.follow.fetchPendingApprovals

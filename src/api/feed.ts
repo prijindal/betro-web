@@ -72,13 +72,23 @@ class FeedController {
         return posts;
     };
 
-    fetchUserPosts = async (username: string): Promise<Array<PostResource> | null> => {
+    fetchUserPosts = async (
+        username: string,
+        after: string | undefined
+    ): Promise<{ data: Array<PostResource>; pageInfo: FeedPageInfo } | null> => {
+        const limit = 5;
+        if (after == null) {
+            after = Buffer.from(new Date().toISOString(), "utf-8").toString("base64");
+        }
         try {
-            const response = await axios.get(`${this.auth.host}/api/user/${username}/posts`, {
-                headers: { Authorization: `Bearer ${this.auth.token}` },
-            });
-            const data: PostsFeedResponse = response.data;
-            return this.transformPostFeed(data, async (post, keys) => {
+            const response = await axios.get(
+                `${this.auth.host}/api/user/${username}/posts?limit=${limit}&after=${after}`,
+                {
+                    headers: { Authorization: `Bearer ${this.auth.token}` },
+                }
+            );
+            const posts: PostsFeedResponse = response.data;
+            const data = await this.transformPostFeed(posts, async (post, keys) => {
                 const symKey = await rsaDecrypt(this.auth.privateKey, keys[post.key_id]);
                 if (symKey == null) {
                     throw Error("Decryption issues");
@@ -86,17 +96,31 @@ class FeedController {
                 const sym_key = symKey.toString("base64");
                 return sym_key;
             });
+            return {
+                data,
+                pageInfo: response.data.pageInfo,
+            };
         } catch (e) {
             return null;
         }
     };
-    fetchOwnPosts = async (): Promise<Array<PostResource> | null> => {
+
+    fetchOwnPosts = async (
+        after: string | undefined
+    ): Promise<{ data: Array<PostResource>; pageInfo: FeedPageInfo } | null> => {
+        const limit = 29;
+        if (after == null) {
+            after = Buffer.from(new Date().toISOString(), "utf-8").toString("base64");
+        }
         try {
-            const response = await axios.get(`${this.auth.host}/api/account/posts`, {
-                headers: { Authorization: `Bearer ${this.auth.token}` },
-            });
-            const data: PostsFeedResponse = response.data;
-            return this.transformPostFeed(data, async (post, keys) => {
+            const response = await axios.get(
+                `${this.auth.host}/api/account/posts?limit=${limit}&after=${after}`,
+                {
+                    headers: { Authorization: `Bearer ${this.auth.token}` },
+                }
+            );
+            const posts: PostsFeedResponse = response.data;
+            const data = await this.transformPostFeed(posts, async (post, keys) => {
                 const symKey = await aesDecrypt(
                     this.auth.encryptionKey,
                     this.auth.encryptionMac,
@@ -105,6 +129,10 @@ class FeedController {
                 const sym_key = symKey.data.toString("base64");
                 return sym_key;
             });
+            return {
+                data,
+                pageInfo: response.data.pageInfo,
+            };
         } catch (e) {
             return null;
         }
