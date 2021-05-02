@@ -32,5 +32,5 @@ if (process.env.NODE_ENV === "development") {
     }
     serviceWorkerRegistration.unregister();
 } else if (process.env.NODE_ENV === "production") {
-    serviceWorkerRegistration.register();
+    serviceWorkerRegistration.unregister();
 }

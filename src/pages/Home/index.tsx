@@ -4,8 +4,8 @@ import Button from "@material-ui/core/Button";
 import { wrapLayout } from "../../components/Layout";
 import PostListItem from "../../components/PostListItem";
 import { useFetchHomeFeed } from "../../hooks";
-import { throttle } from "lodash";
-import { Alert } from "@material-ui/core";
+import throttle from "lodash/throttle";
+import Alert from "@material-ui/core/Alert";
 
 const App = () => {
     const { fetch, response, pageInfo, loaded } = useFetchHomeFeed();
