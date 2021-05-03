@@ -1,20 +1,45 @@
 import React from "react";
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardMedia from "@material-ui/core/CardMedia";
+import CardContent from "@material-ui/core/CardContent";
+import Typography from "@material-ui/core/Typography";
 import { PostResource } from "../../api";
-import UserListItem from "../UserListItem";
+import { UserAvatar, getPrimaryText } from "../UserListItem";
+import { fromNow } from "../../util/fromNow";
 
 const PostListItem: React.FunctionComponent<{ post: PostResource }> = (props) => {
     const { post } = props;
+    const secondary =
+        post.user.first_name != null ? (
+            <Typography component="span" variant="body2" color="textPrimary">
+                {`${post.user.username} ${fromNow(new Date(post.created_at))}`}
+            </Typography>
+        ) : (
+            fromNow(new Date(post.created_at))
+        );
     return (
-        <UserListItem user={post.user}>
-            <span>{post.text_content}</span>
+        <Card style={{ margin: "5px" }}>
+            <CardHeader
+                avatar={<UserAvatar user={post.user} />}
+                title={getPrimaryText(post.user)}
+                subheader={secondary}
+            />
             {post.media_content != null && (
-                <img
-                    style={{ maxWidth: "200px", maxHeight: "200px" }}
-                    src={post.media_content}
-                    alt={post.text_content || "Post"}
-                />
+                <CardMedia>
+                    <img
+                        style={{ maxWidth: "200px", maxHeight: "200px" }}
+                        src={post.media_content}
+                        alt={post.text_content || "Post"}
+                    />
+                </CardMedia>
             )}
-        </UserListItem>
+            <CardContent>
+                <Typography variant="body2" component="p">
+                    {post.text_content}
+                </Typography>
+            </CardContent>
+        </Card>
     );
 };
 

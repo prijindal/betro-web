@@ -12,7 +12,6 @@ const App: React.FC<any> = () => {
     const auth = useSelector(getAuth);
     const onInit = useCallback(() => {
         const isLoggedIn = BetroApiObject.auth.loadFromLocal();
-        console.log(isLoggedIn);
         dispatch(authLoaded(isLoggedIn));
         if (!isLoggedIn) {
             const state = location.state || { from: { pathname: "/login" } };

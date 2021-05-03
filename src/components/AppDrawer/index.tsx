@@ -92,10 +92,10 @@ const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) 
                     <ListItemText>
                         {countData.isLoaded && countData.settings === 0 ? (
                             <Badge color="secondary" variant="dot">
-                                <span>Notification Settings</span>
+                                <span>Settings</span>
                             </Badge>
                         ) : (
-                            "Notification Settings"
+                            "Settings"
                         )}
                     </ListItemText>
                 </NavLink>

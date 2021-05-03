@@ -14,16 +14,39 @@ export interface UserListItemUserProps {
     profile_picture?: Buffer | string | null;
 }
 
-const UserListItem: React.FunctionComponent<{
-    user: UserListItemUserProps;
-    routing?: boolean;
-}> = (props) => {
-    const { user, routing, children } = props;
+export const getPrimaryText = (user: UserListItemUserProps) => {
     const primaryText =
         user.first_name != null ? `${user.first_name} ${user.last_name}` : user.username;
-    const itemText = (
+    return primaryText;
+};
+
+export const UserAvatar: React.FunctionComponent<{
+    user: UserListItemUserProps;
+}> = (props) => {
+    const { user } = props;
+    if (user.profile_picture != null) {
+        return (
+            <Avatar
+                alt={getPrimaryText(user)}
+                src={
+                    typeof user.profile_picture == "string"
+                        ? user.profile_picture
+                        : bufferToImageUrl(user.profile_picture)
+                }
+            />
+        );
+    } else {
+        return <div />;
+    }
+};
+
+export const UserListItemHeader: React.FunctionComponent<{
+    user: UserListItemUserProps;
+}> = (props) => {
+    const { user } = props;
+    return (
         <ListItemText
-            primary={primaryText}
+            primary={getPrimaryText(user)}
             secondary={
                 user.first_name != null ? (
                     <Typography component="span" variant="body2" color="textPrimary">
@@ -33,18 +56,19 @@ const UserListItem: React.FunctionComponent<{
             }
         />
     );
+};
+
+const UserListItem: React.FunctionComponent<{
+    user: UserListItemUserProps;
+    routing?: boolean;
+}> = (props) => {
+    const { user, routing, children } = props;
+    const itemText = <UserListItemHeader user={user} />;
     return (
         <ListItem>
             {user.profile_picture != null && (
                 <ListItemAvatar>
-                    <Avatar
-                        alt={primaryText}
-                        src={
-                            typeof user.profile_picture == "string"
-                                ? user.profile_picture
-                                : bufferToImageUrl(user.profile_picture)
-                        }
-                    />
+                    <UserAvatar user={user} />
                 </ListItemAvatar>
             )}
             {routing ? (

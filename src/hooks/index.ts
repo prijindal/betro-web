@@ -203,11 +203,14 @@ const createFeedHook = (
         const [response, setResponse] = useState<Array<PostResource> | null>(null);
         const [pageInfo, setPageInfo] = useState<FeedPageInfo | null>(null);
         const [loaded, setLoaded] = useState<boolean>(false);
+        const [loading, setLoading] = useState<boolean>(false);
         const getResponse = useCallback(
             async (forceRefresh = false) => {
                 const after = pageInfo == null || forceRefresh ? undefined : pageInfo.after;
+                setLoading(true);
                 const resp = await fetchFunction(after);
                 setLoaded(true);
+                setLoading(false);
                 if (resp !== null) {
                     setPageInfo(resp.pageInfo);
                     if (response == null || forceRefresh) {
@@ -224,6 +227,7 @@ const createFeedHook = (
             response,
             pageInfo,
             loaded,
+            loading,
         };
     };
 

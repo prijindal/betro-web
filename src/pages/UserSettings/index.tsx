@@ -8,13 +8,13 @@ import { wrapLayout } from "../../components/Layout";
 import { useFetchUserSettings, useFetchCountHook } from "../../hooks";
 import BetroApiObject from "../../api/context";
 
-interface SettingNotification {
+interface Setting {
     action: UserSettingsAction;
     text: string;
     enabled: boolean;
 }
 
-const SETTINGS_NOTIFICATIONS: Array<{
+const SETTINGS: Array<{
     action: UserSettingsAction;
     text: string;
 }> = [
@@ -28,8 +28,8 @@ const SETTINGS_NOTIFICATIONS: Array<{
     },
 ];
 
-const parseUserSettings = (settings: Array<UserSettingResponse>): Array<SettingNotification> => {
-    return SETTINGS_NOTIFICATIONS.map((a) => {
+const parseUserSettings = (settings: Array<UserSettingResponse>): Array<Setting> => {
+    return SETTINGS.map((a) => {
         const userSetting = settings.find((b) => b.action === a.action);
         let enabled = false;
         if (userSetting !== null && userSetting !== undefined) {
@@ -39,7 +39,7 @@ const parseUserSettings = (settings: Array<UserSettingResponse>): Array<SettingN
     });
 };
 
-const UserSetting = (params: { userSetting: SettingNotification }) => {
+const UserSetting = (params: { userSetting: Setting }) => {
     const userSetting = params.userSetting;
     const [enabled, setEnabled] = useState<boolean>(userSetting.enabled);
     const [saving, setSaving] = useState<boolean>(false);

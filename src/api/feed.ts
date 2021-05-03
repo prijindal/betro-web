@@ -141,7 +141,7 @@ class FeedController {
     fetchHomeFeed = async (
         after: string | undefined
     ): Promise<{ data: Array<PostResource>; pageInfo: FeedPageInfo } | null> => {
-        const limit = 20;
+        const limit = 5;
         if (after == null) {
             after = Buffer.from(new Date().toISOString(), "utf-8").toString("base64");
         }

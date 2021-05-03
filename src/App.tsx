@@ -95,8 +95,8 @@ const App: React.FC = () => {
         <React.Suspense fallback={<LoadingSuspense />}>
             <Router history={history}>
                 <Helmet
-                    defaultTitle="React SSR Starter – TypeScript Edition"
-                    titleTemplate="%s – React SSR Starter – TypeScript Edition"
+                    defaultTitle="Betro"
+                    titleTemplate="%s – Betro"
                     link={[{ rel: "icon", type: "image/png", href: favicon }]}
                 />
                 <Switch>

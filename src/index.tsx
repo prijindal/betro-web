@@ -2,6 +2,9 @@ import * as React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { HelmetProvider } from "react-helmet-async";
+import ThemeProvider from "@material-ui/core/styles/ThemeProvider";
+import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import deepPurple from "@material-ui/core/colors/deepPurple";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 
 import { configureStore } from "./store";
@@ -11,6 +14,12 @@ import { Store } from "redux";
 import { RootState } from "./store/types";
 import "./index.scss";
 
+const theme = createMuiTheme({
+    palette: {
+        primary: deepPurple,
+    },
+});
+
 const store: Store<RootState> = configureStore({
     initialState: { app: initialState },
 });
@@ -19,7 +28,9 @@ ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
             <HelmetProvider>
-                <App />
+                <ThemeProvider theme={theme}>
+                    <App />
+                </ThemeProvider>
             </HelmetProvider>
         </Provider>
     </React.StrictMode>,
