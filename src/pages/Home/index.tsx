@@ -3,6 +3,7 @@ import Button from "@material-ui/core/Button";
 import useInfiniteScroll from "react-infinite-scroll-hook";
 import throttle from "lodash/throttle";
 import Alert from "@material-ui/core/Alert";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { wrapLayout } from "../../components/Layout";
 import PostListItem from "../../components/PostListItem";
 import { useFetchHomeFeed } from "../../hooks";
@@ -21,7 +22,11 @@ const App = () => {
         fetchThrottled();
     }, [fetchThrottled]);
     if (!loaded) {
-        return <div>Loading</div>;
+        return (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+                <CircularProgress />
+            </div>
+        );
     }
     if (response == null) {
         return <div>Some error occurred</div>;
@@ -52,7 +57,9 @@ const App = () => {
                     <PostListItem key={post.id} post={post} />
                 ))}
                 {(loading || (pageInfo != null && pageInfo.next)) && (
-                    <span ref={sentryRef}>Loading...</span>
+                    <div style={{ display: "flex", justifyContent: "center" }} ref={sentryRef}>
+                        <CircularProgress />
+                    </div>
                 )}
             </div>
         </React.Fragment>
