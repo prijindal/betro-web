@@ -8,6 +8,7 @@ const routes = {
     followers: "/followers",
     followees: "/followees",
     groups: "/groups",
+    search: "/search",
     post: "/post",
     posts: "/posts",
     profile: "/profile",

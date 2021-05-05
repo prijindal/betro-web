@@ -7,6 +7,7 @@ import {
     ApprovalResponse,
     FolloweeResponse,
     FollowerResponse,
+    SearchResult,
     UserInfo,
     PaginatedResponse,
 } from "./types";
@@ -193,6 +194,36 @@ class FollowController {
             }
         } catch (e) {
             return null;
+        }
+    };
+
+    searchUser = async (query: string): Promise<Array<SearchResult>> => {
+        try {
+            const response = await axios.get(`${this.auth.host}/api/user/search?query=${query}`, {
+                headers: { Authorization: `Bearer ${this.auth.token}` },
+            });
+            const data: Array<SearchResult> = [];
+            for (const res of response.data) {
+                let row: SearchResult = {
+                    id: res.id,
+                    username: res.username,
+                    public_key: res.public_key,
+                    is_following: res.is_following,
+                    is_following_approved: res.is_following_approved,
+                };
+                if (res.sym_key != null) {
+                    const userResponse = await parseUserProfile(
+                        res.sym_key,
+                        this.auth.privateKey,
+                        res
+                    );
+                    row = { ...row, ...userResponse };
+                }
+                data.push(row);
+            }
+            return data;
+        } catch (e) {
+            return [];
         }
     };
 }

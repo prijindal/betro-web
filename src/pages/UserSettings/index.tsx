@@ -3,34 +3,38 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Switch from "@material-ui/core/Switch";
-import { UserSettingResponse, UserSettingsAction } from "../../api";
+import { UserSettingResponse, UserSettingsType } from "../../api";
 import { wrapLayout } from "../../components/Layout";
 import { useFetchUserSettings, useFetchCountHook } from "../../hooks";
 import BetroApiObject from "../../api/context";
 
 interface Setting {
-    action: UserSettingsAction;
+    type: UserSettingsType;
     text: string;
     enabled: boolean;
 }
 
 const SETTINGS: Array<{
-    action: UserSettingsAction;
+    type: UserSettingsType;
     text: string;
 }> = [
     {
-        action: "notification_on_approved",
+        type: "notification_on_approved",
         text: "When somebody approves your follow request",
     },
     {
-        action: "notification_on_followed",
+        type: "notification_on_followed",
         text: "When somebody sends you a follow request",
+    },
+    {
+        type: "allow_search",
+        text: "Allow to be searchable",
     },
 ];
 
 const parseUserSettings = (settings: Array<UserSettingResponse>): Array<Setting> => {
     return SETTINGS.map((a) => {
-        const userSetting = settings.find((b) => b.action === a.action);
+        const userSetting = settings.find((b) => b.type === a.type);
         let enabled = false;
         if (userSetting !== null && userSetting !== undefined) {
             enabled = userSetting.enabled;
@@ -49,7 +53,7 @@ const UserSetting = (params: { userSetting: Setting }) => {
         setEnabled(value);
         setSaving(true);
         BetroApiObject.settings
-            .changeUserSettings(userSetting.action, value)
+            .changeUserSettings(userSetting.type, value)
             .then(() => {
                 fetchCount(true);
             })
@@ -81,7 +85,7 @@ const UserSettings = () => {
     return (
         <List>
             {parseUserSettings(settings).map((a) => (
-                <UserSetting key={a.action} userSetting={a} />
+                <UserSetting key={a.type} userSetting={a} />
             ))}
         </List>
     );

@@ -129,6 +129,17 @@ export interface UserInfo {
     profile_picture?: Buffer | null;
 }
 
+export interface SearchResult {
+    id: string;
+    username: string;
+    is_following: boolean;
+    is_following_approved: boolean;
+    public_key: string;
+    first_name?: string | null;
+    last_name?: string | null;
+    profile_picture?: Buffer | null;
+}
+
 export interface GroupResponse {
     id: string;
     sym_key: string;
@@ -136,12 +147,17 @@ export interface GroupResponse {
     is_default: boolean;
 }
 
-export type UserSettingsAction = "notification_on_approved" | "notification_on_followed";
+export type UserSettingsType =
+    | "notification_on_approved"
+    | "notification_on_followed"
+    | "allow_search";
+
+export type UserNotificationsActions = "notification_on_approved" | "notification_on_followed";
 
 export interface NotificationResponse {
     id: string;
     user_id: string;
-    action: UserSettingsAction;
+    action: UserSettingsType;
     content: string;
     read: boolean;
     payload: Record<string, unknown>;
@@ -159,6 +175,6 @@ export interface PaginatedResponse<T> {
 export interface UserSettingResponse {
     id: string;
     user_id: string;
-    action: UserSettingsAction;
+    type: UserNotificationsActions;
     enabled: boolean;
 }

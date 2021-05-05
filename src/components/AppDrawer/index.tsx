@@ -77,6 +77,10 @@ const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) 
                     )}
                 </NavLink>
                 <Divider />
+                <NavLink includeRouting={includeRouting} to="/search">
+                    <ListItemText>Search</ListItemText>
+                </NavLink>
+                <Divider />
                 <NavLink includeRouting={includeRouting} to="/profile">
                     <ListItemText>
                         {profile.isLoaded && isEmpty(profile.first_name) ? (

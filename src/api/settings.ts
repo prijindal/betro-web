@@ -1,6 +1,6 @@
 import axios from "axios";
 import AuthController from "./auth";
-import { UserSettingResponse, UserSettingsAction } from "./types";
+import { UserSettingResponse, UserSettingsType } from "./types";
 
 class SettingsController {
     auth: AuthController;
@@ -19,11 +19,11 @@ class SettingsController {
         }
     };
 
-    changeUserSettings = async (action: UserSettingsAction, enabled: boolean): Promise<null> => {
+    changeUserSettings = async (type: UserSettingsType, enabled: boolean): Promise<null> => {
         try {
             const response = await axios.post(
                 `${this.auth.host}/api/settings`,
-                { action, enabled },
+                { type, enabled },
                 {
                     headers: { Authorization: `Bearer ${this.auth.token}` },
                 }
