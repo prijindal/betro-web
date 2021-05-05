@@ -7,14 +7,16 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import throttle from "lodash/throttle";
 import { wrapLayout } from "../../components/Layout";
 import { getGroup } from "../../store/app/selectors";
-import { useFetchFollowers, useFetchGroupsHook, useFollowUserHook } from "../../hooks";
+import { useFetchFollowers, useFetchGroupsHook } from "../../hooks";
 import UserListItem from "../../components/UserListItem";
 import FollowButton from "../../components/FollowButton";
 import { FollowerResponse } from "../../api";
 
-const FollowerComponent: React.FunctionComponent<{ follower: FollowerResponse }> = (props) => {
-    const { follower } = props;
-    const followHandler = useFollowUserHook(follower.username, follower.public_key);
+const FollowerComponent: React.FunctionComponent<{
+    follower: FollowerResponse;
+    onFollow: () => void;
+}> = (props) => {
+    const { follower, onFollow } = props;
     return (
         <UserListItem user={follower}>
             <ListItemSecondaryAction>
@@ -28,7 +30,7 @@ const FollowerComponent: React.FunctionComponent<{ follower: FollowerResponse }>
                     <FollowButton
                         username={follower.username}
                         public_key={follower.public_key}
-                        onFollow={followHandler}
+                        onFollow={onFollow}
                     />
                 )}
             </ListItemSecondaryAction>
@@ -56,7 +58,7 @@ const Followers = () => {
         <List>
             {response.total === 0 && <div>No Followers</div>}
             {response.data.map((a) => (
-                <FollowerComponent key={a.follow_id} follower={a} />
+                <FollowerComponent key={a.follow_id} follower={a} onFollow={() => fetch(true)} />
             ))}
             {response.next && (
                 <Button onClick={() => fetch()}>

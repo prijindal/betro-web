@@ -1,4 +1,5 @@
 import { produce } from "immer";
+import { CountResponse } from "../../api";
 import { ActionTypes } from "./actions";
 import { Action, AppState } from "./types";
 
@@ -90,6 +91,24 @@ const appReducer = (state: AppState = initialState, action: Action): AppState =>
                 draft.count.followees = action.payload.followees;
                 draft.count.approvals = action.payload.approvals;
                 draft.count.posts = action.payload.posts;
+                return draft;
+            }
+            case ActionTypes.COUNT_INCREMENT: {
+                const count = draft.count[action.payload as keyof CountResponse];
+                if (count != null) {
+                    draft.count[action.payload as keyof CountResponse] = count + 1;
+                } else {
+                    draft.count[action.payload as keyof CountResponse] = 1;
+                }
+                return draft;
+            }
+            case ActionTypes.COUNT_DECREMENT: {
+                const count = draft.count[action.payload as keyof CountResponse];
+                if (count != null) {
+                    draft.count[action.payload as keyof CountResponse] = count - 1;
+                } else {
+                    draft.count[action.payload as keyof CountResponse] = 0;
+                }
                 return draft;
             }
         }

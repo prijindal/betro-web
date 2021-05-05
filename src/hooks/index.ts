@@ -1,12 +1,16 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import isEmpty from "lodash/isEmpty";
 import { getAuth, getGroup, getCount, getProfile } from "../store/app/selectors";
 import {
     groupsLoaded,
     countLoaded,
     profileLoaded,
     profilePictureLoaded,
+    decremenetCount,
+    incrementCount,
 } from "../store/app/actions";
+import { Group } from "../store/app/types";
 import {
     FeedPageInfo,
     PostResource,
@@ -15,6 +19,7 @@ import {
     FollowerResponse,
     UserInfo,
     UserSettingResponse,
+    NotificationResponse,
 } from "../api";
 import throttle from "lodash/throttle";
 import { bufferToImageUrl } from "../util/bufferToImage";
@@ -183,11 +188,14 @@ export const useFetchUserInfoHook = (
 };
 
 export const useFollowUserHook = (username?: string, public_key?: string | null) => {
+    const dispatch = useDispatch();
     const followHandler = useCallback(async () => {
         if (username != null && public_key != null) {
-            return BetroApiObject.follow.followUser(username, public_key);
+            const follow = BetroApiObject.follow.followUser(username, public_key);
+            dispatch(incrementCount("followees"));
+            return follow;
         }
-    }, [username, public_key]);
+    }, [username, public_key, dispatch]);
     return followHandler;
 };
 
@@ -232,6 +240,59 @@ const createFeedHook = (
     };
 
     return useFeedHook;
+};
+
+export const useGroupSelector = () => {
+    const [groupId, setGroupId] = useState<string>("");
+    const groupData = useSelector(getGroup);
+    useEffect(() => {
+        if (isEmpty(groupId)) {
+            const defaultGroup = groupData.data.find((a) => a.is_default);
+            if (defaultGroup != null) {
+                setGroupId(defaultGroup.id);
+            }
+        }
+    }, [groupId, groupData]);
+    return {
+        groupId,
+        setGroupId,
+        groupData,
+    };
+};
+
+export const useApproveUser = (approval: ApprovalResponse, group: Group | undefined) => {
+    const dispatch = useDispatch();
+    const approveHandler = useCallback(() => {
+        if (group !== undefined) {
+            const approvePromise = BetroApiObject.follow.approveUser(
+                approval.id,
+                approval.public_key,
+                group.id,
+                group.sym_key
+            );
+            dispatch(incrementCount("followers"));
+            dispatch(decremenetCount("approvals"));
+            return approvePromise;
+        }
+    }, [approval.id, approval.public_key, group, dispatch]);
+
+    return approveHandler;
+};
+
+export const useReadNotification = (notification: NotificationResponse) => {
+    const dispatch = useDispatch();
+    const [read, setRead] = useState<boolean>(notification.read);
+    const readNotification = useCallback(async () => {
+        const isRead = await BetroApiObject.notifications.readNotification(notification.id);
+        if (isRead) {
+            setRead(true);
+            dispatch(decremenetCount("notifications"));
+        }
+    }, [notification.id, dispatch]);
+    return {
+        readNotification,
+        read,
+    };
 };
 
 export const useFetchHomeFeed = createFeedHook(BetroApiObject.feed.fetchHomeFeed);

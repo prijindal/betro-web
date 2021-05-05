@@ -11,6 +11,8 @@ export const ActionTypes = {
     PROFILE_PICTURE_LOADED: "profile/picture_loaded",
     GROUPS_LOADED: "group/loaded",
     COUNT_LOADED: "count/loaded",
+    COUNT_INCREMENT: "count/increment",
+    COUNT_DECREMENT: "count/decrement",
 };
 
 export const setLocale = (locale: Locale): Action => ({
@@ -67,4 +69,14 @@ export const groupsLoaded = (groups: Array<Group>): Action => ({
 export const countLoaded = (count: CountResponse): Action => ({
     type: ActionTypes.COUNT_LOADED,
     payload: count,
+});
+
+export const incrementCount = (field: keyof CountResponse): Action => ({
+    type: ActionTypes.COUNT_INCREMENT,
+    payload: field,
+});
+
+export const decremenetCount = (field: keyof CountResponse): Action => ({
+    type: ActionTypes.COUNT_DECREMENT,
+    payload: field,
 });

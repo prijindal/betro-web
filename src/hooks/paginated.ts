@@ -8,17 +8,20 @@ export function createPaginatedHook<T>(
         const [response, setResponse] = useState<PaginatedResponse<T> | null>(null);
         const after = response == null ? undefined : response.after;
         const [loaded, setLoaded] = useState<boolean>(false);
-        const getResponse = useCallback(async () => {
-            const resp = await fetchApi(after);
-            setLoaded(true);
-            if (resp !== null) {
-                if (response == null) {
-                    setResponse(resp);
-                } else {
-                    setResponse({ ...resp, data: [...response.data, ...resp.data] });
+        const getResponse = useCallback(
+            async (forceRefresh = false) => {
+                const resp = await fetchApi(after);
+                setLoaded(true);
+                if (resp !== null) {
+                    if (response == null || forceRefresh) {
+                        setResponse(resp);
+                    } else {
+                        setResponse({ ...resp, data: [...response.data, ...resp.data] });
+                    }
                 }
-            }
-        }, [after, response]);
+            },
+            [after, response]
+        );
         return {
             fetch: getResponse,
             response,

@@ -1,31 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
 import Typography from "@material-ui/core/Typography";
 import MenuItem from "@material-ui/core/MenuItem";
 import { wrapLayout } from "../../components/Layout";
-import { getGroup } from "../../store/app/selectors";
-import { useFetchGroupsHook } from "../../hooks";
+import { useFetchGroupsHook, useGroupSelector } from "../../hooks";
 import { bufferToImageUrl } from "../../util/bufferToImage";
 import BetroApiObject from "../../api/context";
+import { incrementCount } from "../../store/app/actions";
 
 const Post = () => {
-    const [groupId, setGroupId] = useState<string>("");
-    const groupData = useSelector(getGroup);
+    const { groupId, setGroupId, groupData } = useGroupSelector();
     const [text, setText] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [media, setMedia] = useState<Buffer | null>(null);
+    const dispatch = useDispatch();
     const fetchGroups = useFetchGroupsHook();
-    useEffect(() => {
-        if (groupData.isLoaded) {
-            const defaultGroup = groupData.data.find((a) => a.is_default);
-            if (defaultGroup != null) {
-                setGroupId(defaultGroup.id);
-            }
-        }
-    }, [groupData]);
     useEffect(() => {
         fetchGroups();
     }, [fetchGroups]);
@@ -38,6 +30,7 @@ const Post = () => {
             setText(null);
             setMedia(null);
             setLoading(false);
+            dispatch(incrementCount("posts"));
         }
     };
     const handleUploadClick = (event: React.ChangeEvent<HTMLInputElement>) => {

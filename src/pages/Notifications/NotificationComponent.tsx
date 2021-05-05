@@ -1,22 +1,16 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import BetroApiObject from "../../api/context";
 import { NotificationResponse } from "../../api";
 import { fromNow } from "../../util/fromNow";
+import { useReadNotification } from "../../hooks";
 
 const NotificationComponent: React.FunctionComponent<{ notification: NotificationResponse }> = (
     props
 ) => {
     const { notification } = props;
-    const [read, setRead] = useState<boolean>(notification.read);
-    const readNotification = useCallback(async () => {
-        const isRead = await BetroApiObject.notifications.readNotification(notification.id);
-        if (isRead) {
-            setRead(true);
-        }
-    }, [notification.id]);
+    const { read, readNotification } = useReadNotification(notification);
     return (
         <ListItem disabled={read} onClick={read ? () => null : () => readNotification()}>
             <ListItemText

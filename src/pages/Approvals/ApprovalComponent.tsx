@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import isEmpty from "lodash/isEmpty";
-import { getGroup } from "../../store/app/selectors";
 
 import UserListItem from "../../components/UserListItem";
 import ConfirmDialog from "../../components/ConfirmDialog";
-import BetroApiObject from "../../api/context";
 import { ApprovalResponse } from "../../api";
+import { useApproveUser, useGroupSelector } from "../../hooks";
 
 const ApprovalComponent: React.FunctionComponent<{
     approval: ApprovalResponse;
@@ -17,23 +14,13 @@ const ApprovalComponent: React.FunctionComponent<{
 }> = (props) => {
     const { approval, onApproved } = props;
     const [confirmApprove, setConfirmApprove] = useState<boolean>(false);
-    const [groupId, setGroupId] = useState<string>("");
-    const groupData = useSelector(getGroup);
-    useEffect(() => {
-        if (isEmpty(groupId)) {
-            const defaultGroup = groupData.data.find((a) => a.is_default);
-            if (defaultGroup != null) {
-                setGroupId(defaultGroup.id);
-            }
-        }
-    }, [groupId, groupData]);
+    const { groupId, setGroupId, groupData } = useGroupSelector();
+    const approveUser = useApproveUser(
+        approval,
+        groupData.data.find((a) => a.id === groupId)
+    );
     const approveHandler = () => {
-        const group = groupData.data.find((a) => a.id === groupId);
-        if (group !== undefined) {
-            BetroApiObject.follow
-                .approveUser(approval.id, approval.public_key, groupId, group.sym_key)
-                .then(onApproved);
-        }
+        approveUser()?.then(onApproved);
     };
     return (
         <UserListItem user={approval}>
