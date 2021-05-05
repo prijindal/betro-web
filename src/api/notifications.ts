@@ -19,6 +19,23 @@ class NotificationController {
             return null;
         }
     };
+
+    readNotification = async (notification_id: string): Promise<boolean> => {
+        try {
+            const response = await axios.post(
+                `${this.auth.host}/api/notifications/read`,
+                {
+                    notification_id,
+                },
+                {
+                    headers: { Authorization: `Bearer ${this.auth.token}` },
+                }
+            );
+            return response.data.read;
+        } catch (e) {
+            return false;
+        }
+    };
 }
 
 export default NotificationController;

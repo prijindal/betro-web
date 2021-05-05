@@ -143,6 +143,7 @@ export interface NotificationResponse {
     user_id: string;
     action: UserSettingsAction;
     content: string;
+    read: boolean;
     payload: Record<string, unknown>;
     created_at: string;
 }

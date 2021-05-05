@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import List from "@material-ui/core/List";
 import BetroApiObject from "../../api/context";
 import { NotificationResponse } from "../../api";
 import { wrapLayout } from "../../components/Layout";
-import { fromNow } from "../../util/fromNow";
+import NotificationComponent from "./NotificationComponent";
 
 const Notifications = () => {
     const [loaded, setLoaded] = useState<boolean>(false);
@@ -28,23 +28,12 @@ const Notifications = () => {
         return <div>Some error</div>;
     }
     return (
-        <div>
+        <List>
             {notifications.length === 0 && <div>No Notifications</div>}
             {notifications.map((a) => (
-                <div key={a.id}>
-                    <Link
-                        to={
-                            a.action === "notification_on_followed"
-                                ? "/approvals"
-                                : `/user/${a.payload.username}`
-                        }
-                    >
-                        <b>{a.content}&nbsp;</b>
-                    </Link>
-                    <span>{fromNow(new Date(Date.parse(a.created_at)))}</span>
-                </div>
+                <NotificationComponent key={a.id} notification={a} />
             ))}
-        </div>
+        </List>
     );
 };
 
