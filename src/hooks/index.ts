@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import isEmpty from "lodash/isEmpty";
-import { getAuth, getGroup, getCount, getProfile } from "../store/app/selectors";
+import { getGroup, getCount, getProfile } from "../store/app/selectors";
 import {
     groupsLoaded,
     countLoaded,
@@ -65,12 +65,11 @@ export function useFetchCountHook() {
 }
 
 export function useFetchWhoami() {
-    const auth = useSelector(getAuth);
     const profile = useSelector(getProfile);
     const dispatch = useDispatch();
     const fetchWhoami = useCallback(
         (forceLoad = false) => {
-            if (auth.isLoaded && (profile.isLoaded === false || forceLoad)) {
+            if (profile.isLoaded === false || forceLoad) {
                 BetroApiObject.account.whoAmi().then(async (resp) => {
                     if (resp != null) {
                         dispatch(
@@ -86,26 +85,25 @@ export function useFetchWhoami() {
                 });
             }
         },
-        [dispatch, auth.isLoaded, profile.isLoaded]
+        [dispatch, profile.isLoaded]
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
     return useCallback(throttle(fetchWhoami, 2000), []);
 }
 
 export function useFetchProfilePicture() {
-    const auth = useSelector(getAuth);
     const profile = useSelector(getProfile);
     const dispatch = useDispatch();
 
     const getProfilePicture = useCallback(
         (forceLoad = false) => {
-            if (auth.isLoaded && (profile.isProfilePictureLoaded === false || forceLoad)) {
+            if (profile.isProfilePictureLoaded === false || forceLoad) {
                 BetroApiObject.account.fetchProfilePicture().then(async (resp) => {
                     dispatch(profilePictureLoaded(resp == null ? null : bufferToImageUrl(resp)));
                 });
             }
         },
-        [dispatch, auth.isLoaded, profile.isProfilePictureLoaded]
+        [dispatch, profile.isProfilePictureLoaded]
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
     return useCallback(throttle(getProfilePicture, 2000), []);
