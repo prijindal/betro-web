@@ -4,10 +4,10 @@
   "private": true,
   "dependencies": {
     "@emotion/styled": "^11.3.0",
-    "@material-ui/core": "^5.0.0-alpha.31",
+    "@material-ui/core": "^5.0.0-alpha.32",
     "@material-ui/icons": "^5.0.0-alpha.29",
     "axios": "^0.21.1",
-    "betro-js-lib": "git+https://prijindal@github.com/betro-app/betro-js-lib.git#3a02475c7e30c6d7cf096e38c2ff0874ca600e69",
+    "betro-js-lib": "git+https://prijindal@github.com/betro-app/betro-js-lib.git#9f98db910d43f4a458613ca5a221814a7f8b7bca",
     "history": "^4.10.1",
     "i18next": "^20.2.2",
     "i18next-xhr-backend": "^3.2.2",
