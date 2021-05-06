@@ -29,6 +29,7 @@ const Search = () => {
             setResults([]);
         }
     }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const searchUserThrottled = useCallback(throttle(searchUser, 2000), []);
     return (
         <div>

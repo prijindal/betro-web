@@ -5,6 +5,7 @@ import { HelmetProvider } from "react-helmet-async";
 import ThemeProvider from "@material-ui/core/styles/ThemeProvider";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import deepPurple from "@material-ui/core/colors/deepPurple";
+import { SnackbarProvider } from "notistack";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 
 import { configureStore } from "./store";
@@ -29,7 +30,9 @@ ReactDOM.render(
         <Provider store={store}>
             <HelmetProvider>
                 <ThemeProvider theme={theme}>
-                    <App />
+                    <SnackbarProvider maxSnack={3}>
+                        <App />
+                    </SnackbarProvider>
                 </ThemeProvider>
             </HelmetProvider>
         </Provider>

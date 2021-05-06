@@ -8,6 +8,7 @@ import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
+import { useSnackbar } from "notistack";
 import { loggedIn, resetAuth, verifedLogin } from "../../store/app/actions";
 import classes from "./Login.module.scss";
 import BetroApiObject from "../../api/context";
@@ -15,6 +16,7 @@ import BetroApiObject from "../../api/context";
 const App: React.FC<any> = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [email, setEmail] = useState<string>("");
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [password, setPassword] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
     const dispatch = useDispatch();
@@ -23,6 +25,8 @@ const App: React.FC<any> = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
+        closeSnackbar();
+        setError(null);
         BetroApiObject.auth
             .login(email, password)
             .then((payload) => {
@@ -45,12 +49,14 @@ const App: React.FC<any> = () => {
                         const errorMessage = error.response?.data?.data || "Login error";
                         setLoading(false);
                         setError(errorMessage);
+                        enqueueSnackbar(errorMessage, { autoHideDuration: 2000 });
                     });
             })
             .catch((error) => {
                 const errorMessage = error.response?.data?.data || "Login error";
                 setLoading(false);
                 setError(errorMessage);
+                enqueueSnackbar(errorMessage, { autoHideDuration: 2000 });
             });
     };
     return (
