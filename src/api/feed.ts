@@ -1,5 +1,5 @@
 import axios from "axios";
-import { aesDecrypt, rsaDecrypt, symDecrypt } from "betro-js-lib";
+import { aesDecrypt, rsaDecrypt } from "betro-js-lib";
 import { bufferToImageUrl } from "../util/bufferToImage";
 import AuthController from "./auth";
 import { parsePost, parseUserProfile } from "./profileHelper";

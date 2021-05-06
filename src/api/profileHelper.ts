@@ -1,6 +1,6 @@
 import { rsaDecrypt, symDecrypt } from "betro-js-lib";
 import { bufferToImageUrl } from "../util/bufferToImage";
-import { PostResource, PostResponse } from "./types";
+import { PostResponse } from "./types";
 
 interface UserProfile {
     first_name?: string | null;
