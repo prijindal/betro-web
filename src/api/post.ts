@@ -3,7 +3,7 @@ import { aesDecrypt, rsaDecrypt, symEncrypt } from "betro-js-lib";
 import { bufferToImageUrl } from "../util/bufferToImage";
 import AuthController from "./auth";
 import { parsePost, parseUserProfile } from "./profileHelper";
-import { GetPostResponse, PostResource, PostResourceUser } from "./types";
+import { GetPostResponse, PostResource, PostResourceUser, LikeResponse } from "./types";
 
 class PostController {
     auth: AuthController;
@@ -89,6 +89,28 @@ class PostController {
         } catch (e) {
             return null;
         }
+    };
+
+    like = async (id: string): Promise<LikeResponse> => {
+        const response = await axios.post<null, AxiosResponse<LikeResponse>>(
+            `${this.auth.host}/api/post/${id}/like`,
+            {},
+            {
+                headers: { Authorization: `Bearer ${this.auth.token}` },
+            }
+        );
+        return response.data;
+    };
+
+    unlike = async (id: string): Promise<LikeResponse> => {
+        const response = await axios.post<null, AxiosResponse<LikeResponse>>(
+            `${this.auth.host}/api/post/${id}/unlike`,
+            {},
+            {
+                headers: { Authorization: `Bearer ${this.auth.token}` },
+            }
+        );
+        return response.data;
     };
 }
 

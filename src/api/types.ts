@@ -41,6 +41,8 @@ export interface PostResource {
     text_content: string | null;
     media_content: string | null;
     media_encoding: string | null;
+    likes: number;
+    is_liked: boolean;
     user: PostResourceUser;
     created_at: Date;
 }
@@ -65,6 +67,8 @@ export interface PostResponse {
     media_encoding: string;
     text_content: string;
     key_id: string;
+    likes: number;
+    is_liked: boolean;
     created_at: Date;
 }
 
@@ -182,4 +186,9 @@ export interface UserSettingResponse {
 export interface GetPostResponse {
     post: PostResponse & { key: string };
     user: PostUserResponse;
+}
+
+export interface LikeResponse {
+    liked: boolean;
+    likes?: number;
 }

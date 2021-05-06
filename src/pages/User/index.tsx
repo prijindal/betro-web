@@ -64,7 +64,7 @@ const User = () => {
                             {response.length === 0 && <div>No posts found</div>}
                             {response.map((post) => (
                                 <div key={post.id} style={{ margin: "20px 0" }}>
-                                    <PostListItem key={post.id} post={post} />
+                                    <PostListItem routing={true} key={post.id} post={post} />
                                 </div>
                             ))}
                             {pageInfo != null && pageInfo.next && (

@@ -42,6 +42,8 @@ export const parsePost = async (
     text_content: string | null;
     media_content: string | null;
     media_encoding: string | null;
+    likes: number;
+    is_liked: boolean;
     created_at: Date;
 }> => {
     let text_content: string | null = null;
@@ -64,5 +66,7 @@ export const parsePost = async (
         text_content: text_content,
         media_content: media_content,
         media_encoding: post.media_encoding,
+        is_liked: post.is_liked,
+        likes: post.likes,
     };
 };

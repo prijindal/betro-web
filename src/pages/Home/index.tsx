@@ -54,7 +54,7 @@ const App = () => {
                     </div>
                 )}
                 {response.map((post) => (
-                    <PostListItem key={post.id} post={post} />
+                    <PostListItem routing={true} key={post.id} post={post} />
                 ))}
                 {(loading || (pageInfo != null && pageInfo.next)) && (
                     <div style={{ display: "flex", justifyContent: "center" }} ref={sentryRef}>

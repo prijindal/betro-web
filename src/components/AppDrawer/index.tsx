@@ -67,7 +67,7 @@ const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) 
                     )}
                 </NavLink>
                 <Divider />
-                <NavLink includeRouting={includeRouting} to="/post">
+                <NavLink includeRouting={includeRouting} to="/newpost">
                     <ListItemText>Post</ListItemText>
                 </NavLink>
                 <NavLink includeRouting={includeRouting} to="/posts">
