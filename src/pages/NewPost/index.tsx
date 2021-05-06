@@ -11,7 +11,7 @@ import { bufferToImageUrl } from "../../util/bufferToImage";
 import BetroApiObject from "../../api/context";
 import { incrementCount } from "../../store/app/actions";
 
-const Post = () => {
+const NewPost = () => {
     const { groupId, setGroupId, groupData } = useGroupSelector();
     const [text, setText] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
@@ -98,4 +98,4 @@ const Post = () => {
     );
 };
 
-export default wrapLayout(Post);
+export default wrapLayout(NewPost);
