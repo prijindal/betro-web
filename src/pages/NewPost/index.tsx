@@ -26,7 +26,7 @@ const NewPost = () => {
         const group = groupData.data.find((a) => a.id === groupId);
         if (group !== undefined) {
             setLoading(true);
-            await BetroApiObject.account.createPost(groupId, group?.sym_key, text, null, media);
+            await BetroApiObject.post.createPost(groupId, group?.sym_key, text, null, media);
             setText(null);
             setMedia(null);
             setLoading(false);

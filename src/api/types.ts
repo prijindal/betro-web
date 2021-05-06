@@ -178,3 +178,8 @@ export interface UserSettingResponse {
     type: UserNotificationsActions;
     enabled: boolean;
 }
+
+export interface GetPostResponse {
+    post: PostResponse & { key: string };
+    user: PostUserResponse;
+}

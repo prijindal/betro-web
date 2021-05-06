@@ -7,9 +7,11 @@ import Typography from "@material-ui/core/Typography";
 import { PostResource } from "../../api";
 import { UserAvatar, getPrimaryText } from "../UserListItem";
 import { fromNow } from "../../util/fromNow";
+import { useHistory } from "react-router-dom";
 
 const PostListItem: React.FunctionComponent<{ post: PostResource }> = (props) => {
     const { post } = props;
+    const history = useHistory();
     const secondary =
         post.user.first_name != null ? (
             <Typography component="span" variant="body2" color="textPrimary">
@@ -19,7 +21,10 @@ const PostListItem: React.FunctionComponent<{ post: PostResource }> = (props) =>
             fromNow(new Date(post.created_at))
         );
     return (
-        <Card style={{ margin: "5px" }}>
+        <Card
+            onClick={() => history.push({ pathname: `/post/${post.id}`, state: post })}
+            style={{ margin: "5px" }}
+        >
             <CardHeader
                 avatar={<UserAvatar user={post.user} />}
                 title={getPrimaryText(post.user)}

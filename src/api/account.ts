@@ -214,47 +214,6 @@ class AccountController {
             return null;
         }
     };
-
-    createPost = async (
-        group_id: string,
-        encrypted_sym_key: string,
-        text: string | null,
-        media_encoding: string | null,
-        media: Buffer | null
-    ): Promise<null> => {
-        try {
-            const sym_key = await aesDecrypt(
-                this.auth.encryptionKey,
-                this.auth.encryptionMac,
-                encrypted_sym_key
-            );
-            let encryptedText: string | null = null;
-            if (text != null) {
-                encryptedText = await symEncrypt(
-                    sym_key.data.toString("base64"),
-                    Buffer.from(text)
-                );
-            }
-            let encryptedMedia: string | null = null;
-            if (media != null) {
-                encryptedMedia = await symEncrypt(sym_key.data.toString("base64"), media);
-            }
-            const response = await axios.post(
-                `${this.auth.host}/api/post`,
-                {
-                    group_id: group_id,
-                    text_content: encryptedText,
-                    media_content: encryptedMedia,
-                },
-                {
-                    headers: { Authorization: `Bearer ${this.auth.token}` },
-                }
-            );
-            return response.data;
-        } catch (e) {
-            return null;
-        }
-    };
 }
 
 export default AccountController;

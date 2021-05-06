@@ -1,4 +1,6 @@
 import { rsaDecrypt, symDecrypt } from "betro-js-lib";
+import { bufferToImageUrl } from "../util/bufferToImage";
+import { PostResource, PostResponse } from "./types";
 
 interface UserProfile {
     first_name?: string | null;
@@ -30,4 +32,37 @@ export const parseUserProfile = async (
     response.last_name = last_name_bytes?.toString("utf-8");
     response.profile_picture = profile_picture_bytes;
     return response;
+};
+
+export const parsePost = async (
+    post: PostResponse,
+    sym_key: string
+): Promise<{
+    id: string;
+    text_content: string | null;
+    media_content: string | null;
+    media_encoding: string | null;
+    created_at: Date;
+}> => {
+    let text_content: string | null = null;
+    let media_content: string | null = null;
+    if (post.text_content !== null) {
+        const text = await symDecrypt(sym_key, post.text_content);
+        if (text != null) {
+            text_content = text.toString("utf-8");
+        }
+    }
+    if (post.media_content !== null) {
+        const media = await symDecrypt(sym_key, post.media_content);
+        if (media != null) {
+            media_content = bufferToImageUrl(media);
+        }
+    }
+    return {
+        id: post.id,
+        created_at: post.created_at,
+        text_content: text_content,
+        media_content: media_content,
+        media_encoding: post.media_encoding,
+    };
 };

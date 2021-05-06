@@ -15,6 +15,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import User from "./pages/User";
+import Post from "./pages/Post";
 import NewPost from "./pages/NewPost";
 import Posts from "./pages/Posts";
 import Search from "./pages/Search";
@@ -75,6 +76,10 @@ const APP_ROUTES = [
     },
     {
         route: routes.post,
+        Component: Post,
+    },
+    {
+        route: routes.newpost,
         Component: NewPost,
     },
     {

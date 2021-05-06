@@ -5,6 +5,7 @@ import GroupController from "./group";
 import FeedController from "./feed";
 import NotificationController from "./notifications";
 import SettingsController from "./settings";
+import PostController from "./post";
 export * from "./types";
 
 class BetroApi {
@@ -37,6 +38,10 @@ class BetroApi {
 
     get settings() {
         return new SettingsController(this.auth);
+    }
+
+    get post() {
+        return new PostController(this.auth);
     }
 }
 
