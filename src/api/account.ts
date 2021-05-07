@@ -31,7 +31,6 @@ class AccountController {
         if (!this.auth.isAuthenticated()) return false;
         const response = await this.auth.instance.get("api/account/keys");
         const data = response.data;
-
         const encryptedPrivateKey = data.private_key;
         const encryptedSymKey = data.sym_key;
         const privateKey = await aesDecrypt(

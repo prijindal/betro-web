@@ -46,6 +46,7 @@ const App: React.FC<any> = () => {
                         }
                     })
                     .catch((error) => {
+                        console.log(error);
                         const errorMessage = error.response?.data?.data || "Login error";
                         setLoading(false);
                         setError(errorMessage);
@@ -53,6 +54,7 @@ const App: React.FC<any> = () => {
                     });
             })
             .catch((error) => {
+                console.log(error);
                 const errorMessage = error.response?.data?.data || "Login error";
                 setLoading(false);
                 setError(errorMessage);

@@ -25,7 +25,8 @@ class AuthController {
         if (
             this.encryptionKey.length === 0 ||
             this.encryptionMac.length === 0 ||
-            this.token.length === 0
+            ((this.token == null || this.token.length === 0) &&
+                this.instance.defaults.headers["cookie"] === null)
         ) {
             return false;
         }
@@ -54,6 +55,7 @@ class AuthController {
     };
 
     logout = () => {
+        this.instance = axios.create({ baseURL: this.host });
         localStorage.clear();
         this.encryptionKey = "";
         this.encryptionMac = "";
@@ -65,16 +67,21 @@ class AuthController {
     login = async (email: string, password: string): Promise<boolean> => {
         const masterKey = await getMasterKey(email, password);
         const masterHash = await getMasterHash(masterKey, password);
-        const response = await this.instance.post(`${this.host}/api/login`, {
-            email,
-            master_hash: masterHash,
-        });
+        const response = await this.instance.post(
+            `/api/login?set_cookie=${this.host === window.location.origin}`,
+            {
+                email,
+                master_hash: masterHash,
+            }
+        );
         const encryptionKeys = await getEncryptionKey(masterKey);
         const token = response.data.token;
         this.encryptionKey = encryptionKeys.encryption_key;
         this.encryptionMac = encryptionKeys.encryption_mac;
-        this.token = token;
-        this.instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        if (token != null) {
+            this.token = token;
+            this.instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        }
         this.storeLocal();
         return true;
     };
@@ -82,7 +89,7 @@ class AuthController {
     isAvailableUsername = async (username: string): Promise<boolean> => {
         try {
             const response = await this.instance.get(
-                `${this.host}/api/register/available/username?username=${username}`
+                `/api/register/available/username?username=${username}`
             );
             return response.data.available;
         } catch (e) {
@@ -93,7 +100,7 @@ class AuthController {
     isAvailableEmail = async (email: string): Promise<boolean> => {
         try {
             const response = await this.instance.get(
-                `${this.host}/api/register/available/email?email=${email}`
+                `/api/register/available/email?email=${email}`
             );
             return response.data.available;
         } catch (e) {
@@ -117,7 +124,7 @@ class AuthController {
             encryptionKeys.encryption_mac,
             Buffer.from(symKey, "base64")
         );
-        const response = await this.instance.post(`${this.host}/api/register`, {
+        const response = await this.instance.post(`/api/register`, {
             username,
             email,
             master_hash: masterHash,
@@ -129,8 +136,10 @@ class AuthController {
         const token = response.data.token;
         this.encryptionKey = encryptionKeys.encryption_key;
         this.encryptionMac = encryptionKeys.encryption_mac;
-        this.token = token;
-        this.instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        if (token != null) {
+            this.token = token;
+            this.instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        }
         this.storeLocal();
         return true;
     };
