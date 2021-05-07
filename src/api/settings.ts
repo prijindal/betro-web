@@ -1,4 +1,3 @@
-import axios from "axios";
 import AuthController from "./auth";
 import { UserSettingResponse, UserSettingsType } from "./types";
 
@@ -9,9 +8,7 @@ class SettingsController {
     }
     fetchUserSettings = async (): Promise<Array<UserSettingResponse> | null> => {
         try {
-            const response = await axios.get(`${this.auth.host}/api/settings`, {
-                headers: { Authorization: `Bearer ${this.auth.token}` },
-            });
+            const response = await this.auth.instance.get(`/api/settings`);
             const data = response.data;
             return data;
         } catch (e) {
@@ -21,13 +18,7 @@ class SettingsController {
 
     changeUserSettings = async (type: UserSettingsType, enabled: boolean): Promise<null> => {
         try {
-            const response = await axios.post(
-                `${this.auth.host}/api/settings`,
-                { type, enabled },
-                {
-                    headers: { Authorization: `Bearer ${this.auth.token}` },
-                }
-            );
+            const response = await this.auth.instance.post(`/api/settings`, { type, enabled });
             const data = response.data;
             return data;
         } catch (e) {

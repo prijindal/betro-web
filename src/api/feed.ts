@@ -1,4 +1,3 @@
-import axios from "axios";
 import { aesDecrypt, rsaDecrypt } from "betro-js-lib";
 import { bufferToImageUrl } from "../util/bufferToImage";
 import AuthController from "./auth";
@@ -64,11 +63,8 @@ class FeedController {
             after = Buffer.from(new Date().toISOString(), "utf-8").toString("base64");
         }
         try {
-            const response = await axios.get(
-                `${this.auth.host}/api/user/${username}/posts?limit=${limit}&after=${after}`,
-                {
-                    headers: { Authorization: `Bearer ${this.auth.token}` },
-                }
+            const response = await this.auth.instance.get(
+                `/api/user/${username}/posts?limit=${limit}&after=${after}`
             );
             const posts: PostsFeedResponse = response.data;
             const data = await this.transformPostFeed(posts, async (post, keys) => {
@@ -96,11 +92,8 @@ class FeedController {
             after = Buffer.from(new Date().toISOString(), "utf-8").toString("base64");
         }
         try {
-            const response = await axios.get(
-                `${this.auth.host}/api/account/posts?limit=${limit}&after=${after}`,
-                {
-                    headers: { Authorization: `Bearer ${this.auth.token}` },
-                }
+            const response = await this.auth.instance.get(
+                `/api/account/posts?limit=${limit}&after=${after}`
             );
             const posts: PostsFeedResponse = response.data;
             const data = await this.transformPostFeed(posts, async (post, keys) => {
@@ -129,11 +122,8 @@ class FeedController {
             after = Buffer.from(new Date().toISOString(), "utf-8").toString("base64");
         }
         try {
-            const response = await axios.get(
-                `${this.auth.host}/api/feed?limit=${limit}&after=${after}`,
-                {
-                    headers: { Authorization: `Bearer ${this.auth.token}` },
-                }
+            const response = await this.auth.instance.get(
+                `/api/feed?limit=${limit}&after=${after}`
             );
             const posts: PostsFeedResponse = response.data;
             const data = await this.transformPostFeed(posts, async (post, keys) => {

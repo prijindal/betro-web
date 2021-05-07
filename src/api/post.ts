@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import { aesDecrypt, rsaDecrypt, symEncrypt } from "betro-js-lib";
 import { bufferToImageUrl } from "../util/bufferToImage";
 import AuthController from "./auth";
@@ -12,11 +12,8 @@ class PostController {
     }
 
     getPost = async (id: string): Promise<PostResource | null> => {
-        const response = await axios.get<null, AxiosResponse<GetPostResponse>>(
-            `${this.auth.host}/api/post/${id}`,
-            {
-                headers: { Authorization: `Bearer ${this.auth.token}` },
-            }
+        const response = await this.auth.instance.get<null, AxiosResponse<GetPostResponse>>(
+            `/api/post/${id}`
         );
         const resp = response.data;
         let user: PostResourceUser = {
@@ -74,17 +71,11 @@ class PostController {
             if (media != null) {
                 encryptedMedia = await symEncrypt(sym_key.data.toString("base64"), media);
             }
-            const response = await axios.post(
-                `${this.auth.host}/api/post`,
-                {
-                    group_id: group_id,
-                    text_content: encryptedText,
-                    media_content: encryptedMedia,
-                },
-                {
-                    headers: { Authorization: `Bearer ${this.auth.token}` },
-                }
-            );
+            const response = await this.auth.instance.post(`/api/post`, {
+                group_id: group_id,
+                text_content: encryptedText,
+                media_content: encryptedMedia,
+            });
             return response.data;
         } catch (e) {
             return null;
@@ -92,23 +83,17 @@ class PostController {
     };
 
     like = async (id: string): Promise<LikeResponse> => {
-        const response = await axios.post<null, AxiosResponse<LikeResponse>>(
-            `${this.auth.host}/api/post/${id}/like`,
-            {},
-            {
-                headers: { Authorization: `Bearer ${this.auth.token}` },
-            }
+        const response = await this.auth.instance.post<null, AxiosResponse<LikeResponse>>(
+            `/api/post/${id}/like`,
+            {}
         );
         return response.data;
     };
 
     unlike = async (id: string): Promise<LikeResponse> => {
-        const response = await axios.post<null, AxiosResponse<LikeResponse>>(
-            `${this.auth.host}/api/post/${id}/unlike`,
-            {},
-            {
-                headers: { Authorization: `Bearer ${this.auth.token}` },
-            }
+        const response = await this.auth.instance.post<null, AxiosResponse<LikeResponse>>(
+            `/api/post/${id}/unlike`,
+            {}
         );
         return response.data;
     };

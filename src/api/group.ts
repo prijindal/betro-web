@@ -1,4 +1,3 @@
-import axios from "axios";
 import { aesEncrypt, generateSymKey } from "betro-js-lib";
 
 import AuthController from "./auth";
@@ -11,9 +10,7 @@ class GroupController {
     }
     fetchGroups = async (): Promise<Array<GroupResponse> | null> => {
         try {
-            const response = await axios.get(`${this.auth.host}/api/groups`, {
-                headers: { Authorization: `Bearer ${this.auth.token}` },
-            });
+            const response = await this.auth.instance.get(`/api/groups`);
             const data = response.data;
             return data;
         } catch (e) {
@@ -25,9 +22,7 @@ class GroupController {
         groupId: string
     ): Promise<{ is_following: boolean; is_approved: boolean; email: string } | null> => {
         try {
-            const response = await axios.delete(`${this.auth.host}/api/groups/${groupId}`, {
-                headers: { Authorization: `Bearer ${this.auth.token}` },
-            });
+            const response = await this.auth.instance.delete(`/api/groups/${groupId}`);
             const data = response.data;
             return data;
         } catch (e) {
@@ -43,13 +38,11 @@ class GroupController {
             Buffer.from(sym_key, "base64")
         );
         try {
-            const response = await axios.post(
-                `${this.auth.host}/api/groups`,
-                { name: name, sym_key: encryptedSymKey, is_default: is_default },
-                {
-                    headers: { Authorization: `Bearer ${this.auth.token}` },
-                }
-            );
+            const response = await this.auth.instance.post(`/api/groups`, {
+                name: name,
+                sym_key: encryptedSymKey,
+                is_default: is_default,
+            });
             return response.data;
         } catch (e) {
             return null;

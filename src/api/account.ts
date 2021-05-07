@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import { aesDecrypt, aesEncrypt, symDecrypt, symEncrypt } from "betro-js-lib";
 import AuthController from "./auth";
 import {
@@ -18,9 +18,7 @@ class AccountController {
     fetchProfilePicture = async (): Promise<Buffer | null> => {
         if (!this.auth.isAuthenticated()) return null;
         try {
-            const response = await axios.get(`${this.auth.host}/api/account/profile_picture`, {
-                headers: { Authorization: `Bearer ${this.auth.token}` },
-            });
+            const response = await this.auth.instance.get("/api/account/profile_picture");
             const data = response.data;
             const profile_picture = await symDecrypt(this.auth.symKey, data);
             return profile_picture;
@@ -31,9 +29,7 @@ class AccountController {
 
     fetchKeys = async (): Promise<boolean> => {
         if (!this.auth.isAuthenticated()) return false;
-        const response = await axios.get(`${this.auth.host}/api/account/keys`, {
-            headers: { Authorization: `Bearer ${this.auth.token}` },
-        });
+        const response = await this.auth.instance.get("api/account/keys");
         const data = response.data;
 
         const encryptedPrivateKey = data.private_key;
@@ -63,9 +59,7 @@ class AccountController {
 
     whoAmi = async (): Promise<WhoAmiResponse | null> => {
         if (!this.auth.isAuthenticated()) return null;
-        const response = await axios.get(`${this.auth.host}/api/account/whoami`, {
-            headers: { Authorization: `Bearer ${this.auth.token}` },
-        });
+        const response = await this.auth.instance.get("/api/account/whoami");
         const data = response.data;
         let first_name: string | undefined;
         let last_name: string | undefined;
@@ -97,11 +91,8 @@ class AccountController {
                 "approvals",
                 "posts",
             ];
-            const response = await axios.get(
-                `${this.auth.host}/api/account/count?include_fields=${include_fields.join(",")}`,
-                {
-                    headers: { Authorization: `Bearer ${this.auth.token}` },
-                }
+            const response = await this.auth.instance.get(
+                `/api/account/count?include_fields=${include_fields.join(",")}`
             );
             const data = response.data;
             return data;
@@ -112,7 +103,7 @@ class AccountController {
 
     fetchProfile = async (): Promise<UserProfileResponse | null> => {
         try {
-            const response = await axios.get<
+            const response = await this.auth.instance.get<
                 null,
                 AxiosResponse<{
                     first_name: string;
@@ -120,9 +111,7 @@ class AccountController {
                     profile_picture: string;
                     sym_key: string;
                 }>
-            >(`${this.auth.host}/api/account/profile`, {
-                headers: { Authorization: `Bearer ${this.auth.token}` },
-            });
+            >("/api/account/profile");
             const data = response.data;
             const encrypted_first_name = data.first_name;
             const encrypted_last_name = data.last_name;
@@ -179,9 +168,7 @@ class AccountController {
                 );
                 request.profile_picture = encrypted_profile_picture;
             }
-            const response = await axios.post(`${this.auth.host}/api/account/profile`, request, {
-                headers: { Authorization: `Bearer ${this.auth.token}` },
-            });
+            const response = await this.auth.instance.post(`/api/account/profile`, request);
             const data = response.data;
             return data;
         } catch (e) {
@@ -205,9 +192,7 @@ class AccountController {
             if (profile_picture != null) {
                 request.profile_picture = await symEncrypt(this.auth.symKey, profile_picture);
             }
-            const response = await axios.put(`${this.auth.host}/api/account/profile`, request, {
-                headers: { Authorization: `Bearer ${this.auth.token}` },
-            });
+            const response = await this.auth.instance.put("/api/account/profile", request);
             const data = response.data;
             return data;
         } catch (e) {

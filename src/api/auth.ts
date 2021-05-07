@@ -1,6 +1,5 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 import {
-    aesDecrypt,
     aesEncrypt,
     generateRsaPair,
     generateSymKey,
@@ -10,14 +9,16 @@ import {
 } from "betro-js-lib";
 
 class AuthController {
-    public host: string;
+    private host: string;
     public encryptionKey = "";
     public encryptionMac = "";
-    public token = "";
+    private token = "";
     public privateKey = "";
     public symKey = "";
+    public instance: AxiosInstance;
     constructor(host: string) {
         this.host = host;
+        this.instance = axios.create({ baseURL: host });
     }
 
     isAuthenticated = (): boolean => {
@@ -45,6 +46,7 @@ class AuthController {
             this.encryptionKey = encryptionKey;
             this.encryptionMac = encryptionMac;
             this.token = token;
+            this.instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
             return true;
         } else {
             return false;
@@ -63,40 +65,23 @@ class AuthController {
     login = async (email: string, password: string): Promise<boolean> => {
         const masterKey = await getMasterKey(email, password);
         const masterHash = await getMasterHash(masterKey, password);
-        const response = await axios.post(`${this.host}/api/login`, {
+        const response = await this.instance.post(`${this.host}/api/login`, {
             email,
             master_hash: masterHash,
         });
         const encryptionKeys = await getEncryptionKey(masterKey);
         const token = response.data.token;
-        const privateKeyD = await aesDecrypt(
-            encryptionKeys.encryption_key,
-            encryptionKeys.encryption_mac,
-            response.data.private_key
-        );
-        if (privateKeyD.isVerified === false) {
-            return false;
-        }
-        const symKeyD = await aesDecrypt(
-            encryptionKeys.encryption_key,
-            encryptionKeys.encryption_mac,
-            response.data.sym_key
-        );
-        if (symKeyD.isVerified === false) {
-            return false;
-        }
         this.encryptionKey = encryptionKeys.encryption_key;
         this.encryptionMac = encryptionKeys.encryption_mac;
         this.token = token;
-        this.privateKey = privateKeyD.data.toString("base64");
-        this.symKey = symKeyD.data.toString("base64");
+        this.instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         this.storeLocal();
         return true;
     };
 
     isAvailableUsername = async (username: string): Promise<boolean> => {
         try {
-            const response = await axios.get(
+            const response = await this.instance.get(
                 `${this.host}/api/register/available/username?username=${username}`
             );
             return response.data.available;
@@ -107,7 +92,7 @@ class AuthController {
 
     isAvailableEmail = async (email: string): Promise<boolean> => {
         try {
-            const response = await axios.get(
+            const response = await this.instance.get(
                 `${this.host}/api/register/available/email?email=${email}`
             );
             return response.data.available;
@@ -132,7 +117,7 @@ class AuthController {
             encryptionKeys.encryption_mac,
             Buffer.from(symKey, "base64")
         );
-        const response = await axios.post(`${this.host}/api/register`, {
+        const response = await this.instance.post(`${this.host}/api/register`, {
             username,
             email,
             master_hash: masterHash,
@@ -145,8 +130,7 @@ class AuthController {
         this.encryptionKey = encryptionKeys.encryption_key;
         this.encryptionMac = encryptionKeys.encryption_mac;
         this.token = token;
-        this.privateKey = privateKey;
-        this.symKey = symKey;
+        this.instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         this.storeLocal();
         return true;
     };

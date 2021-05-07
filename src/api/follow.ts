@@ -1,4 +1,3 @@
-import axios from "axios";
 import { aesDecrypt, rsaEncrypt } from "betro-js-lib";
 import { parseUserProfile } from "./profileHelper";
 
@@ -23,11 +22,8 @@ class FollowController {
     ): Promise<PaginatedResponse<ApprovalResponse> | null> => {
         const limit = 50;
         try {
-            const response = await axios.get(
-                `${this.auth.host}/api/follow/approvals?limit=${limit}&after=${after}`,
-                {
-                    headers: { Authorization: `Bearer ${this.auth.token}` },
-                }
+            const response = await this.auth.instance.get(
+                `/api/follow/approvals?limit=${limit}&after=${after}`
             );
             const resp = response.data;
             const data: Array<ApprovalResponse> = [];
@@ -52,11 +48,8 @@ class FollowController {
     ): Promise<PaginatedResponse<FollowerResponse> | null> => {
         const limit = 50;
         try {
-            const response = await axios.get(
-                `${this.auth.host}/api/follow/followers?limit=${limit}&after=${after}`,
-                {
-                    headers: { Authorization: `Bearer ${this.auth.token}` },
-                }
+            const response = await this.auth.instance.get(
+                `/api/follow/followers?limit=${limit}&after=${after}`
             );
             const resp = response.data;
             const data: Array<FollowerResponse> = [];
@@ -86,11 +79,8 @@ class FollowController {
     ): Promise<PaginatedResponse<FolloweeResponse> | null> => {
         const limit = 50;
         try {
-            const response = await axios.get(
-                `${this.auth.host}/api/follow/followees?limit=${limit}&after=${after}`,
-                {
-                    headers: { Authorization: `Bearer ${this.auth.token}` },
-                }
+            const response = await this.auth.instance.get(
+                `/api/follow/followees?limit=${limit}&after=${after}`
             );
             const resp = response.data;
             const data: Array<FolloweeResponse> = [];
@@ -126,16 +116,10 @@ class FollowController {
                 public_key,
                 Buffer.from(this.auth.symKey, "base64")
             );
-            const response = await axios.post(
-                `${this.auth.host}/api/follow/`,
-                {
-                    followee_username: username,
-                    sym_key: encrypted_sym_key,
-                },
-                {
-                    headers: { Authorization: `Bearer ${this.auth.token}` },
-                }
-            );
+            const response = await this.auth.instance.post(`/api/follow/`, {
+                followee_username: username,
+                sym_key: encrypted_sym_key,
+            });
             const data = response.data;
             return data;
         } catch (e) {
@@ -157,18 +141,12 @@ class FollowController {
         const groupSymKey = await rsaEncrypt(publicKey, decryptedGroupSymKey.data);
         const userSymKey = await rsaEncrypt(publicKey, Buffer.from(this.auth.symKey, "base64"));
         try {
-            const response = await axios.post(
-                `${this.auth.host}/api/follow/approve`,
-                {
-                    follow_id: followId,
-                    group_id: group_id,
-                    group_sym_key: groupSymKey,
-                    followee_sym_key: userSymKey,
-                },
-                {
-                    headers: { Authorization: `Bearer ${this.auth.token}` },
-                }
-            );
+            const response = await this.auth.instance.post(`/api/follow/approve`, {
+                follow_id: followId,
+                group_id: group_id,
+                group_sym_key: groupSymKey,
+                followee_sym_key: userSymKey,
+            });
             const data = response.data;
             return data;
         } catch (e) {
@@ -178,9 +156,7 @@ class FollowController {
 
     fetchUserInfo = async (username: string): Promise<UserInfo | null> => {
         try {
-            const response = await axios.get(`${this.auth.host}/api/user/${username}`, {
-                headers: { Authorization: `Bearer ${this.auth.token}` },
-            });
+            const response = await this.auth.instance.get(`/api/user/${username}`);
             const data = response.data;
             if (data.sym_key != null) {
                 const userResponse = await parseUserProfile(
@@ -199,9 +175,7 @@ class FollowController {
 
     searchUser = async (query: string): Promise<Array<SearchResult>> => {
         try {
-            const response = await axios.get(`${this.auth.host}/api/user/search?query=${query}`, {
-                headers: { Authorization: `Bearer ${this.auth.token}` },
-            });
+            const response = await this.auth.instance.get(`/api/user/search?query=${query}`);
             const data: Array<SearchResult> = [];
             for (const res of response.data) {
                 let row: SearchResult = {

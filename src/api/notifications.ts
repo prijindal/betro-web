@@ -1,4 +1,3 @@
-import axios from "axios";
 import AuthController from "./auth";
 import { NotificationResponse } from "./types";
 
@@ -10,9 +9,7 @@ class NotificationController {
 
     fetchNotifications = async (): Promise<Array<NotificationResponse> | null> => {
         try {
-            const response = await axios.get(`${this.auth.host}/api/notifications`, {
-                headers: { Authorization: `Bearer ${this.auth.token}` },
-            });
+            const response = await this.auth.instance.get(`/api/notifications`);
             const data = response.data;
             return data;
         } catch (e) {
@@ -22,15 +19,9 @@ class NotificationController {
 
     readNotification = async (notification_id: string): Promise<boolean> => {
         try {
-            const response = await axios.post(
-                `${this.auth.host}/api/notifications/read`,
-                {
-                    notification_id,
-                },
-                {
-                    headers: { Authorization: `Bearer ${this.auth.token}` },
-                }
-            );
+            const response = await this.auth.instance.post(`/api/notifications/read`, {
+                notification_id,
+            });
             return response.data.read;
         } catch (e) {
             return false;
