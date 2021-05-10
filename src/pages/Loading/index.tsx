@@ -21,17 +21,25 @@ const App: React.FC<any> = () => {
 
     const login = useCallback(() => {
         if (auth.isLoggedIn && auth.isLoaded) {
-            BetroApiObject.account.fetchKeys().then(async (resp) => {
-                if (resp === true) {
-                    dispatch(verifedLogin());
-                    const state = location.state || { from: { pathname: "/home" } };
-                    history.replace((state as any).from);
-                } else {
+            BetroApiObject.account
+                .fetchKeys()
+                .then(async (resp) => {
+                    if (resp === true) {
+                        dispatch(verifedLogin());
+                        const state = location.state || { from: { pathname: "/home" } };
+                        history.replace((state as any).from);
+                    } else {
+                        const state = { from: { pathname: "/login" } };
+                        dispatch(resetAuth());
+                        history.replace((state as any).from);
+                    }
+                })
+                .catch(() => {
                     const state = { from: { pathname: "/login" } };
+                    BetroApiObject.auth.logout();
                     dispatch(resetAuth());
                     history.replace((state as any).from);
-                }
-            });
+                });
         }
     }, [dispatch, location, history, auth.isLoggedIn, auth.isLoaded]);
 
