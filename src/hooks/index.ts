@@ -145,6 +145,7 @@ export const useFetchUserInfoHook = (
                   ...state,
                   profile_picture:
                       typeof state.profile_picture == "string" ? null : state.profile_picture,
+                  username: state.username || "",
               }
     );
     const fetchPosts = useCallback(

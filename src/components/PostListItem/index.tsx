@@ -35,7 +35,7 @@ const PostLikedButton: React.FunctionComponent<{ post: PostResource }> = (props)
         <IconButton
             disabled={loading}
             onClick={toggleLike}
-            color={isLiked ? "secondary" : undefined}
+            color={isLiked ? "primary" : undefined}
             aria-label="add to favorites"
         >
             <Badge badgeContent={likes.toString()}>

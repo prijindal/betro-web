@@ -1,35 +1,61 @@
 import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import Icon from "@material-ui/core/Icon";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import classes from "./NavLink.module.scss";
+import { useTheme } from "@material-ui/core";
 
-const NavLinkWithoutRouting: React.FunctionComponent = (props) => {
-    const { children } = props;
-    return <ListItem>{children}</ListItem>;
-};
-
-const NavLinkWithRouting: React.FunctionComponent<{ pathname: string }> = (props) => {
-    const { children, pathname } = props;
-    const location = useLocation();
+const NavLinkWithoutRouting: React.FunctionComponent<{ icon?: React.ReactElement }> = (props) => {
+    const { children, icon } = props;
     return (
-        <ListItem
-            className={classes.listItem}
-            selected={location.pathname === pathname}
-            disabled={location.pathname === pathname}
-            component={location.pathname === pathname ? "span" : Link}
-            to={pathname}
-        >
+        <ListItem>
+            {icon != null && (
+                <ListItemIcon>
+                    <Icon>{icon}</Icon>
+                </ListItemIcon>
+            )}
             {children}
         </ListItem>
     );
 };
 
-const NavLink: React.FunctionComponent<{ to: string; includeRouting: boolean }> = (props) => {
-    const { children, to, includeRouting } = props;
+const NavLinkWithRouting: React.FunctionComponent<{
+    pathname: string;
+    icon?: React.ReactElement;
+}> = (props) => {
+    const { children, pathname, icon } = props;
+    const location = useLocation();
+    const theme = useTheme();
+    const primaryColor = theme.palette.primary.main;
+    return (
+        <ListItem
+            selected={location.pathname === pathname}
+            component={location.pathname === pathname ? "span" : Link}
+            to={pathname}
+            style={{
+                color: location.pathname === pathname ? primaryColor : "",
+            }}
+        >
+            {icon != null && (
+                <ListItemIcon style={{ color: location.pathname === pathname ? primaryColor : "" }}>
+                    {icon}
+                </ListItemIcon>
+            )}
+            {children}
+        </ListItem>
+    );
+};
+
+const NavLink: React.FunctionComponent<{
+    icon?: React.ReactElement;
+    to: string;
+    includeRouting: boolean;
+}> = (props) => {
+    const { children, to, includeRouting, icon } = props;
     if (includeRouting) {
-        return <NavLinkWithRouting children={children} pathname={to} />;
+        return <NavLinkWithRouting icon={icon} children={children} pathname={to} />;
     } else {
-        return <NavLinkWithoutRouting children={children} />;
+        return <NavLinkWithoutRouting icon={icon} children={children} />;
     }
 };
 

@@ -7,16 +7,16 @@ import Typography from "@material-ui/core/Typography";
 import { bufferToImageUrl } from "../../util/bufferToImage";
 
 export interface UserListItemUserProps {
-    username: string;
+    username: string | null;
     first_name?: string | null;
     last_name?: string | null;
     profile_picture?: Buffer | string | null;
 }
 
-export const getPrimaryText = (user: UserListItemUserProps) => {
+export const getPrimaryText = (user: UserListItemUserProps): string => {
     const primaryText =
         user.first_name != null ? `${user.first_name} ${user.last_name}` : user.username;
-    return primaryText;
+    return primaryText || "";
 };
 
 export const UserAvatar: React.FunctionComponent<{

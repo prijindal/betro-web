@@ -7,15 +7,15 @@ import Hidden from "@material-ui/core/Hidden";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { Link } from "react-router-dom";
-import isEmpty from "lodash/isEmpty";
 import { useSelector } from "react-redux";
-import classes from "./TopAppBar.module.scss";
 import { getProfile } from "../../store/app/selectors";
 import { useFetchCountHook, useFetchWhoami, useFetchProfilePicture } from "../../hooks";
+import { getPrimaryText, UserAvatar } from "../UserListItem";
 
 const TopAppBar: React.FunctionComponent<{
     includeRouting: boolean;
     onDrawerToggle: () => void;
+    position?: "fixed" | "absolute" | "sticky" | "static" | "relative";
 }> = (props) => {
     const { includeRouting, onDrawerToggle } = props;
     const profile = useSelector(getProfile);
@@ -30,13 +30,12 @@ const TopAppBar: React.FunctionComponent<{
         }
     }, [fetchProfilePicture, fetchWhoami, fetchCount, includeRouting]);
     return (
-        <AppBar position="fixed" className={classes.appBar}>
+        <AppBar position={props.position || "sticky"}>
             <Toolbar>
                 <Hidden mdUp implementation="css">
                     <IconButton
                         onClick={onDrawerToggle}
                         edge="start"
-                        className={classes.menuButton}
                         color="inherit"
                         aria-label="menu"
                     >
@@ -49,27 +48,23 @@ const TopAppBar: React.FunctionComponent<{
                         to="/home"
                         href="/home"
                         edge="start"
-                        className={classes.menuButton}
                         color="inherit"
                         aria-label="menu"
                     >
                         <HomeIcon />
                     </IconButton>
                 </Hidden>
-                <Typography variant="h6" className={classes.title}>
-                    Betro
-                </Typography>
+                <Typography variant="h6">Betro</Typography>
                 <div style={{ flex: 1 }}></div>
                 <div>
-                    {profile.profile_picture && (
-                        <img width="30" height="30" src={profile.profile_picture} alt="Profile" />
-                    )}
+                    <UserAvatar user={{ ...profile, username: profile.username || "" }} />
                 </div>
-                <Typography>
-                    {isEmpty(profile.first_name)
-                        ? profile.username
-                        : `${profile.first_name} ${profile.last_name}`}
-                </Typography>
+                <div className="flex flex-col justify-center ml-4">
+                    <div className="font-medium text-white text-gray-100 text-sm">
+                        {getPrimaryText(profile)}
+                    </div>
+                    <div className="font-normal text-gray-300 text-sm">{profile.username}</div>
+                </div>
             </Toolbar>
         </AppBar>
     );
