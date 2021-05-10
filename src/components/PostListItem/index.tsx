@@ -1,9 +1,7 @@
 import React, { useState, useCallback } from "react";
 import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import Badge from "@material-ui/core/Badge";
 import CardActions from "@material-ui/core/CardActions";
@@ -51,20 +49,20 @@ const PostListItem: React.FunctionComponent<{ routing: boolean; post: PostResour
     const { post, routing } = props;
     const history = useHistory();
     const secondary =
-        post.user.first_name != null ? (
-            <Typography component="span" variant="body2" color="textPrimary">
-                {`${post.user.username} ${fromNow(new Date(post.created_at))}`}
-            </Typography>
-        ) : (
-            fromNow(new Date(post.created_at))
-        );
+        post.user.first_name != null
+            ? `@${post.user.username} ${fromNow(new Date(post.created_at))}`
+            : fromNow(new Date(post.created_at));
     return (
         <Card style={{ margin: "5px" }}>
-            <CardHeader
-                avatar={<UserAvatar user={post.user} />}
-                title={getPrimaryText(post.user)}
-                subheader={secondary}
-            />
+            <div className="flex flex-row p-5">
+                <UserAvatar user={post.user} />
+                <div className="flex flex-col justify-center ml-4">
+                    <div className="font-medium text-gray-900 text-sm">
+                        {getPrimaryText(post.user)}
+                    </div>
+                    <div className="font-normal text-gray-500 text-sm">{secondary}</div>
+                </div>
+            </div>
             {post.media_content != null && (
                 <CardMedia>
                     <img
@@ -79,9 +77,7 @@ const PostListItem: React.FunctionComponent<{ routing: boolean; post: PostResour
                     history.push({ pathname: `/post/${post.id}`, state: routing ? post : null })
                 }
             >
-                <Typography variant="body2" component="p">
-                    {post.text_content}
-                </Typography>
+                <div className="font-normal text-gray-900 text-sm">{post.text_content}</div>
             </CardContent>
             <CardActions disableSpacing>
                 <PostLikedButton post={post} />

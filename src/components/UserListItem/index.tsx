@@ -4,7 +4,6 @@ import ListItemText from "@material-ui/core/ListItemText";
 import { Link } from "react-router-dom";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Typography from "@material-ui/core/Typography";
-import Avatar from "@material-ui/core/Avatar";
 import { bufferToImageUrl } from "../../util/bufferToImage";
 
 export interface UserListItemUserProps {
@@ -26,14 +25,17 @@ export const UserAvatar: React.FunctionComponent<{
     const { user } = props;
     if (user.profile_picture != null) {
         return (
-            <Avatar
-                alt={getPrimaryText(user)}
-                src={
-                    typeof user.profile_picture == "string"
-                        ? user.profile_picture
-                        : bufferToImageUrl(user.profile_picture)
-                }
-            />
+            <div className="flex-shrink-0 h-10 w-10">
+                <img
+                    className="h-10 w-10 rounded-full"
+                    src={
+                        typeof user.profile_picture == "string"
+                            ? user.profile_picture
+                            : bufferToImageUrl(user.profile_picture)
+                    }
+                    alt={getPrimaryText(user)}
+                />
+            </div>
         );
     } else {
         return <div />;
