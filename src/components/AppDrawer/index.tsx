@@ -27,7 +27,10 @@ const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) 
     const profile = useSelector(getProfile);
     const countData = useSelector(getCount);
     return (
-        <nav className={classes.drawer} aria-label="mailbox folders">
+        <nav
+            className={`flex flex-col justify-center ${classes.drawer}`}
+            aria-label="mailbox folders"
+        >
             <List>
                 <NavLink icon={<HomeIcon />} includeRouting={includeRouting} to="/home">
                     <ListItemText>Home</ListItemText>

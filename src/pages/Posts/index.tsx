@@ -32,7 +32,7 @@ const Posts = () => {
                         <div key={post.id} style={{ margin: "20px 0" }}>
                             <PostListItem
                                 key={post.id}
-                                routing={true}
+                                routing={false}
                                 post={{
                                     ...post,
                                     user: {

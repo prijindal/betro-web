@@ -52,6 +52,9 @@ const PostListItem: React.FunctionComponent<{ routing: boolean; post: PostResour
         post.user.first_name != null
             ? `@${post.user.username} ${fromNow(new Date(post.created_at))}`
             : fromNow(new Date(post.created_at));
+    const onClickHandler = routing
+        ? () => history.push({ pathname: `/post/${post.id}`, state: post })
+        : () => null;
     return (
         <Card style={{ margin: "5px" }}>
             <div className="flex flex-row p-5">
@@ -64,7 +67,7 @@ const PostListItem: React.FunctionComponent<{ routing: boolean; post: PostResour
                 </div>
             </div>
             {post.media_content != null && (
-                <CardMedia>
+                <CardMedia onClick={onClickHandler}>
                     <img
                         style={{ maxWidth: "200px", maxHeight: "200px" }}
                         src={post.media_content}
@@ -72,11 +75,7 @@ const PostListItem: React.FunctionComponent<{ routing: boolean; post: PostResour
                     />
                 </CardMedia>
             )}
-            <CardContent
-                onClick={() =>
-                    history.push({ pathname: `/post/${post.id}`, state: routing ? post : null })
-                }
-            >
+            <CardContent onClick={onClickHandler}>
                 <div className="font-normal text-gray-900 text-sm">{post.text_content}</div>
             </CardContent>
             <CardActions disableSpacing>
