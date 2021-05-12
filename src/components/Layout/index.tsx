@@ -11,7 +11,7 @@ const Layout: React.FunctionComponent<{ includeRouting: boolean }> = (props) => 
     const hidden = window.innerWidth < 960;
     const drawerToggle = useCallback(() => setOpen(!open), [open]);
     return (
-        <div className="flex flex-row h-full overflow-hidden">
+        <div className="flex flex-row h-full">
             {hidden ? (
                 <Suspense fallback={<Loading />}>
                     <MobileAppDrawer
@@ -21,11 +21,18 @@ const Layout: React.FunctionComponent<{ includeRouting: boolean }> = (props) => 
                     />
                 </Suspense>
             ) : (
-                <AppDrawer includeRouting={includeRouting} />
+                <div className="flex flex-row items-start justify-end flex-1">
+                    <AppDrawer includeRouting={includeRouting} />
+                </div>
             )}
-            <div className="flex-1 overflow-auto ml-auto mr-auto">
-                <TopAppBar onDrawerToggle={drawerToggle} includeRouting={includeRouting} />
-                <div className="m-1">{children}</div>
+            <div
+                className="flex flex-col flex-1 ml-auto mr-auto overflow-auto"
+                style={{ flexBasis: "auto" }}
+            >
+                <div className="flex-1 max-w-5xl" style={{ minWidth: "42rem" }}>
+                    <TopAppBar onDrawerToggle={drawerToggle} includeRouting={includeRouting} />
+                    <div className="m-1">{children}</div>
+                </div>
             </div>
         </div>
     );

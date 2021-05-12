@@ -5,7 +5,6 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Input from "@material-ui/core/Input";
 import List from "@material-ui/core/List";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Typography from "@material-ui/core/Typography";
 import SearchIcon from "@material-ui/icons/Search";
@@ -14,6 +13,7 @@ import { wrapLayout } from "../../components/Layout";
 import UserListItem from "../../components/UserListItem";
 import FollowButton from "../../components/FollowButton";
 import { SearchResult } from "../../api";
+import Button from "../../components/Button";
 
 const Search = () => {
     const [query, setQuery] = useState<string>("");
@@ -45,12 +45,9 @@ const Search = () => {
                     }}
                     endAdornment={
                         <InputAdornment position="end">
-                            <IconButton
-                                aria-label="Search"
-                                onClick={() => searchUserThrottled(query)}
-                            >
+                            <Button outlined onClick={() => searchUserThrottled(query)}>
                                 <SearchIcon />
-                            </IconButton>
+                            </Button>
                         </InputAdornment>
                     }
                 />
