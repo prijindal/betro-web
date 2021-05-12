@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import BetroApiObject from "../../api/context";
 import { resetAuth } from "../../store/app/actions";
+import LoadingFullPage from "../../components/LoadingFullPage";
 
 const Logout = () => {
     const history = useHistory();
@@ -15,7 +16,7 @@ const Logout = () => {
     useEffect(() => {
         logoutFunction();
     }, [logoutFunction]);
-    return <div>Logging Out...</div>;
+    return <LoadingFullPage>Logging Out...</LoadingFullPage>;
 };
 
 export default Logout;

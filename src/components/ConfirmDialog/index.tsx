@@ -1,9 +1,10 @@
 import React from "react";
+import LoadingFullPage from "../LoadingFullPage";
 
 import { ConfirmDialogProps } from "./types";
 const ConfirmDialog = React.lazy(() => import("./ConfirmDialog"));
 
-const Loading = () => <div></div>;
+const Loading = () => <LoadingFullPage />;
 
 const ConfirmDialogWrapper: React.FunctionComponent<ConfirmDialogProps> = (props) => {
     return props.open ? (

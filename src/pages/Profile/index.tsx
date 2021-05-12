@@ -6,6 +6,7 @@ import { getProfile } from "../../store/app/selectors";
 import { imageUrlToBuffer } from "../../util/bufferToImage";
 import ProfileForm from "./ProfileForm";
 import Button from "../../components/Button";
+import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";
 
 const Profile = () => {
     const profile = useSelector(getProfile);
@@ -21,7 +22,7 @@ const Profile = () => {
         loadLocalProfilePicture();
     }, [loadLocalProfilePicture]);
     if (profile.isLoaded === false) {
-        return <div>Loading</div>;
+        return <LoadingSpinnerCenter />;
     }
     if (isEmpty(profile.first_name)) {
         return <ProfileForm method="POST" />;

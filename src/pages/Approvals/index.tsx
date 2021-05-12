@@ -8,6 +8,7 @@ import { useFetchApprovals, useFetchGroupsHook } from "../../hooks";
 import ApprovalComponent from "./ApprovalComponent";
 import { Link } from "react-router-dom";
 import isEmpty from "lodash/isEmpty";
+import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";
 
 const Approvals = () => {
     const profile = useSelector(getProfile);
@@ -21,7 +22,7 @@ const Approvals = () => {
         fetchPendingApprovalsThrottled();
     }, [fetchGroups, fetchPendingApprovalsThrottled]);
     if (loaded === false || groupData.isLoaded === false) {
-        return <div>Loading</div>;
+        return <LoadingSpinnerCenter />;
     }
     if (response === null) {
         return <div>Some error</div>;

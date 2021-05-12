@@ -4,6 +4,7 @@ import { useHistory, useLocation } from "react-router";
 import { authLoaded, resetAuth, verifedLogin } from "../../store/app/actions";
 import { getAuth } from "../../store/app/selectors";
 import BetroApiObject from "../../api/context";
+import LoadingFullPage from "../../components/LoadingFullPage";
 
 const App: React.FC<any> = () => {
     const dispatch = useDispatch();
@@ -58,9 +59,9 @@ const App: React.FC<any> = () => {
             <div>
                 <p>
                     {auth.isLoaded ? (
-                        <span>{auth.isLoggedIn ? "Logging In" : "Logged In"}</span>
+                        <span>{auth.isLoggedIn ? <LoadingFullPage /> : "Logged In"}</span>
                     ) : (
-                        <span>Loading</span>
+                        <LoadingFullPage />
                     )}
                 </p>
             </div>

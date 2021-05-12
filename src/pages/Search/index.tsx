@@ -8,6 +8,7 @@ import FollowButton from "../../components/FollowButton";
 import { SearchResult } from "../../api";
 import Button from "../../components/Button";
 import TextField from "../../components/TextField";
+import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";
 
 const Search = () => {
     const [query, setQuery] = useState<string>("");
@@ -47,7 +48,7 @@ const Search = () => {
                     </Button>
                 </div>
             </form>
-            {loading && <div>Loading</div>}
+            {loading && <LoadingSpinnerCenter />}
             <ul>
                 {results.length === 0 && <div>No results found</div>}
                 {results.map((a) => (

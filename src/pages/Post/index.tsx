@@ -5,6 +5,7 @@ import { PostResource } from "../../api";
 import BetroApiObject from "../../api/context";
 import { wrapLayout } from "../../components/Layout";
 import PostListItem from "../../components/PostListItem";
+import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";
 
 const Post = () => {
     const params: any = useParams();
@@ -23,7 +24,7 @@ const Post = () => {
         fetchPostThrottled();
     }, [fetchPostThrottled]);
     if (post == null) {
-        return <div>Loading..</div>;
+        return <LoadingSpinnerCenter />;
     }
     return (
         <div>

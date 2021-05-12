@@ -1,9 +1,8 @@
 import React, { Suspense, useCallback, useState } from "react";
 import TopAppBar from "../TopAppBar";
 import AppDrawer from "../AppDrawer";
+import LoadingFullPage from "../LoadingFullPage";
 const MobileAppDrawer = React.lazy(() => import("../AppDrawer/MobileAppDrawer"));
-
-const Loading = () => <div>loading...</div>;
 
 const Layout: React.FunctionComponent<{ includeRouting: boolean }> = (props) => {
     const { children, includeRouting } = props;
@@ -13,7 +12,7 @@ const Layout: React.FunctionComponent<{ includeRouting: boolean }> = (props) => 
     return (
         <div className="flex flex-row h-full">
             {hidden ? (
-                <Suspense fallback={<Loading />}>
+                <Suspense fallback={<LoadingFullPage />}>
                     <MobileAppDrawer
                         open={open}
                         setOpen={setOpen}

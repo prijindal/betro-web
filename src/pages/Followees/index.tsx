@@ -7,6 +7,7 @@ import { useFetchFollowees, useFetchGroupsHook } from "../../hooks";
 import UserListItem from "../../components/UserListItem";
 import Button from "../../components/Button";
 import { FolloweeResponse } from "../../api";
+import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";
 
 const FolloweeComponent: React.FunctionComponent<{ follower: FolloweeResponse }> = (props) => {
     const { follower } = props;
@@ -32,7 +33,7 @@ const Followees = () => {
         fetchFolloweesThrottled();
     }, [fetchGroups, fetchFolloweesThrottled]);
     if (loaded === false || groupData.isLoaded === false) {
-        return <div>Loading</div>;
+        return <LoadingSpinnerCenter />;
     }
     if (response === null) {
         return <div>Some error</div>;

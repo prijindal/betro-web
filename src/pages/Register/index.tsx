@@ -5,13 +5,13 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { loggedIn } from "../../store/app/actions";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import CheckIcon from "@heroicons/react/solid/CheckIcon";
 import ExclamationCircleIcon from "@heroicons/react/solid/ExclamationCircleIcon";
 import classes from "../Login/Login.module.scss";
 import BetroApiObject from "../../api/context";
 import Button from "../../components/Button";
 import TextField from "../../components/TextField";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 const UsernameField: React.FunctionComponent<{
     value: string;
@@ -68,7 +68,7 @@ const UsernameField: React.FunctionComponent<{
                     {isErrored ? (
                         <ExclamationCircleIcon className="heroicon" />
                     ) : loading ? (
-                        <CircularProgress size={20} />
+                        <LoadingSpinner className="text-black" />
                     ) : (
                         <CheckIcon className="heroicon" />
                     )}

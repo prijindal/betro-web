@@ -3,6 +3,7 @@ import BetroApiObject from "../../api/context";
 import { NotificationResponse } from "../../api";
 import { wrapLayout } from "../../components/Layout";
 import NotificationComponent from "./NotificationComponent";
+import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";
 
 const Notifications = () => {
     const [loaded, setLoaded] = useState<boolean>(false);
@@ -21,7 +22,7 @@ const Notifications = () => {
         fetchGrps();
     }, [fetchGrps]);
     if (loaded === false) {
-        return <div>Loading</div>;
+        return <LoadingSpinnerCenter />;
     }
     if (notifications === null) {
         return <div>Some error</div>;

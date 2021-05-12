@@ -13,6 +13,7 @@ import { wrapLayout } from "./components/Layout";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import User from "./pages/User";
 import Post from "./pages/Post";
 import NewPost from "./pages/NewPost";
@@ -26,17 +27,16 @@ import Notifications from "./pages/Notifications";
 import UserSettings from "./pages/UserSettings";
 import Profile from "./pages/Profile";
 import Logout from "./pages/Logout";
-
-const Register = React.lazy(() => import("./pages/Register"));
+import LoadingFullPage from "./components/LoadingFullPage";
 
 const history = createHistory();
 
-const LayoutLoading = wrapLayout(() => <p>Loading...</p>, { includeRouting: false });
+const LayoutLoading = wrapLayout(() => <LoadingFullPage />, { includeRouting: false });
 
 const LoadingSuspense = () => {
     const auth = useSelector(getAuth);
     if (auth.isLoaded === false) {
-        return <p>Loading...</p>;
+        return <LoadingFullPage />;
     } else {
         return <LayoutLoading />;
     }

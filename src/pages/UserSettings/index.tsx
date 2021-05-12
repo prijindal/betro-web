@@ -4,6 +4,7 @@ import { wrapLayout } from "../../components/Layout";
 import { useFetchUserSettings, useFetchCountHook } from "../../hooks";
 import BetroApiObject from "../../api/context";
 import Switch from "../../components/Switch";
+import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";
 
 interface Setting {
     type: UserSettingsType;
@@ -76,7 +77,7 @@ const UserSettings = () => {
         fetchUserSettings();
     }, [fetchUserSettings]);
     if (loaded === false) {
-        return <div>Loading</div>;
+        return <LoadingSpinnerCenter />;
     }
     if (settings === null) {
         return <div>Some error</div>;

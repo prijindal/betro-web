@@ -9,6 +9,7 @@ import UserListItem, { UserListItemUserProps } from "../../components/UserListIt
 import { useFetchUserInfoHook } from "../../hooks";
 import FollowButton from "../../components/FollowButton";
 import Button from "../../components/Button";
+import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";
 
 const User = () => {
     const params: any = useParams();
@@ -33,7 +34,7 @@ const User = () => {
         return <Redirect to="/posts" />;
     }
     if (userInfo === null) {
-        return <div>{loaded === true ? "User not found" : "Loading..."}</div>;
+        return <div>{loaded === true ? "User not found" : <LoadingSpinnerCenter />}</div>;
     }
     return (
         <div>
@@ -57,7 +58,7 @@ const User = () => {
             </ul>
             {loaded && (
                 <React.Fragment>
-                    {postsLoading === true && <div>Loading...</div>}
+                    {postsLoading === true && <LoadingSpinnerCenter />}
                     {userInfo.is_approved && response != null && (
                         <ul>
                             {response.length === 0 && <div>No posts found</div>}

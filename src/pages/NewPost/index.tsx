@@ -8,6 +8,7 @@ import { useFetchGroupsHook, useGroupSelector } from "../../hooks";
 import { bufferToImageUrl } from "../../util/bufferToImage";
 import BetroApiObject from "../../api/context";
 import { incrementCount } from "../../store/app/actions";
+import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";
 
 const NewPost = () => {
     const { groupId, setGroupId, groupData } = useGroupSelector();
@@ -48,7 +49,7 @@ const NewPost = () => {
         }
     };
     if (groupData.isLoaded === false) {
-        return <div>Loading</div>;
+        return <LoadingSpinnerCenter />;
     }
     return (
         <div>

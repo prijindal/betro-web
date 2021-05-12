@@ -6,6 +6,7 @@ import Button from "../../components/Button";
 import { getProfile } from "../../store/app/selectors";
 import PostListItem from "../../components/PostListItem";
 import { useFetchOwnFeed } from "../../hooks";
+import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";
 
 const Posts = () => {
     const { fetch, response, pageInfo, loaded } = useFetchOwnFeed();
@@ -16,14 +17,14 @@ const Posts = () => {
         fetchThrottled();
     }, [fetchThrottled]);
     if (!loaded) {
-        return <div>Loading</div>;
+        return <LoadingSpinnerCenter />;
     }
     if (response == null) {
         return <div>Some error occurred</div>;
     }
     return (
         <div>
-            {response == null && <div>Loading...</div>}
+            {response == null && <LoadingSpinnerCenter />}
             {response != null && (
                 <ul>
                     {response.length === 0 && <div>No posts found</div>}

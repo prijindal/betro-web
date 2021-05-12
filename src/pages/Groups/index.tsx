@@ -5,6 +5,7 @@ import { getGroup } from "../../store/app/selectors";
 import { useFetchGroupsHook, useFetchCountHook } from "../../hooks";
 import NewGroupForm from "./NewGroupForm";
 import GroupComponent from "./GroupComponent";
+import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";
 
 const Groups = () => {
     const groupData = useSelector(getGroup);
@@ -18,7 +19,7 @@ const Groups = () => {
         fetchGroups(true);
     }, [fetchGroups]);
     if (groupData.isLoaded === false) {
-        return <div>Loading</div>;
+        return <LoadingSpinnerCenter />;
     }
     if (groupData.data === null) {
         return <div>Some error</div>;

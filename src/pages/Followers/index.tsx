@@ -8,6 +8,7 @@ import UserListItem from "../../components/UserListItem";
 import FollowButton from "../../components/FollowButton";
 import Button from "../../components/Button";
 import { FollowerResponse } from "../../api";
+import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";
 
 const FollowerComponent: React.FunctionComponent<{
     follower: FollowerResponse;
@@ -46,7 +47,7 @@ const Followers = () => {
         fetchFollowersThrottled();
     }, [fetchGroups, fetchFollowersThrottled]);
     if (loaded === false || groupData.isLoaded === false) {
-        return <div>Loading</div>;
+        return <LoadingSpinnerCenter />;
     }
     if (response === null) {
         return <div>Some error</div>;
