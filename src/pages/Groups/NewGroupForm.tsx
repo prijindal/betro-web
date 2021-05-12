@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
-import TextField from "@material-ui/core/TextField";
 import BetroApiObject from "../../api/context";
 import Button from "../../components/Button";
+import Switch from "../../components/Switch";
+import TextField from "../../components/TextField";
 
 const NewGroupForm = (params: { isDefault?: boolean; onCreated: () => void }) => {
     const [name, setName] = useState<string>("");
@@ -15,20 +14,15 @@ const NewGroupForm = (params: { isDefault?: boolean; onCreated: () => void }) =>
         setName("");
     };
     return (
-        <form onSubmit={handleNewGroup}>
+        <form className="flex flex-row px-8" onSubmit={handleNewGroup}>
             <TextField
-                label="Group name"
+                placeholder="Followers"
                 type="text"
+                label="Group name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={setName}
             />
-
-            <FormControlLabel
-                control={
-                    <Switch checked={isDefault} onChange={(e) => setIsDefault(e.target.checked)} />
-                }
-                label="Default"
-            />
+            <Switch className="mr-4" value={isDefault} onChange={setIsDefault} label="Default" />
             <Button outlined type="submit">
                 New group
             </Button>

@@ -1,6 +1,5 @@
 import { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
-import Typography from "@material-ui/core/Typography";
 import throttle from "lodash/throttle";
 import { wrapLayout } from "../../components/Layout";
 import { getGroup } from "../../store/app/selectors";
@@ -14,9 +13,9 @@ const FolloweeComponent: React.FunctionComponent<{ follower: FolloweeResponse }>
     return (
         <UserListItem user={follower} routing>
             <div>
-                <Typography component="span" variant="body2" color="textPrimary">
+                <span className="text-sm text-black">
                     {follower.is_approved ? "Approved" : "Waiting for approval"}
-                </Typography>
+                </span>
             </div>
         </UserListItem>
     );

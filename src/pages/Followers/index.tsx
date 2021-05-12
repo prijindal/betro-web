@@ -1,6 +1,5 @@
 import { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
-import Typography from "@material-ui/core/Typography";
 import throttle from "lodash/throttle";
 import { wrapLayout } from "../../components/Layout";
 import { getGroup } from "../../store/app/selectors";
@@ -19,11 +18,11 @@ const FollowerComponent: React.FunctionComponent<{
         <UserListItem user={follower}>
             <div>
                 {follower.is_following ? (
-                    <Typography component="span" variant="body2" color="textPrimary">
+                    <span className="text-sm text-black">
                         {follower.is_following_approved
                             ? "Already following"
                             : "Follow not approved"}
-                    </Typography>
+                    </span>
                 ) : (
                     <FollowButton
                         username={follower.username}

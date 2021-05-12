@@ -1,6 +1,5 @@
 import { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
-import Alert from "@material-ui/core/Alert";
 import throttle from "lodash/throttle";
 import { wrapLayout } from "../../components/Layout";
 import Button from "../../components/Button";
@@ -30,16 +29,20 @@ const Approvals = () => {
     return (
         <div>
             {groupData.isLoaded && groupData.data.length === 0 && (
-                <Alert severity="warning">
-                    You have not created a group. Please create one under{" "}
-                    <Link to="/groups">Groups</Link> to start approving user
-                </Alert>
+                <div className="p-2 bg-purple-100">
+                    <span className="font-normal text-sm text-gray-700">
+                        You have not created a group. Please create one under{" "}
+                        <Link to="/groups">Groups</Link> to start approving user
+                    </span>
+                </div>
             )}
             {profile.isLoaded && isEmpty(profile.first_name) && (
-                <Alert severity="warning">
-                    You have not Setup your profile. Please setup under{" "}
-                    <Link to="/profile">Profile</Link> to start approving user
-                </Alert>
+                <div className="p-2 bg-purple-100">
+                    <span className="font-normal text-sm text-gray-700">
+                        You have not Setup your profile. Please setup under{" "}
+                        <Link to="/profile">Profile</Link> to start approving user
+                    </span>
+                </div>
             )}
             {response.total === 0 && <div>No Approvals</div>}
             <ul>
