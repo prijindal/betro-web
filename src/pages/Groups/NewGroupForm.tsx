@@ -14,7 +14,7 @@ const NewGroupForm = (params: { isDefault?: boolean; onCreated: () => void }) =>
         setName("");
     };
     return (
-        <form className="flex flex-row px-8" onSubmit={handleNewGroup}>
+        <form className="flex flex-row items-center px-8" onSubmit={handleNewGroup}>
             <TextField
                 placeholder="Followers"
                 type="text"

@@ -38,9 +38,9 @@ const Button: React.FunctionComponent<{
         } ${className != null ? className : ""}`;
     }
     if (size === "small") {
-        internalClassName += "px-2";
+        internalClassName += " px-2";
     } else {
-        internalClassName += "px-4 py-2";
+        internalClassName += " px-4 py-2";
     }
     return (
         <button onClick={disabled ? undefined : onClick} type={type} className={internalClassName}>
