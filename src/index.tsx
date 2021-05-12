@@ -2,10 +2,6 @@ import * as React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { HelmetProvider } from "react-helmet-async";
-import ThemeProvider from "@material-ui/core/styles/ThemeProvider";
-import { createTheme } from "@material-ui/core/styles";
-import deepPurple from "@material-ui/core/colors/deepPurple";
-import { SnackbarProvider } from "notistack";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 
 import { configureStore } from "./store";
@@ -15,12 +11,6 @@ import { Store } from "redux";
 import { RootState } from "./store/types";
 import "./index.scss";
 
-const theme = createTheme({
-    palette: {
-        primary: deepPurple,
-    },
-});
-
 const store: Store<RootState> = configureStore({
     initialState: { app: initialState },
 });
@@ -29,11 +19,7 @@ ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
             <HelmetProvider>
-                <ThemeProvider theme={theme}>
-                    <SnackbarProvider maxSnack={3}>
-                        <App />
-                    </SnackbarProvider>
-                </ThemeProvider>
+                <App />
             </HelmetProvider>
         </Provider>
     </React.StrictMode>,

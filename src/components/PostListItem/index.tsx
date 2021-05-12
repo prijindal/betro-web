@@ -2,8 +2,6 @@ import React, { useState, useCallback } from "react";
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
-import IconButton from "@material-ui/core/IconButton";
-import Badge from "@material-ui/core/Badge";
 import CardActions from "@material-ui/core/CardActions";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { LikeResponse, PostResource } from "../../api";
@@ -32,16 +30,17 @@ const PostLikedButton: React.FunctionComponent<{ post: PostResource }> = (props)
         }
     }, [isLiked, post.id]);
     return (
-        <IconButton
+        <button
+            className={`p-2 flex flex-row item-center ${
+                isLiked ? "text-purple-500" : "text-gray-500"
+            }`}
             disabled={loading}
             onClick={toggleLike}
-            color={isLiked ? "primary" : undefined}
             aria-label="add to favorites"
         >
-            <Badge badgeContent={likes.toString()}>
-                <FavoriteIcon />
-            </Badge>
-        </IconButton>
+            <FavoriteIcon />
+            <span className="ml-1 text-base">{likes.toString()}</span>
+        </button>
     );
 };
 

@@ -1,11 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import isEmpty from "lodash/isEmpty";
-import Divider from "@material-ui/core/Divider";
-import List from "@material-ui/core/List";
-import ListItemText from "@material-ui/core/ListItemText";
-import Chip from "@material-ui/core/Chip";
-import Badge from "@material-ui/core/Badge";
 import HomeIcon from "@material-ui/icons/Home";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import GroupsIcon from "@material-ui/icons/Groups";
@@ -21,6 +16,31 @@ import LogoutIcon from "@material-ui/icons/Logout";
 import classes from "./AppDrawer.module.scss";
 import NavLink from "../NavLink";
 import { getCount, getProfile } from "../../store/app/selectors";
+import { CountState } from "../../store/app/types";
+
+const Divider = () => <hr className="border-0 border-b border-gray-200" />;
+
+const Badge: React.FunctionComponent = ({ children }) => {
+    return (
+        <span className="relative inline-flex align-middle flex-shrink">
+            {children}
+            <span
+                className="flex flex-row justify-center items-center absolute box-border text-sm w-2 h-2 rounded-full bg-pink-500 top-0 right-0 origin-top-right"
+                style={{
+                    transform: "scale(1) translate(50%, -50%)",
+                }}
+            ></span>
+        </span>
+    );
+};
+
+const getChipComponent = (
+    countData: CountState,
+    key: "notifications" | "posts" | "approvals" | "followers" | "followees"
+) =>
+    countData.isLoaded && countData[key] != null && (countData[key] as number) > 0 ? (
+        <span>{countData[key]}</span>
+    ) : undefined;
 
 const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) => {
     const { includeRouting } = props;
@@ -31,77 +51,69 @@ const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) 
             className={`flex flex-col justify-center ${classes.drawer}`}
             aria-label="mailbox folders"
         >
-            <List>
+            <ul>
                 <NavLink icon={<HomeIcon />} includeRouting={includeRouting} to="/home">
-                    <ListItemText>Home</ListItemText>
+                    <span>Home</span>
                 </NavLink>
                 <NavLink
                     icon={<NotificationsIcon />}
                     includeRouting={includeRouting}
                     to="/notifications"
+                    chip={getChipComponent(countData, "notifications")}
                 >
-                    <ListItemText>Notifications</ListItemText>
-                    {countData.isLoaded && countData.notifications !== 0 && (
-                        <Chip
-                            className={classes.chip}
-                            color="secondary"
-                            size="small"
-                            label={countData.notifications}
-                        />
-                    )}
+                    <span>Notifications</span>
                 </NavLink>
-                <NavLink icon={<ApprovalIcon />} includeRouting={includeRouting} to="/approvals">
-                    <ListItemText>Approvals</ListItemText>
-                    {countData.isLoaded && countData.approvals !== 0 && (
-                        <Chip
-                            className={classes.chip}
-                            color="secondary"
-                            size="small"
-                            label={countData.approvals}
-                        />
-                    )}
+                <NavLink
+                    icon={<ApprovalIcon />}
+                    includeRouting={includeRouting}
+                    to="/approvals"
+                    chip={getChipComponent(countData, "approvals")}
+                >
+                    <span>Approvals</span>
                 </NavLink>
                 <NavLink icon={<GroupsIcon />} includeRouting={includeRouting} to="/groups">
-                    <ListItemText>
+                    <span>
                         {countData.isLoaded && countData.groups === 0 ? (
-                            <Badge color="secondary" variant="dot">
+                            <Badge>
                                 <span>Groups</span>
                             </Badge>
                         ) : (
                             "Groups"
                         )}
-                    </ListItemText>
+                    </span>
                 </NavLink>
                 <Divider />
-                <NavLink icon={<PeopleIcon />} includeRouting={includeRouting} to="/followers">
-                    <ListItemText>Followers</ListItemText>
-                    {countData.isLoaded && countData.followers !== 0 && (
-                        <Chip className={classes.chip} size="small" label={countData.followers} />
-                    )}
+                <NavLink
+                    icon={<PeopleIcon />}
+                    includeRouting={includeRouting}
+                    to="/followers"
+                    chip={getChipComponent(countData, "followers")}
+                >
+                    <span>Followers</span>
                 </NavLink>
                 <NavLink
                     icon={<SupervisorAccountIcon />}
                     includeRouting={includeRouting}
                     to="/followees"
+                    chip={getChipComponent(countData, "followees")}
                 >
-                    <ListItemText>Followees</ListItemText>
-                    {countData.isLoaded && countData.followees !== 0 && (
-                        <Chip className={classes.chip} size="small" label={countData.followees} />
-                    )}
+                    <span>Followees</span>
                 </NavLink>
                 <Divider />
                 <NavLink icon={<AddIcon />} includeRouting={includeRouting} to="/newpost">
-                    <ListItemText>Post</ListItemText>
+                    <span>Post</span>
                 </NavLink>
-                <NavLink icon={<FeedIcon />} includeRouting={includeRouting} to="/posts">
-                    <ListItemText>My Posts</ListItemText>
-                    {countData.isLoaded && countData.posts !== 0 && (
-                        <Chip className={classes.chip} size="small" label={countData.posts} />
-                    )}
+                <NavLink
+                    icon={<FeedIcon />}
+                    includeRouting={includeRouting}
+                    to="/posts"
+                    chip={getChipComponent(countData, "posts")}
+                >
+                    <span>My Posts</span>
                 </NavLink>
                 <Divider />
                 <NavLink icon={<SearchIcon />} includeRouting={includeRouting} to="/search">
-                    <ListItemText>Search</ListItemText>
+                    <span>Search</span>
                 </NavLink>
                 <Divider />
                 <NavLink
@@ -109,32 +121,32 @@ const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) 
                     includeRouting={includeRouting}
                     to="/profile"
                 >
-                    <ListItemText>
+                    <span>
                         {profile.isLoaded && isEmpty(profile.first_name) ? (
-                            <Badge color="secondary" variant="dot">
+                            <Badge>
                                 <span>Profile</span>
                             </Badge>
                         ) : (
                             "Profile"
                         )}
-                    </ListItemText>
+                    </span>
                 </NavLink>
                 <NavLink icon={<SettingsIcon />} includeRouting={includeRouting} to="/settings">
-                    <ListItemText>
+                    <span>
                         {countData.isLoaded && countData.settings === 0 ? (
-                            <Badge color="secondary" variant="dot">
+                            <Badge>
                                 <span>Settings</span>
                             </Badge>
                         ) : (
                             "Settings"
                         )}
-                    </ListItemText>
+                    </span>
                 </NavLink>
                 <Divider />
                 <NavLink icon={<LogoutIcon />} includeRouting={includeRouting} to="/logout">
-                    <ListItemText>Logout</ListItemText>
+                    <span>Logout</span>
                 </NavLink>
-            </List>
+            </ul>
         </nav>
     );
 };

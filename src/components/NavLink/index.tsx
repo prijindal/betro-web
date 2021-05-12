@@ -1,56 +1,85 @@
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
-import { useTheme } from "@material-ui/core";
+import { Link, useHistory, useLocation } from "react-router-dom";
 
-const NavLinkWithoutRouting: React.FunctionComponent<{ icon?: React.ReactElement }> = (props) => {
-    const { children, icon } = props;
-    return (
-        <ListItem>
-            {icon != null && <ListItemIcon>{icon}</ListItemIcon>}
+const liClassName = (selected: boolean) =>
+    `p-3 flex flex-row items-center ${
+        selected ? "bg-purple-100 text-purple-500 font-medium" : "text-black font-normal"
+    }`;
+
+const iconClassName = (selected: boolean) =>
+    `pl-2 pr-4 ${selected ? "text-purple-500" : "text-gray-500"}`;
+
+const Chip: React.FunctionComponent<{ selected: boolean }> = ({ children, selected }) => (
+    <span
+        className={`inline-flex items-center ml-auto rounded-full bg-white border p-px bg-gray-200 text-center mx-1 ${
+            selected ? "border-purple-300" : "border-gray-300"
+        }`}
+    >
+        <span style={{ minWidth: "40px" }} className="text-sm">
             {children}
-        </ListItem>
+        </span>
+    </span>
+);
+
+const NavLinkWithoutRouting: React.FunctionComponent<{
+    icon?: React.ReactElement;
+    chip?: React.ReactElement;
+}> = (props) => {
+    const { children, icon, chip } = props;
+    return (
+        <li className={liClassName(false)}>
+            {icon != null && <span className={iconClassName(false)}>{icon}</span>}
+            {children}
+            {chip != null && <Chip selected={false}>{chip}</Chip>}
+        </li>
     );
 };
 
 const NavLinkWithRouting: React.FunctionComponent<{
     pathname: string;
     icon?: React.ReactElement;
+    chip?: React.ReactElement;
 }> = (props) => {
-    const { children, pathname, icon } = props;
+    const { children, pathname, icon, chip } = props;
+    const history = useHistory();
     const location = useLocation();
-    const theme = useTheme();
-    const primaryColor = theme.palette.primary.main;
+    const selected = location.pathname === pathname;
+    if (selected) {
+        return (
+            <span
+                className={liClassName(selected)}
+                onClick={selected ? undefined : () => history.push(pathname)}
+            >
+                {icon != null && <span className={iconClassName(selected)}>{icon}</span>}
+                {children}
+                {chip != null && <Chip selected={selected}>{chip}</Chip>}
+            </span>
+        );
+    }
     return (
-        <ListItem
-            selected={location.pathname === pathname}
-            component={location.pathname === pathname ? "span" : Link}
+        <Link
             to={pathname}
-            style={{
-                color: location.pathname === pathname ? primaryColor : "",
-            }}
+            className={liClassName(selected)}
+            onClick={selected ? undefined : () => history.push(pathname)}
         >
-            {icon != null && (
-                <ListItemIcon style={{ color: location.pathname === pathname ? primaryColor : "" }}>
-                    {icon}
-                </ListItemIcon>
-            )}
+            {icon != null && <span className={iconClassName(selected)}>{icon}</span>}
             {children}
-        </ListItem>
+            {chip != null && <Chip selected={selected}>{chip}</Chip>}
+        </Link>
     );
 };
 
 const NavLink: React.FunctionComponent<{
     icon?: React.ReactElement;
+    chip?: React.ReactElement;
     to: string;
     includeRouting: boolean;
 }> = (props) => {
-    const { children, to, includeRouting, icon } = props;
+    const { children, to, includeRouting, icon, chip } = props;
     if (includeRouting) {
-        return <NavLinkWithRouting icon={icon} children={children} pathname={to} />;
+        return <NavLinkWithRouting chip={chip} icon={icon} children={children} pathname={to} />;
     } else {
-        return <NavLinkWithoutRouting icon={icon} children={children} />;
+        return <NavLinkWithoutRouting chip={chip} icon={icon} children={children} />;
     }
 };
 
