@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import AppBar from "@material-ui/core/AppBar";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { Theme } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
-import Hidden from "@material-ui/core/Hidden";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { Link } from "react-router-dom";
@@ -22,6 +23,7 @@ const TopAppBar: React.FunctionComponent<{
     const fetchCount = useFetchCountHook();
     const fetchWhoami = useFetchWhoami();
     const fetchProfilePicture = useFetchProfilePicture();
+    const hidden = useMediaQuery<Theme>((theme) => theme.breakpoints.down("md"));
     useEffect(() => {
         if (includeRouting) {
             fetchProfilePicture();
@@ -32,7 +34,7 @@ const TopAppBar: React.FunctionComponent<{
     return (
         <AppBar position={props.position || "sticky"}>
             <Toolbar>
-                <Hidden mdUp implementation="css">
+                {hidden ? (
                     <IconButton
                         onClick={onDrawerToggle}
                         edge="start"
@@ -41,8 +43,7 @@ const TopAppBar: React.FunctionComponent<{
                     >
                         <MenuIcon />
                     </IconButton>
-                </Hidden>
-                <Hidden mdDown implementation="css">
+                ) : (
                     <IconButton
                         component={includeRouting ? Link : "a"}
                         to="/home"
@@ -53,7 +54,7 @@ const TopAppBar: React.FunctionComponent<{
                     >
                         <HomeIcon />
                     </IconButton>
-                </Hidden>
+                )}
                 <Typography variant="h6">Betro</Typography>
                 <div style={{ flex: 1 }}></div>
                 <div>

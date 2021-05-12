@@ -1,23 +1,29 @@
 import React, { useCallback, useState } from "react";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { Theme } from "@material-ui/core";
 import Drawer from "@material-ui/core/Drawer";
-import Hidden from "@material-ui/core/Hidden";
 import TopAppBar from "../TopAppBar";
 import AppDrawer from "../AppDrawer";
 
 const Layout: React.FunctionComponent<{ includeRouting: boolean }> = (props) => {
     const { children, includeRouting } = props;
     const [open, setOpen] = useState<boolean>(false);
+    const hidden = useMediaQuery<Theme>((theme) => theme.breakpoints.down("md"));
     const drawerToggle = useCallback(() => setOpen(!open), [open]);
     return (
         <div className="flex flex-row h-full overflow-hidden">
-            <Hidden mdUp implementation="js">
-                <Drawer onClose={() => setOpen(false)} variant="temporary" open={open}>
+            {hidden ? (
+                <Drawer
+                    sx={{ display: { md: "none", xs: "block" } }}
+                    onClose={() => setOpen(false)}
+                    variant="temporary"
+                    open={open}
+                >
                     <AppDrawer includeRouting={includeRouting} />
                 </Drawer>
-            </Hidden>
-            <Hidden mdDown implementation="js">
+            ) : (
                 <AppDrawer includeRouting={includeRouting} />
-            </Hidden>
+            )}
             <div className="flex-1 overflow-auto ml-auto mr-auto">
                 <TopAppBar
                     position="sticky"

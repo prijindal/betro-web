@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { HelmetProvider } from "react-helmet-async";
 import ThemeProvider from "@material-ui/core/styles/ThemeProvider";
-import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import { createTheme } from "@material-ui/core/styles";
 import deepPurple from "@material-ui/core/colors/deepPurple";
 import { SnackbarProvider } from "notistack";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
@@ -15,7 +15,7 @@ import { Store } from "redux";
 import { RootState } from "./store/types";
 import "./index.scss";
 
-const theme = createMuiTheme({
+const theme = createTheme({
     palette: {
         primary: deepPurple,
     },

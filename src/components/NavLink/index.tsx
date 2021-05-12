@@ -1,6 +1,5 @@
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import Icon from "@material-ui/core/Icon";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "@material-ui/core";
@@ -9,11 +8,7 @@ const NavLinkWithoutRouting: React.FunctionComponent<{ icon?: React.ReactElement
     const { children, icon } = props;
     return (
         <ListItem>
-            {icon != null && (
-                <ListItemIcon>
-                    <Icon>{icon}</Icon>
-                </ListItemIcon>
-            )}
+            {icon != null && <ListItemIcon>{icon}</ListItemIcon>}
             {children}
         </ListItem>
     );
