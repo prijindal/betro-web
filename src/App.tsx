@@ -11,22 +11,22 @@ import { useSelector } from "react-redux";
 import { getAuth } from "./store/app/selectors";
 import { wrapLayout } from "./components/Layout";
 
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import User from "./pages/User";
-import Post from "./pages/Post";
-import NewPost from "./pages/NewPost";
-import Posts from "./pages/Posts";
-import Search from "./pages/Search";
-import Approvals from "./pages/Approvals";
-import Followers from "./pages/Followers";
-import Followees from "./pages/Followees";
-import Groups from "./pages/Groups";
-import Notifications from "./pages/Notifications";
-import UserSettings from "./pages/UserSettings";
-import Profile from "./pages/Profile";
-import Logout from "./pages/Logout";
+const Home = React.lazy(() => import("./pages/Home"));
+const Login = React.lazy(() => import("./pages/Login"));
+const Register = React.lazy(() => import("./pages/Register"));
+const User = React.lazy(() => import("./pages/User"));
+const Post = React.lazy(() => import("./pages/Post"));
+const NewPost = React.lazy(() => import("./pages/NewPost"));
+const Posts = React.lazy(() => import("./pages/Posts"));
+const Search = React.lazy(() => import("./pages/Search"));
+const Approvals = React.lazy(() => import("./pages/Approvals"));
+const Followers = React.lazy(() => import("./pages/Followers"));
+const Followees = React.lazy(() => import("./pages/Followees"));
+const Groups = React.lazy(() => import("./pages/Groups"));
+const Notifications = React.lazy(() => import("./pages/Notifications"));
+const UserSettings = React.lazy(() => import("./pages/UserSettings"));
+const Profile = React.lazy(() => import("./pages/Profile"));
+const Logout = React.lazy(() => import("./pages/Logout"));
 
 const history = createHistory();
 

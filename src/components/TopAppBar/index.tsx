@@ -31,10 +31,14 @@ const TopAppBar: React.FunctionComponent<{
                 <button className="p-2" onClick={onDrawerToggle} aria-label="menu">
                     <MenuIcon />
                 </button>
-            ) : (
+            ) : includeRouting ? (
                 <Link to="/home" className="p-2" aria-label="menu">
                     <HomeIcon />
                 </Link>
+            ) : (
+                <span>
+                    <HomeIcon />
+                </span>
             )}
             <span className="text-xl font-medium">Betro</span>
             <div style={{ flex: 1 }}></div>
