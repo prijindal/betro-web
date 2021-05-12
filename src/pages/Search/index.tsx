@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import throttle from "lodash/throttle";
-import SearchIcon from "@material-ui/icons/Search";
+import SearchIcon from "@heroicons/react/solid/SearchIcon";
 import BetroApiObject from "../../api/context";
 import { wrapLayout } from "../../components/Layout";
 import UserListItem from "../../components/UserListItem";
@@ -43,7 +43,7 @@ const Search = () => {
                 />
                 <div className="ml-2 text-center flex text-gray-500">
                     <Button type="submit">
-                        <SearchIcon />
+                        <SearchIcon className="heroicon" />
                     </Button>
                 </div>
             </form>

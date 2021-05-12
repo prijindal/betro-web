@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import HomeIcon from "@material-ui/icons/Home";
-import MenuIcon from "@material-ui/icons/Menu";
+import HomeIcon from "@heroicons/react/solid/HomeIcon";
+import MenuIcon from "@heroicons/react/solid/MenuIcon";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getProfile } from "../../store/app/selectors";
@@ -30,15 +30,15 @@ const TopAppBar: React.FunctionComponent<{
         <div className="text-white sticky top-0 shadow-appbar max-w bg-purple-500 flex flex-row items-center justify-between p-2">
             {hidden ? (
                 <Button onClick={onDrawerToggle}>
-                    <MenuIcon />
+                    <MenuIcon className="heroicon" />
                 </Button>
             ) : includeRouting ? (
                 <Link to="/home" className="p-2" aria-label="menu">
-                    <HomeIcon />
+                    <HomeIcon className="heroicon" />
                 </Link>
             ) : (
                 <span>
-                    <HomeIcon />
+                    <HomeIcon className="heroicon" />
                 </span>
             )}
             <span className="text-xl font-medium">Betro</span>

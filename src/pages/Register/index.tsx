@@ -6,8 +6,8 @@ import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { loggedIn } from "../../store/app/actions";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import CheckIcon from "@material-ui/icons/Check";
-import ErrorIcon from "@material-ui/icons/Error";
+import CheckIcon from "@heroicons/react/solid/CheckIcon";
+import ExclamationCircleIcon from "@heroicons/react/solid/ExclamationCircleIcon";
 import classes from "../Login/Login.module.scss";
 import BetroApiObject from "../../api/context";
 import Button from "../../components/Button";
@@ -66,11 +66,11 @@ const UsernameField: React.FunctionComponent<{
                 />
                 <div className="text-center max-h-8 flex text-gray-500">
                     {isErrored ? (
-                        <ErrorIcon />
+                        <ExclamationCircleIcon className="heroicon" />
                     ) : loading ? (
                         <CircularProgress size={20} />
                     ) : (
-                        <CheckIcon />
+                        <CheckIcon className="heroicon" />
                     )}
                 </div>
             </div>

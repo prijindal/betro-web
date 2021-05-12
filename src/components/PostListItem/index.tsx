@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import Divider from "../Divider";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import HeartIcon from "@heroicons/react/solid/HeartIcon";
+import HeartOutlineIcon from "@heroicons/react/outline/HeartIcon";
 import { LikeResponse, PostResource } from "../../api";
 import { UserAvatar } from "../UserListItem/UserAvatar";
 import { getPrimaryText } from "../UserListItem/getPrimaryText";
@@ -40,7 +40,11 @@ const PostLikedButton: React.FunctionComponent<{ post: PostResource }> = (props)
             onClick={toggleLike}
             aria-label="add to favorites"
         >
-            {isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+            {isLiked ? (
+                <HeartIcon className="heroicon" />
+            ) : (
+                <HeartOutlineIcon className="heroicon" />
+            )}
             <span className="ml-1 text-base">{likes.toString()}</span>
         </Button>
     );

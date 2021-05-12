@@ -5,8 +5,8 @@
   "dependencies": {
     "@craco/craco": "^6.1.2",
     "@emotion/styled": "^11.3.0",
+    "@heroicons/react": "^1.0.1",
     "@material-ui/core": "^5.0.0-alpha.33",
-    "@material-ui/icons": "^5.0.0-alpha.29",
     "@tailwindcss/forms": "^0.3.2",
     "axios": "^0.21.1",
     "betro-js-lib": "git+https://prijindal@github.com/betro-app/betro-js-lib.git#9f98db910d43f4a458613ca5a221814a7f8b7bca",

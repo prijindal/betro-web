@@ -1,18 +1,17 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import isEmpty from "lodash/isEmpty";
-import HomeIcon from "@material-ui/icons/Home";
-import NotificationsIcon from "@material-ui/icons/Notifications";
-import GroupsIcon from "@material-ui/icons/Groups";
-import ApprovalIcon from "@material-ui/icons/Approval";
-import PeopleIcon from "@material-ui/icons/People";
-import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
-import AddIcon from "@material-ui/icons/Add";
-import FeedIcon from "@material-ui/icons/Feed";
-import ManageAccountsIcon from "@material-ui/icons/ManageAccounts";
-import SettingsIcon from "@material-ui/icons/Settings";
-import SearchIcon from "@material-ui/icons/Search";
-import LogoutIcon from "@material-ui/icons/Logout";
+import HomeIcon from "@heroicons/react/solid/HomeIcon";
+import BellIcon from "@heroicons/react/solid/BellIcon";
+import UserGroupIcon from "@heroicons/react/solid/UserGroupIcon";
+import UserAddIcon from "@heroicons/react/solid/UserAddIcon";
+import UsersIcon from "@heroicons/react/solid/UsersIcon";
+import PlusIcon from "@heroicons/react/solid/PlusIcon";
+import ViewListIcon from "@heroicons/react/outline/ViewListIcon";
+import SearchIcon from "@heroicons/react/outline/SearchIcon";
+import UserCircleIcon from "@heroicons/react/solid/UserCircleIcon";
+import CogIcon from "@heroicons/react/solid/CogIcon";
+import LogoutIcon from "@heroicons/react/solid/LogoutIcon";
 import classes from "./AppDrawer.module.scss";
 import NavLink from "../NavLink";
 import { getCount, getProfile } from "../../store/app/selectors";
@@ -51,11 +50,15 @@ const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) 
             aria-label="mailbox folders"
         >
             <ul>
-                <NavLink icon={<HomeIcon />} includeRouting={includeRouting} to="/home">
+                <NavLink
+                    icon={<HomeIcon className="heroicon" />}
+                    includeRouting={includeRouting}
+                    to="/home"
+                >
                     <span>Home</span>
                 </NavLink>
                 <NavLink
-                    icon={<NotificationsIcon />}
+                    icon={<BellIcon className="heroicon" />}
                     includeRouting={includeRouting}
                     to="/notifications"
                     chip={getChipComponent(countData, "notifications")}
@@ -63,14 +66,18 @@ const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) 
                     <span>Notifications</span>
                 </NavLink>
                 <NavLink
-                    icon={<ApprovalIcon />}
+                    icon={<UserAddIcon className="heroicon" />}
                     includeRouting={includeRouting}
                     to="/approvals"
                     chip={getChipComponent(countData, "approvals")}
                 >
                     <span>Approvals</span>
                 </NavLink>
-                <NavLink icon={<GroupsIcon />} includeRouting={includeRouting} to="/groups">
+                <NavLink
+                    icon={<UserGroupIcon className="heroicon" />}
+                    includeRouting={includeRouting}
+                    to="/groups"
+                >
                     <span>
                         {countData.isLoaded && countData.groups === 0 ? (
                             <Badge>
@@ -83,7 +90,7 @@ const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) 
                 </NavLink>
                 <Divider />
                 <NavLink
-                    icon={<PeopleIcon />}
+                    icon={<UsersIcon className="heroicon" />}
                     includeRouting={includeRouting}
                     to="/followers"
                     chip={getChipComponent(countData, "followers")}
@@ -91,7 +98,7 @@ const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) 
                     <span>Followers</span>
                 </NavLink>
                 <NavLink
-                    icon={<SupervisorAccountIcon />}
+                    icon={<UsersIcon className="heroicon" style={{ transform: "scaleX(-1)" }} />}
                     includeRouting={includeRouting}
                     to="/followees"
                     chip={getChipComponent(countData, "followees")}
@@ -99,11 +106,15 @@ const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) 
                     <span>Followees</span>
                 </NavLink>
                 <Divider />
-                <NavLink icon={<AddIcon />} includeRouting={includeRouting} to="/newpost">
+                <NavLink
+                    icon={<PlusIcon className="heroicon" />}
+                    includeRouting={includeRouting}
+                    to="/newpost"
+                >
                     <span>Post</span>
                 </NavLink>
                 <NavLink
-                    icon={<FeedIcon />}
+                    icon={<ViewListIcon className="heroicon" />}
                     includeRouting={includeRouting}
                     to="/posts"
                     chip={getChipComponent(countData, "posts")}
@@ -111,12 +122,16 @@ const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) 
                     <span>My Posts</span>
                 </NavLink>
                 <Divider />
-                <NavLink icon={<SearchIcon />} includeRouting={includeRouting} to="/search">
+                <NavLink
+                    icon={<SearchIcon className="heroicon" />}
+                    includeRouting={includeRouting}
+                    to="/search"
+                >
                     <span>Search</span>
                 </NavLink>
                 <Divider />
                 <NavLink
-                    icon={<ManageAccountsIcon />}
+                    icon={<UserCircleIcon className="heroicon" />}
                     includeRouting={includeRouting}
                     to="/profile"
                 >
@@ -130,7 +145,11 @@ const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) 
                         )}
                     </span>
                 </NavLink>
-                <NavLink icon={<SettingsIcon />} includeRouting={includeRouting} to="/settings">
+                <NavLink
+                    icon={<CogIcon className="heroicon" />}
+                    includeRouting={includeRouting}
+                    to="/settings"
+                >
                     <span>
                         {countData.isLoaded && countData.settings === 0 ? (
                             <Badge>
@@ -142,7 +161,11 @@ const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) 
                     </span>
                 </NavLink>
                 <Divider />
-                <NavLink icon={<LogoutIcon />} includeRouting={includeRouting} to="/logout">
+                <NavLink
+                    icon={<LogoutIcon className="heroicon" />}
+                    includeRouting={includeRouting}
+                    to="/logout"
+                >
                     <span>Logout</span>
                 </NavLink>
             </ul>
