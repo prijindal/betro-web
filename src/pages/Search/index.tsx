@@ -1,10 +1,5 @@
 import React, { useCallback, useState } from "react";
 import throttle from "lodash/throttle";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Input from "@material-ui/core/Input";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import Typography from "@material-ui/core/Typography";
 import SearchIcon from "@material-ui/icons/Search";
 import BetroApiObject from "../../api/context";
 import { wrapLayout } from "../../components/Layout";
@@ -12,6 +7,7 @@ import UserListItem from "../../components/UserListItem";
 import FollowButton from "../../components/FollowButton";
 import { SearchResult } from "../../api";
 import Button from "../../components/Button";
+import TextField from "../../components/TextField";
 
 const Search = () => {
     const [query, setQuery] = useState<string>("");
@@ -29,27 +25,28 @@ const Search = () => {
     }, []);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const searchUserThrottled = useCallback(throttle(searchUser, 2000), []);
+    const searchForm = (e: React.FormEvent) => {
+        e.preventDefault();
+        searchUserThrottled(query);
+    };
     return (
         <div>
-            <FormControl>
-                <InputLabel htmlFor="user-search">Search</InputLabel>
-                <Input
-                    id="user-search"
+            <form onClick={searchForm} className="flex flex-row items-center">
+                <TextField
                     type="text"
+                    placeholder="Search"
                     value={query}
                     onChange={(e) => {
-                        setQuery(e.target.value);
-                        // searchUserThrottled(e.target.value);
+                        setQuery(e);
+                        // searchUserThrottled(e);
                     }}
-                    endAdornment={
-                        <InputAdornment position="end">
-                            <Button outlined onClick={() => searchUserThrottled(query)}>
-                                <SearchIcon />
-                            </Button>
-                        </InputAdornment>
-                    }
                 />
-            </FormControl>
+                <div className="ml-2 text-center flex text-gray-500">
+                    <Button type="submit">
+                        <SearchIcon />
+                    </Button>
+                </div>
+            </form>
             {loading && <div>Loading</div>}
             <ul>
                 {results.length === 0 && <div>No results found</div>}
@@ -57,11 +54,11 @@ const Search = () => {
                     <UserListItem key={a.id} user={a} routing={true}>
                         <div>
                             {a.is_following ? (
-                                <Typography component="span" variant="body2" color="textPrimary">
+                                <span className="text-sm text-black">
                                     {a.is_following_approved
                                         ? "Already following"
                                         : "Follow not approved"}
-                                </Typography>
+                                </span>
                             ) : (
                                 <FollowButton
                                     username={a.username}
