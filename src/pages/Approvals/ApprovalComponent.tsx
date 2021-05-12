@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
 
 import UserListItem from "../../components/UserListItem";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import Button from "../../components/Button";
 import { ApprovalResponse } from "../../api";
 import { useApproveUser, useGroupSelector } from "../../hooks";
+import GroupSelect from "../../components/GroupSelect";
 
 const ApprovalComponent: React.FunctionComponent<{
     approval: ApprovalResponse;
@@ -32,13 +31,7 @@ const ApprovalComponent: React.FunctionComponent<{
                 title={`Approve user ${approval.username}?`}
                 description="By approving this user, you agree to allow them to see your email and name"
             />
-            <Select value={groupId} onChange={(e) => setGroupId(e.target.value as string)}>
-                {groupData.data.map((g) => (
-                    <MenuItem key={g.id} value={g.id}>
-                        {g.name}
-                    </MenuItem>
-                ))}
-            </Select>
+            <GroupSelect groupId={groupId} setGroupId={setGroupId} groupData={groupData} />
             <Button onClick={() => setConfirmApprove(true)}>Approve</Button>
         </UserListItem>
     );

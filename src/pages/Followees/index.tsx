@@ -1,8 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
-import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import throttle from "lodash/throttle";
 import { wrapLayout } from "../../components/Layout";
 import { getGroup } from "../../store/app/selectors";
@@ -15,11 +13,11 @@ const FolloweeComponent: React.FunctionComponent<{ follower: FolloweeResponse }>
     const { follower } = props;
     return (
         <UserListItem user={follower} routing>
-            <ListItemSecondaryAction>
+            <div>
                 <Typography component="span" variant="body2" color="textPrimary">
                     {follower.is_approved ? "Approved" : "Waiting for approval"}
                 </Typography>
-            </ListItemSecondaryAction>
+            </div>
         </UserListItem>
     );
 };
@@ -41,7 +39,7 @@ const Followees = () => {
         return <div>Some error</div>;
     }
     return (
-        <List>
+        <ul>
             {response.total === 0 && <div>No Followees</div>}
             {response.data.map((a) => (
                 <FolloweeComponent key={a.follow_id} follower={a} />
@@ -51,7 +49,7 @@ const Followees = () => {
                     Load More (Loaded {response.data.length} out of {response.total})
                 </Button>
             )}
-        </List>
+        </ul>
     );
 };
 

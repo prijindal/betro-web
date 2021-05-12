@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import throttle from "lodash/throttle";
-import List from "@material-ui/core/List";
 import { wrapLayout } from "../../components/Layout";
 import Button from "../../components/Button";
 import { getProfile } from "../../store/app/selectors";
@@ -26,7 +25,7 @@ const Posts = () => {
         <div>
             {response == null && <div>Loading...</div>}
             {response != null && (
-                <List>
+                <ul>
                     {response.length === 0 && <div>No posts found</div>}
                     {response.map((post) => (
                         <div key={post.id} style={{ margin: "20px 0" }}>
@@ -48,7 +47,7 @@ const Posts = () => {
                             Load More (Loaded {response.length} out of {pageInfo.total})
                         </Button>
                     )}
-                </List>
+                </ul>
             )}
         </div>
     );

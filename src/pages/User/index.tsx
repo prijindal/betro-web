@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect } from "react";
-import List from "@material-ui/core/List";
 import { useSelector } from "react-redux";
 import throttle from "lodash/throttle";
 import { Redirect, useLocation, useParams } from "react-router";
@@ -38,7 +37,7 @@ const User = () => {
     }
     return (
         <div>
-            <List>
+            <ul>
                 <UserListItem user={userInfo}>
                     {loaded === true && (
                         <React.Fragment>
@@ -55,12 +54,12 @@ const User = () => {
                         </React.Fragment>
                     )}
                 </UserListItem>
-            </List>
+            </ul>
             {loaded && (
                 <React.Fragment>
                     {postsLoading === true && <div>Loading...</div>}
                     {userInfo.is_approved && response != null && (
-                        <List>
+                        <ul>
                             {response.length === 0 && <div>No posts found</div>}
                             {response.map((post) => (
                                 <div key={post.id} style={{ margin: "20px 0" }}>
@@ -72,7 +71,7 @@ const User = () => {
                                     Load More (Loaded {response.length} out of {pageInfo.total})
                                 </Button>
                             )}
-                        </List>
+                        </ul>
                     )}
                 </React.Fragment>
             )}

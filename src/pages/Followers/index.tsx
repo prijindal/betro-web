@@ -1,8 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
-import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import throttle from "lodash/throttle";
 import { wrapLayout } from "../../components/Layout";
 import { getGroup } from "../../store/app/selectors";
@@ -19,7 +17,7 @@ const FollowerComponent: React.FunctionComponent<{
     const { follower, onFollow } = props;
     return (
         <UserListItem user={follower}>
-            <ListItemSecondaryAction>
+            <div>
                 {follower.is_following ? (
                     <Typography component="span" variant="body2" color="textPrimary">
                         {follower.is_following_approved
@@ -33,7 +31,7 @@ const FollowerComponent: React.FunctionComponent<{
                         onFollow={onFollow}
                     />
                 )}
-            </ListItemSecondaryAction>
+            </div>
         </UserListItem>
     );
 };
@@ -55,7 +53,7 @@ const Followers = () => {
         return <div>Some error</div>;
     }
     return (
-        <List>
+        <ul>
             {response.total === 0 && <div>No Followers</div>}
             {response.data.map((a) => (
                 <FollowerComponent key={a.follow_id} follower={a} onFollow={() => fetch(true)} />
@@ -65,7 +63,7 @@ const Followers = () => {
                     Load More (Loaded {response.data.length} out of {response.total})
                 </Button>
             )}
-        </List>
+        </ul>
     );
 };
 

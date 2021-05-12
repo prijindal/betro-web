@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
 import Switch from "@material-ui/core/Switch";
 import { UserSettingResponse, UserSettingsType } from "../../api";
 import { wrapLayout } from "../../components/Layout";
@@ -62,12 +60,12 @@ const UserSetting = (params: { userSetting: Setting }) => {
             });
     };
     return (
-        <ListItem>
+        <li className="relative flex flex-row items-center py-4 px-8">
             <FormControlLabel
                 control={<Switch disabled={saving} checked={enabled} onChange={handleChange} />}
                 label={userSetting.text}
             />
-        </ListItem>
+        </li>
     );
 };
 
@@ -83,11 +81,11 @@ const UserSettings = () => {
         return <div>Some error</div>;
     }
     return (
-        <List>
+        <ul>
             {parseUserSettings(settings).map((a) => (
                 <UserSetting key={a.type} userSetting={a} />
             ))}
-        </List>
+        </ul>
     );
 };
 

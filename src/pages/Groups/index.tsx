@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect } from "react";
-import List from "@material-ui/core/List";
 import { useSelector } from "react-redux";
 import { wrapLayout } from "../../components/Layout";
 import { getGroup } from "../../store/app/selectors";
@@ -25,7 +24,7 @@ const Groups = () => {
         return <div>Some error</div>;
     }
     return (
-        <List>
+        <ul>
             {groupData.data.length === 0 && <div>No Groups</div>}
             {groupData.data.map((a) => (
                 <GroupComponent key={a.id} group={a} />
@@ -34,7 +33,7 @@ const Groups = () => {
                 onCreated={handleNewGroup}
                 isDefault={groupData.data.filter((a) => a.is_default).length === 0}
             />
-        </List>
+        </ul>
     );
 };
 

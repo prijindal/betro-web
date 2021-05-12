@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import List from "@material-ui/core/List";
 import BetroApiObject from "../../api/context";
 import { NotificationResponse } from "../../api";
 import { wrapLayout } from "../../components/Layout";
@@ -28,12 +27,12 @@ const Notifications = () => {
         return <div>Some error</div>;
     }
     return (
-        <List>
+        <ul>
             {notifications.length === 0 && <div>No Notifications</div>}
             {notifications.map((a) => (
                 <NotificationComponent key={a.id} notification={a} />
             ))}
-        </List>
+        </ul>
     );
 };
 

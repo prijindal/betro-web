@@ -1,7 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Alert from "@material-ui/core/Alert";
-import List from "@material-ui/core/List";
 import throttle from "lodash/throttle";
 import { wrapLayout } from "../../components/Layout";
 import Button from "../../components/Button";
@@ -43,7 +42,7 @@ const Approvals = () => {
                 </Alert>
             )}
             {response.total === 0 && <div>No Approvals</div>}
-            <List>
+            <ul>
                 {response.data.map((a) => (
                     <ApprovalComponent
                         key={a.id}
@@ -56,7 +55,7 @@ const Approvals = () => {
                         Load More (Loaded {response.data.length} out of {response.total})
                     </Button>
                 )}
-            </List>
+            </ul>
         </div>
     );
 };

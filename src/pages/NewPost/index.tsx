@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import TextField from "@material-ui/core/TextField";
-import Select from "@material-ui/core/Select";
 import Typography from "@material-ui/core/Typography";
-import MenuItem from "@material-ui/core/MenuItem";
 import { wrapLayout } from "../../components/Layout";
+import GroupSelect from "../../components/GroupSelect";
 import Button from "../../components/Button";
 import { useFetchGroupsHook, useGroupSelector } from "../../hooks";
 import { bufferToImageUrl } from "../../util/bufferToImage";
@@ -62,17 +61,12 @@ const NewPost = () => {
                         value={text || ""}
                         onChange={(e) => setText(e.target.value)}
                     />
-                    <Select
+                    <GroupSelect
                         disabled={loading}
-                        value={groupId}
-                        onChange={(e) => setGroupId(e.target.value as string)}
-                    >
-                        {groupData.data.map((g) => (
-                            <MenuItem key={g.id} value={g.id}>
-                                {g.name}
-                            </MenuItem>
-                        ))}
-                    </Select>
+                        groupId={groupId}
+                        setGroupId={setGroupId}
+                        groupData={groupData}
+                    />
                     <div>
                         {media != null && <img src={bufferToImageUrl(media)} alt="Profile" />}
                     </div>

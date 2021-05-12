@@ -1,9 +1,5 @@
 import React from "react";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
 import { Link } from "react-router-dom";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Typography from "@material-ui/core/Typography";
 import { UserListItemUserProps as props } from "./types";
 import { getPrimaryText } from "./getPrimaryText";
 import { UserAvatar } from "./UserAvatar";
@@ -14,17 +10,13 @@ export const UserListItemHeader: React.FunctionComponent<{
     user: UserListItemUserProps;
 }> = (props) => {
     const { user } = props;
+
+    const secondary = user.first_name != null ? `@${user.username}` : undefined;
     return (
-        <ListItemText
-            primary={getPrimaryText(user)}
-            secondary={
-                user.first_name != null ? (
-                    <Typography component="span" variant="body2" color="textPrimary">
-                        {user.username}
-                    </Typography>
-                ) : undefined
-            }
-        />
+        <div className="flex flex-col justify-center ml-4">
+            <div className="font-medium text-gray-900 text-sm">{getPrimaryText(user)}</div>
+            <div className="font-normal text-gray-500 text-sm">{secondary}</div>
+        </div>
     );
 };
 
@@ -35,19 +27,19 @@ const UserListItem: React.FunctionComponent<{
     const { user, routing, children } = props;
     const itemText = <UserListItemHeader user={user} />;
     return (
-        <ListItem>
+        <li className="relative flex flex-row items-center py-4 px-8">
             {user.profile_picture != null && (
-                <ListItemAvatar>
+                <div className="mr-4">
                     <UserAvatar user={user} />
-                </ListItemAvatar>
+                </div>
             )}
             {routing ? (
                 <Link to={{ pathname: `/user/${user.username}`, state: user }}>{itemText}</Link>
             ) : (
                 itemText
             )}
-            {children}
-        </ListItem>
+            <div className="flex flex-row flex-1 justify-end">{children}</div>
+        </li>
     );
 };
 

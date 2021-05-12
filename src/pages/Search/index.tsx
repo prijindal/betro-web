@@ -3,9 +3,7 @@ import throttle from "lodash/throttle";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Input from "@material-ui/core/Input";
-import List from "@material-ui/core/List";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Typography from "@material-ui/core/Typography";
 import SearchIcon from "@material-ui/icons/Search";
 import BetroApiObject from "../../api/context";
@@ -53,11 +51,11 @@ const Search = () => {
                 />
             </FormControl>
             {loading && <div>Loading</div>}
-            <List>
+            <ul>
                 {results.length === 0 && <div>No results found</div>}
                 {results.map((a) => (
                     <UserListItem key={a.id} user={a} routing={true}>
-                        <ListItemSecondaryAction>
+                        <div>
                             {a.is_following ? (
                                 <Typography component="span" variant="body2" color="textPrimary">
                                     {a.is_following_approved
@@ -71,10 +69,10 @@ const Search = () => {
                                     onFollow={() => searchUserThrottled(query)}
                                 />
                             )}
-                        </ListItemSecondaryAction>
+                        </div>
                     </UserListItem>
                 ))}
-            </List>
+            </ul>
         </div>
     );
 };
