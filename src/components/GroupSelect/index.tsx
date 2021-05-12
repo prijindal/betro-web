@@ -9,8 +9,8 @@ const GroupSelect: React.FunctionComponent<{
     className?: string;
     styleType?: "solid" | "underline";
 }> = ({ disabled, groupId, setGroupId, groupData, className, styleType }) => {
-    const underlineStyles = `block w-full mt-0 px-0.5 border-0 border-b-2 border-purple-200 focus:ring-0 focus:border-purple-500 ${className}`;
-    const solidStyles = `block w-full mt-1 rounded-md bg-purple-100 border-transparent focus:border-purple-500 focus:bg-white focus:ring-0 ${className}`;
+    const underlineStyles = `block w-32 mt-0 px-0.5 border-0 border-b-2 border-purple-200 focus:ring-0 focus:border-purple-500 ${className}`;
+    const solidStyles = `block w-32 mt-1 rounded-md bg-purple-100 border-transparent focus:border-purple-500 focus:bg-white focus:ring-0 ${className}`;
     return (
         <select
             disabled={disabled}
