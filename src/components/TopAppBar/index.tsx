@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getProfile } from "../../store/app/selectors";
 import { useFetchCountHook, useFetchWhoami, useFetchProfilePicture } from "../../hooks";
-import { getPrimaryText, UserAvatar } from "../UserListItem";
+import { UserAvatar } from "../UserListItem/UserAvatar";
+import { getPrimaryText } from "../UserListItem/getPrimaryText";
 
 const TopAppBar: React.FunctionComponent<{
     includeRouting: boolean;

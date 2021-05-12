@@ -4,43 +4,11 @@ import ListItemText from "@material-ui/core/ListItemText";
 import { Link } from "react-router-dom";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Typography from "@material-ui/core/Typography";
-import { bufferToImageUrl } from "../../util/bufferToImage";
+import { UserListItemUserProps as props } from "./types";
+import { getPrimaryText } from "./getPrimaryText";
+import { UserAvatar } from "./UserAvatar";
 
-export interface UserListItemUserProps {
-    username: string | null;
-    first_name?: string | null;
-    last_name?: string | null;
-    profile_picture?: Buffer | string | null;
-}
-
-export const getPrimaryText = (user: UserListItemUserProps): string => {
-    const primaryText =
-        user.first_name != null ? `${user.first_name} ${user.last_name}` : user.username;
-    return primaryText || "";
-};
-
-export const UserAvatar: React.FunctionComponent<{
-    user: UserListItemUserProps;
-}> = (props) => {
-    const { user } = props;
-    if (user.profile_picture != null) {
-        return (
-            <div className="flex-shrink-0 h-10 w-10">
-                <img
-                    className="h-10 w-10 rounded-full"
-                    src={
-                        typeof user.profile_picture == "string"
-                            ? user.profile_picture
-                            : bufferToImageUrl(user.profile_picture)
-                    }
-                    alt={getPrimaryText(user)}
-                />
-            </div>
-        );
-    } else {
-        return <div />;
-    }
-};
+export type UserListItemUserProps = props;
 
 export const UserListItemHeader: React.FunctionComponent<{
     user: UserListItemUserProps;

@@ -1,11 +1,9 @@
 import React, { useState, useCallback } from "react";
-import Card from "@material-ui/core/Card";
-import CardMedia from "@material-ui/core/CardMedia";
-import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
+import Divider from "../Divider";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { LikeResponse, PostResource } from "../../api";
-import { UserAvatar, getPrimaryText } from "../UserListItem";
+import { UserAvatar } from "../UserListItem/UserAvatar";
+import { getPrimaryText } from "../UserListItem/getPrimaryText";
 import { fromNow } from "../../util/fromNow";
 import { useHistory } from "react-router-dom";
 import BetroApiObject from "../../api/context";
@@ -55,8 +53,8 @@ const PostListItem: React.FunctionComponent<{ routing: boolean; post: PostResour
         ? () => history.push({ pathname: `/post/${post.id}`, state: post })
         : () => null;
     return (
-        <Card style={{ margin: "5px" }}>
-            <div className="flex flex-row p-5">
+        <div className="my-2 max-w-xl">
+            <div className="flex flex-row p-4">
                 <UserAvatar user={post.user} />
                 <div className="flex flex-col justify-center ml-4">
                     <div className="font-medium text-gray-900 text-sm">
@@ -66,21 +64,22 @@ const PostListItem: React.FunctionComponent<{ routing: boolean; post: PostResour
                 </div>
             </div>
             {post.media_content != null && (
-                <CardMedia onClick={onClickHandler}>
+                <div className="p-4" onClick={onClickHandler}>
                     <img
                         style={{ maxWidth: "200px", maxHeight: "200px" }}
                         src={post.media_content}
                         alt={post.text_content || "Post"}
                     />
-                </CardMedia>
+                </div>
             )}
-            <CardContent onClick={onClickHandler}>
+            <div className="p-4" onClick={onClickHandler}>
                 <div className="font-normal text-gray-900 text-sm">{post.text_content}</div>
-            </CardContent>
-            <CardActions disableSpacing>
+            </div>
+            <div className="p-2 flex flex-row items-center">
                 <PostLikedButton post={post} />
-            </CardActions>
-        </Card>
+            </div>
+            <Divider />
+        </div>
     );
 };
 

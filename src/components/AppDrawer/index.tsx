@@ -17,8 +17,7 @@ import classes from "./AppDrawer.module.scss";
 import NavLink from "../NavLink";
 import { getCount, getProfile } from "../../store/app/selectors";
 import { CountState } from "../../store/app/types";
-
-const Divider = () => <hr className="border-0 border-b border-gray-200" />;
+import Divider from "../Divider";
 
 const Badge: React.FunctionComponent = ({ children }) => {
     return (

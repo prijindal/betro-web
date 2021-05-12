@@ -1,12 +1,24 @@
 import React, { useCallback, useEffect } from "react";
-import Button from "@material-ui/core/Button";
 import useInfiniteScroll from "react-infinite-scroll-hook";
 import throttle from "lodash/throttle";
-import Alert from "@material-ui/core/Alert";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import { wrapLayout } from "../../components/Layout";
 import PostListItem from "../../components/PostListItem";
 import { useFetchHomeFeed } from "../../hooks";
+
+const LoadingComponent = () => (
+    <div className="border border-purple-300 shadow rounded-md p-4 max-w-xl w-full">
+        <div className="animate-pulse flex space-x-4">
+            <div className="rounded-full bg-purple-400 h-12 w-12"></div>
+            <div className="flex-1 space-y-4 py-1">
+                <div className="h-4 bg-purple-400 rounded w-3/4"></div>
+                <div className="space-y-2">
+                    <div className="h-4 bg-purple-400 rounded"></div>
+                    <div className="h-4 bg-purple-400 rounded w-5/6"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+);
 
 const App = () => {
     const { fetch, response, pageInfo, loaded, loading } = useFetchHomeFeed();
@@ -22,11 +34,7 @@ const App = () => {
         fetchThrottled();
     }, [fetchThrottled]);
     if (!loaded) {
-        return (
-            <div style={{ display: "flex", justifyContent: "center" }}>
-                <CircularProgress />
-            </div>
-        );
+        return <LoadingComponent />;
     }
     if (response == null) {
         return <div>Some error occurred</div>;
@@ -35,10 +43,17 @@ const App = () => {
         <React.Fragment>
             <div>
                 {pageInfo != null && pageInfo.updating && response.length > 0 && (
-                    <Alert severity="info">
-                        Feed is still building. The responses might not be complete
-                        <Button onClick={() => fetch(true)}>Refresh</Button>
-                    </Alert>
+                    <div className="p-2 bg-purple-100">
+                        <span className="font-normal text-sm text-gray-700">
+                            Feed is still building. The respponses might not be complete.
+                        </span>
+                        <button
+                            onClick={() => fetch(true)}
+                            className="bg-transparent hover:bg-purple-500 text-purple-700 font-semibold hover:text-white py-2 px-4 border border-purple-500 hover:border-transparent rounded"
+                        >
+                            Refresh
+                        </button>
+                    </div>
                 )}
                 {response.length === 0 && (
                     <div>
@@ -46,7 +61,12 @@ const App = () => {
                         {pageInfo != null && pageInfo.updating ? (
                             <span>
                                 Feed is still building{" "}
-                                <Button onClick={() => fetch(true)}>Refresh</Button>
+                                <button
+                                    onClick={() => fetch(true)}
+                                    className="bg-transparent hover:bg-purple-500 text-purple-700 font-semibold hover:text-white py-2 px-4 border border-purple-500 hover:border-transparent rounded"
+                                >
+                                    Refresh
+                                </button>
                             </span>
                         ) : (
                             "Follow more users to build your feed"
@@ -57,8 +77,8 @@ const App = () => {
                     <PostListItem routing={true} key={post.id} post={post} />
                 ))}
                 {(loading || (pageInfo != null && pageInfo.next)) && (
-                    <div style={{ display: "flex", justifyContent: "center" }} ref={sentryRef}>
-                        <CircularProgress />
+                    <div ref={sentryRef}>
+                        <LoadingComponent />
                     </div>
                 )}
             </div>

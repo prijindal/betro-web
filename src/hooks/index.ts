@@ -23,7 +23,7 @@ import {
 } from "../api";
 import throttle from "lodash/throttle";
 import { bufferToImageUrl } from "../util/bufferToImage";
-import { UserListItemUserProps } from "../components/UserListItem";
+import { UserListItemUserProps } from "../components/UserListItem/types";
 import { createPaginatedHook } from "./paginated";
 import BetroApiObject from "../api/context";
 
