@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from "react";
-import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import { useDispatch } from "react-redux";
@@ -7,6 +6,7 @@ import { profilePictureLoaded, verifedLogin } from "../../store/app/actions";
 import { bufferToImageUrl } from "../../util/bufferToImage";
 import { useFetchWhoami } from "../../hooks";
 import BetroApiObject from "../../api/context";
+import Button from "../../components/Button";
 
 const ProfileForm: React.FunctionComponent<{
     method: "POST" | "PUT";

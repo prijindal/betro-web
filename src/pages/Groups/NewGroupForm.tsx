@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Button from "@material-ui/core/Button";
 import Switch from "@material-ui/core/Switch";
 import TextField from "@material-ui/core/TextField";
 import BetroApiObject from "../../api/context";
+import Button from "../../components/Button";
 
 const NewGroupForm = (params: { isDefault?: boolean; onCreated: () => void }) => {
     const [name, setName] = useState<string>("");
@@ -29,7 +29,9 @@ const NewGroupForm = (params: { isDefault?: boolean; onCreated: () => void }) =>
                 }
                 label="Default"
             />
-            <Button type="submit">New group</Button>
+            <Button outlined type="submit">
+                New group
+            </Button>
         </form>
     );
 };

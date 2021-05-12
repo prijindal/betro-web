@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
-import Button from "@material-ui/core/Button";
 import isEmpty from "lodash/isEmpty";
 import { useSelector } from "react-redux";
 import { wrapLayout } from "../../components/Layout";
 import { getProfile } from "../../store/app/selectors";
 import { imageUrlToBuffer } from "../../util/bufferToImage";
 import ProfileForm from "./ProfileForm";
+import Button from "../../components/Button";
 
 const Profile = () => {
     const profile = useSelector(getProfile);

@@ -1,10 +1,10 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Button from "../Button";
 
 type ConfirmDialogProps = {
     id: string;
@@ -42,13 +42,9 @@ const ConfirmDialog: React.FunctionComponent<ConfirmDialogProps> = (props) => {
                 </DialogContent>
             )}
             <DialogActions>
-                <Button onClick={handleCancel} color="primary">
-                    {cancelText || "Disagree"}
-                </Button>
+                <Button onClick={handleCancel}>{cancelText || "Disagree"}</Button>
                 {handleConfirm != null && (
-                    <Button onClick={handleConfirm} color="primary" autoFocus>
-                        {confirmText || "Agree"}
-                    </Button>
+                    <Button onClick={handleConfirm}>{confirmText || "Agree"}</Button>
                 )}
             </DialogActions>
         </Dialog>

@@ -5,7 +5,6 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { loggedIn } from "../../store/app/actions";
-import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
@@ -17,6 +16,7 @@ import CheckIcon from "@material-ui/icons/Check";
 import ErrorIcon from "@material-ui/icons/Error";
 import classes from "../Login/Login.module.scss";
 import BetroApiObject from "../../api/context";
+import Button from "../../components/Button";
 
 const UsernameField: React.FunctionComponent<{
     value: string;

@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
+import Chip from "../Chip";
 
 const liClassName = (selected: boolean) =>
     `p-3 flex flex-row items-center ${
@@ -8,18 +9,6 @@ const liClassName = (selected: boolean) =>
 
 const iconClassName = (selected: boolean) =>
     `pl-2 pr-4 ${selected ? "text-purple-500" : "text-gray-500"}`;
-
-const Chip: React.FunctionComponent<{ selected: boolean }> = ({ children, selected }) => (
-    <span
-        className={`inline-flex items-center ml-auto rounded-full bg-white border p-px bg-gray-200 text-center mx-1 ${
-            selected ? "border-purple-300" : "border-gray-300"
-        }`}
-    >
-        <span style={{ minWidth: "40px" }} className="text-sm">
-            {children}
-        </span>
-    </span>
-);
 
 const NavLinkWithoutRouting: React.FunctionComponent<{
     icon?: React.ReactElement;

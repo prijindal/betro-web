@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory, useLocation } from "react-router";
 import { Link } from "react-router-dom";
-import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
@@ -11,6 +10,7 @@ import Paper from "@material-ui/core/Paper";
 import { loggedIn, resetAuth, verifedLogin } from "../../store/app/actions";
 import classes from "./Login.module.scss";
 import BetroApiObject from "../../api/context";
+import Button from "../../components/Button";
 
 const App: React.FC<any> = () => {
     const [loading, setLoading] = useState<boolean>(false);

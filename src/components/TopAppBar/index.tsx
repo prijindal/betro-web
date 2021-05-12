@@ -7,6 +7,7 @@ import { getProfile } from "../../store/app/selectors";
 import { useFetchCountHook, useFetchWhoami, useFetchProfilePicture } from "../../hooks";
 import { UserAvatar } from "../UserListItem/UserAvatar";
 import { getPrimaryText } from "../UserListItem/getPrimaryText";
+import Button from "../Button";
 
 const TopAppBar: React.FunctionComponent<{
     includeRouting: boolean;
@@ -28,9 +29,9 @@ const TopAppBar: React.FunctionComponent<{
     return (
         <div className="text-white sticky top-0 shadow-appbar max-w bg-purple-500 flex flex-row items-center justify-between p-2">
             {hidden ? (
-                <button className="p-2" onClick={onDrawerToggle} aria-label="menu">
+                <Button onClick={onDrawerToggle}>
                     <MenuIcon />
-                </button>
+                </Button>
             ) : includeRouting ? (
                 <Link to="/home" className="p-2" aria-label="menu">
                     <HomeIcon />

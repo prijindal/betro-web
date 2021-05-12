@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect } from "react";
 import List from "@material-ui/core/List";
-import Button from "@material-ui/core/Button";
 import { useSelector } from "react-redux";
 import throttle from "lodash/throttle";
 import { Redirect, useLocation, useParams } from "react-router";
@@ -10,6 +9,7 @@ import PostListItem from "../../components/PostListItem";
 import UserListItem, { UserListItemUserProps } from "../../components/UserListItem";
 import { useFetchUserInfoHook } from "../../hooks";
 import FollowButton from "../../components/FollowButton";
+import Button from "../../components/Button";
 
 const User = () => {
     const params: any = useParams();

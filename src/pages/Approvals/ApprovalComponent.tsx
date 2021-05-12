@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 
 import UserListItem from "../../components/UserListItem";
 import ConfirmDialog from "../../components/ConfirmDialog";
+import Button from "../../components/Button";
 import { ApprovalResponse } from "../../api";
 import { useApproveUser, useGroupSelector } from "../../hooks";
 

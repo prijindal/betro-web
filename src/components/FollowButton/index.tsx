@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
-import Button from "@material-ui/core/Button";
 import { useFollowUserHook } from "../../hooks";
 import ConfirmDialog from "../../components/ConfirmDialog";
+import Button from "../../components/Button";
 
 const FollowButton: React.FunctionComponent<{
     username: string;

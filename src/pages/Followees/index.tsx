@@ -1,6 +1,5 @@
 import { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
-import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
@@ -9,6 +8,7 @@ import { wrapLayout } from "../../components/Layout";
 import { getGroup } from "../../store/app/selectors";
 import { useFetchFollowees, useFetchGroupsHook } from "../../hooks";
 import UserListItem from "../../components/UserListItem";
+import Button from "../../components/Button";
 import { FolloweeResponse } from "../../api";
 
 const FolloweeComponent: React.FunctionComponent<{ follower: FolloweeResponse }> = (props) => {

@@ -4,6 +4,7 @@ import throttle from "lodash/throttle";
 import { wrapLayout } from "../../components/Layout";
 import PostListItem from "../../components/PostListItem";
 import { useFetchHomeFeed } from "../../hooks";
+import Button from "../../components/Button";
 
 const LoadingComponent = () => (
     <div className="border border-purple-300 shadow rounded-md p-4 max-w-xl w-full">
@@ -47,12 +48,9 @@ const App = () => {
                         <span className="font-normal text-sm text-gray-700">
                             Feed is still building. The respponses might not be complete.
                         </span>
-                        <button
-                            onClick={() => fetch(true)}
-                            className="bg-transparent hover:bg-purple-500 text-purple-700 font-semibold hover:text-white py-2 px-4 border border-purple-500 hover:border-transparent rounded"
-                        >
+                        <Button onClick={() => fetch(true)} outlined>
                             Refresh
-                        </button>
+                        </Button>
                     </div>
                 )}
                 {response.length === 0 && (
@@ -61,12 +59,9 @@ const App = () => {
                         {pageInfo != null && pageInfo.updating ? (
                             <span>
                                 Feed is still building{" "}
-                                <button
-                                    onClick={() => fetch(true)}
-                                    className="bg-transparent hover:bg-purple-500 text-purple-700 font-semibold hover:text-white py-2 px-4 border border-purple-500 hover:border-transparent rounded"
-                                >
+                                <Button onClick={() => fetch(true)} outlined>
                                     Refresh
-                                </button>
+                                </Button>
                             </span>
                         ) : (
                             "Follow more users to build your feed"

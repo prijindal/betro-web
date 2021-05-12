@@ -1,10 +1,10 @@
 import { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Alert from "@material-ui/core/Alert";
-import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
 import throttle from "lodash/throttle";
 import { wrapLayout } from "../../components/Layout";
+import Button from "../../components/Button";
 import { getGroup, getProfile } from "../../store/app/selectors";
 import { useFetchApprovals, useFetchGroupsHook } from "../../hooks";
 import ApprovalComponent from "./ApprovalComponent";

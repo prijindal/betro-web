@@ -1,12 +1,14 @@
 import React, { useState, useCallback } from "react";
 import Divider from "../Divider";
 import FavoriteIcon from "@material-ui/icons/Favorite";
+import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import { LikeResponse, PostResource } from "../../api";
 import { UserAvatar } from "../UserListItem/UserAvatar";
 import { getPrimaryText } from "../UserListItem/getPrimaryText";
 import { fromNow } from "../../util/fromNow";
 import { useHistory } from "react-router-dom";
 import BetroApiObject from "../../api/context";
+import Button from "../Button";
 
 const PostLikedButton: React.FunctionComponent<{ post: PostResource }> = (props) => {
     const { post } = props;
@@ -28,17 +30,19 @@ const PostLikedButton: React.FunctionComponent<{ post: PostResource }> = (props)
         }
     }, [isLiked, post.id]);
     return (
-        <button
-            className={`p-2 flex flex-row item-center ${
-                isLiked ? "text-purple-500" : "text-gray-500"
-            }`}
+        <Button
+            outlined
+            color={isLiked ? "purple" : "gray"}
+            noBorder
+            noHoverBg
+            className={`flex flex-row item-center`}
             disabled={loading}
             onClick={toggleLike}
             aria-label="add to favorites"
         >
-            <FavoriteIcon />
+            {isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
             <span className="ml-1 text-base">{likes.toString()}</span>
-        </button>
+        </Button>
     );
 };
 
