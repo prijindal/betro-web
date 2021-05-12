@@ -8,9 +8,11 @@ const GroupSelect: React.FunctionComponent<{
     groupId: string;
     setGroupId: (e: string) => void;
     groupData: GroupState;
-}> = ({ disabled, groupId, setGroupId, groupData }) => {
+    className?: string;
+}> = ({ disabled, groupId, setGroupId, groupData, className }) => {
     return (
         <Select
+            className={className}
             disabled={disabled}
             value={groupId}
             onChange={(e) => setGroupId(e.target.value as string)}

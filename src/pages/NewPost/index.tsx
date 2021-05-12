@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
 import { wrapLayout } from "../../components/Layout";
 import GroupSelect from "../../components/GroupSelect";
 import Button from "../../components/Button";
+import TextField from "../../components/TextField";
 import { useFetchGroupsHook, useGroupSelector } from "../../hooks";
 import { bufferToImageUrl } from "../../util/bufferToImage";
 import BetroApiObject from "../../api/context";
@@ -54,14 +53,17 @@ const NewPost = () => {
     return (
         <div>
             <form onSubmit={handleSubmit}>
-                <div>
+                <div className="flex flex-col max-w-sm">
                     <TextField
+                        className="mb-4"
                         disabled={loading}
                         type="text"
+                        placeholder="Post Title"
                         value={text || ""}
-                        onChange={(e) => setText(e.target.value)}
+                        onChange={setText}
                     />
                     <GroupSelect
+                        className="mb-4"
                         disabled={loading}
                         groupId={groupId}
                         setGroupId={setGroupId}
@@ -70,7 +72,7 @@ const NewPost = () => {
                     <div>
                         {media != null && <img src={bufferToImageUrl(media)} alt="Profile" />}
                     </div>
-                    <div>
+                    <div className="flex flex-row items-center mb-4">
                         <input
                             style={{ display: "none" }}
                             accept="image/*"
@@ -80,7 +82,7 @@ const NewPost = () => {
                             onChange={handleUploadClick}
                         />
                         <label htmlFor="contained-button-file">
-                            <Typography>Upload Media</Typography>
+                            <span className="text-base text-gray-700">Upload Media</span>
                         </label>
                     </div>
                     <Button type="submit" disabled={loading}>

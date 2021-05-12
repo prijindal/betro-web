@@ -7,11 +7,14 @@ const SwitchComponent: React.FunctionComponent<{
     label?: React.ReactNode;
     className?: string;
     disabled?: boolean;
-}> = ({ value, onChange, label, className, disabled }) => {
+    labelPosition?: "left" | "right";
+}> = ({ value, onChange, label, className, disabled, labelPosition }) => {
     return (
         <Switch.Group>
             <div className={`flex items-center ${className != null ? className : ""}`}>
-                {label != null && <Switch.Label className="mr-4">{label}</Switch.Label>}
+                {labelPosition !== "right" && label != null && (
+                    <Switch.Label className="mr-4">{label}</Switch.Label>
+                )}
                 <Switch
                     disabled={disabled}
                     checked={value}
@@ -26,6 +29,9 @@ const SwitchComponent: React.FunctionComponent<{
                         } inline-block w-4 h-4 transform bg-white rounded-full transition-transform`}
                     />
                 </Switch>
+                {labelPosition === "right" && label != null && (
+                    <Switch.Label className="ml-4">{label}</Switch.Label>
+                )}
             </div>
         </Switch.Group>
     );

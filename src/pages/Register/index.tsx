@@ -5,25 +5,20 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { loggedIn } from "../../store/app/actions";
-import TextField from "@material-ui/core/TextField";
-import FormControl from "@material-ui/core/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import CheckIcon from "@material-ui/icons/Check";
 import ErrorIcon from "@material-ui/icons/Error";
 import classes from "../Login/Login.module.scss";
 import BetroApiObject from "../../api/context";
 import Button from "../../components/Button";
+import TextField from "../../components/TextField";
 
 const UsernameField: React.FunctionComponent<{
     value: string;
     onChange: (value: string) => void;
     errorMessage: string;
-    label: string;
-    placeholder: string;
+    label?: string;
+    placeholder?: string;
     name: string;
     type: "text" | "email";
     checkFunction: (a: string) => Promise<boolean>;
@@ -53,33 +48,34 @@ const UsernameField: React.FunctionComponent<{
     const handleFieldChangeThrottle = useCallback(throttle(handleFieldChange, 2000), []);
     const isErrored = fieldvalue.length === 0 || error != null;
     return (
-        <TextField
-            type={type}
-            label={error || label}
-            error={isErrored}
-            name={name}
-            placeholder={placeholder}
-            required
-            value={fieldvalue}
-            onChange={(e) => {
-                setLoading(true);
-                setFieldvalue(e.target.value);
-                handleFieldChangeThrottle(e.target.value);
-            }}
-            InputProps={{
-                endAdornment: (
-                    <InputAdornment position="end">
-                        {isErrored ? (
-                            <ErrorIcon />
-                        ) : loading ? (
-                            <CircularProgress size={20} />
-                        ) : (
-                            <CheckIcon />
-                        )}
-                    </InputAdornment>
-                ),
-            }}
-        />
+        <div className="flex flex-col items-start">
+            <div className="flex flex-row items-center">
+                <TextField
+                    type={type}
+                    error={isErrored}
+                    label={label}
+                    name={name}
+                    placeholder={placeholder}
+                    required
+                    value={fieldvalue}
+                    onChange={(e) => {
+                        setLoading(true);
+                        setFieldvalue(e);
+                        handleFieldChangeThrottle(e);
+                    }}
+                />
+                <div className="text-center max-h-8 flex text-gray-500">
+                    {isErrored ? (
+                        <ErrorIcon />
+                    ) : loading ? (
+                        <CircularProgress size={20} />
+                    ) : (
+                        <CheckIcon />
+                    )}
+                </div>
+            </div>
+            {error && <div className="mt-2 text-sm text-red-500">{error}</div>}
+        </div>
     );
 };
 
@@ -115,12 +111,12 @@ const App: React.FC<any> = () => {
     };
     return (
         <React.Fragment>
-            <Paper className={classes.paper} elevation={3}>
-                <FormControl className={classes.paper}>
+            <div className={"shadow-2xl flex flex-col mt-12 max-w-xl p-16 mx-auto"}>
+                <div className={classes.paper}>
                     <form onSubmit={handleSubmit} className={classes.formWrapper}>
                         <div className={classes.formComponent} style={{ marginBottom: "20px" }}>
-                            <Typography variant="h4">Welcome to Betro App.</Typography>
-                            <Typography variant="h5">Please register below</Typography>
+                            <div className="text-2xl text-gray-700">Welcome to Betro App.</div>
+                            <div className="text-xl text-gray-500">Please register below</div>
                         </div>
                         <div className={classes.formComponent}>
                             <UsernameField
@@ -129,7 +125,6 @@ const App: React.FC<any> = () => {
                                 errorMessage="Username is not available"
                                 checkFunction={BetroApiObject.auth.isAvailableUsername}
                                 name="username"
-                                label="Username"
                                 placeholder="Username"
                                 type="text"
                             />
@@ -141,7 +136,6 @@ const App: React.FC<any> = () => {
                                 errorMessage="Email is not available"
                                 checkFunction={BetroApiObject.auth.isAvailableEmail}
                                 name="email"
-                                label="Email"
                                 placeholder="Email"
                                 type="email"
                             />
@@ -151,12 +145,11 @@ const App: React.FC<any> = () => {
                                 type="password"
                                 disabled={loading}
                                 name="password"
-                                label="Password"
                                 error={password.length === 0}
                                 required
                                 placeholder="Password"
                                 value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                onChange={setPassword}
                             />
                         </div>
                         <div className={classes.formComponent}>
@@ -164,17 +157,16 @@ const App: React.FC<any> = () => {
                                 type="password"
                                 disabled={loading}
                                 name="confirm_password"
-                                label="Confirm Password"
                                 error={confirmPassword.length === 0}
                                 required
                                 placeholder="Confirm Password"
                                 value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                onChange={setConfirmPassword}
                             />
                         </div>
                         {error != null && (
                             <div className={classes.formComponent}>
-                                <FormHelperText>{error}</FormHelperText>
+                                <div className="my-2 text-sm text-gray-500">{error}</div>
                             </div>
                         )}
                         <div className={classes.formComponent}>
@@ -186,8 +178,8 @@ const App: React.FC<any> = () => {
                             <Link to="/login">Login</Link>
                         </div>
                     </form>
-                </FormControl>
-            </Paper>
+                </div>
+            </div>
         </React.Fragment>
     );
 };

@@ -1,12 +1,11 @@
 import React, { useCallback, useState } from "react";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
 import { useDispatch } from "react-redux";
 import { profilePictureLoaded, verifedLogin } from "../../store/app/actions";
 import { bufferToImageUrl } from "../../util/bufferToImage";
 import { useFetchWhoami } from "../../hooks";
 import BetroApiObject from "../../api/context";
 import Button from "../../components/Button";
+import TextField from "../../components/TextField";
 
 const ProfileForm: React.FunctionComponent<{
     method: "POST" | "PUT";
@@ -73,28 +72,28 @@ const ProfileForm: React.FunctionComponent<{
     return (
         <div>
             <form onSubmit={profileSaveHandler}>
-                <div>
+                <div className="mb-4">
                     <TextField
                         type="text"
                         value={firstName}
-                        label="First Name"
-                        onChange={(e) => setFirstName(e.target.value)}
+                        placeholder="First Name"
+                        onChange={setFirstName}
                     />
                 </div>
-                <div>
+                <div className="mb-4">
                     <TextField
                         type="text"
                         value={lastName}
-                        label="Last Name"
-                        onChange={(e) => setLastName(e.target.value)}
+                        placeholder="Last Name"
+                        onChange={setLastName}
                     />
                 </div>
-                <div>
+                <div className="mb-4">
                     {profilePicture != null && (
                         <img src={bufferToImageUrl(profilePicture)} alt="Profile" />
                     )}
                 </div>
-                <div>
+                <div className="mb-4">
                     <input
                         style={{ display: "none" }}
                         accept="image/*"
@@ -104,7 +103,7 @@ const ProfileForm: React.FunctionComponent<{
                         onChange={handleUploadClick}
                     />
                     <label htmlFor="contained-button-file">
-                        <Typography>Upload profile picture</Typography>
+                        <span className="text-base text-gray-700">Upload Profile Picture</span>
                     </label>
                 </div>
                 <div>

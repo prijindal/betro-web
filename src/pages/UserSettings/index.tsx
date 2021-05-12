@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { UserSettingResponse, UserSettingsType } from "../../api";
 import { wrapLayout } from "../../components/Layout";
 import { useFetchUserSettings, useFetchCountHook } from "../../hooks";
@@ -60,9 +59,12 @@ const UserSetting = (params: { userSetting: Setting }) => {
     };
     return (
         <li className="relative flex flex-row items-center py-4 px-8">
-            <FormControlLabel
-                control={<Switch disabled={saving} value={enabled} onChange={handleChange} />}
+            <Switch
                 label={userSetting.text}
+                labelPosition="right"
+                disabled={saving}
+                value={enabled}
+                onChange={handleChange}
             />
         </li>
     );
