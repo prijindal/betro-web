@@ -1,6 +1,4 @@
 import React from "react";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
 import { GroupState } from "../../store/app/types";
 
 const GroupSelect: React.FunctionComponent<{
@@ -9,20 +7,23 @@ const GroupSelect: React.FunctionComponent<{
     setGroupId: (e: string) => void;
     groupData: GroupState;
     className?: string;
-}> = ({ disabled, groupId, setGroupId, groupData, className }) => {
+    styleType?: "solid" | "underline";
+}> = ({ disabled, groupId, setGroupId, groupData, className, styleType }) => {
+    const underlineStyles = `block w-full mt-0 px-0.5 border-0 border-b-2 border-purple-200 focus:ring-0 focus:border-purple-500 ${className}`;
+    const solidStyles = `block w-full mt-1 rounded-md bg-purple-100 border-transparent focus:border-purple-500 focus:bg-white focus:ring-0 ${className}`;
     return (
-        <Select
-            className={className}
+        <select
             disabled={disabled}
             value={groupId}
             onChange={(e) => setGroupId(e.target.value as string)}
+            className={styleType === "solid" ? solidStyles : underlineStyles}
         >
             {groupData.data.map((g) => (
-                <MenuItem key={g.id} value={g.id}>
+                <option key={g.id} value={g.id}>
                     {g.name}
-                </MenuItem>
+                </option>
             ))}
-        </Select>
+        </select>
     );
 };
 
