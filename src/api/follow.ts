@@ -1,4 +1,4 @@
-import { aesDecrypt, rsaEncrypt } from "betro-js-lib";
+import { symDecrypt, rsaEncrypt } from "betro-js-lib";
 import { parseUserProfile } from "./profileHelper";
 
 import AuthController from "./auth";
@@ -133,22 +133,24 @@ class FollowController {
         group_id: string,
         encrypted_group_sym_key: string
     ): Promise<{ is_following: boolean; is_approved: boolean; email: string } | null> => {
-        const decryptedGroupSymKey = await aesDecrypt(
+        const decryptedGroupSymKey = await symDecrypt(
             this.auth.encryptionKey,
-            this.auth.encryptionMac,
             encrypted_group_sym_key
         );
-        const groupSymKey = await rsaEncrypt(publicKey, decryptedGroupSymKey.data);
         const userSymKey = await rsaEncrypt(publicKey, Buffer.from(this.auth.symKey, "base64"));
         try {
-            const response = await this.auth.instance.post(`/api/follow/approve`, {
-                follow_id: followId,
-                group_id: group_id,
-                group_sym_key: groupSymKey,
-                followee_sym_key: userSymKey,
-            });
-            const data = response.data;
-            return data;
+            if (decryptedGroupSymKey != null) {
+                const groupSymKey = await rsaEncrypt(publicKey, decryptedGroupSymKey);
+                const response = await this.auth.instance.post(`/api/follow/approve`, {
+                    follow_id: followId,
+                    group_id: group_id,
+                    group_sym_key: groupSymKey,
+                    followee_sym_key: userSymKey,
+                });
+                const data = response.data;
+                return data;
+            }
+            return null;
         } catch (e) {
             return null;
         }

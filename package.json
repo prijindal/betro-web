@@ -9,7 +9,7 @@
     "@material-ui/core": "^5.0.0-alpha.33",
     "@tailwindcss/forms": "^0.3.2",
     "axios": "^0.21.1",
-    "betro-js-lib": "git+https://prijindal@github.com/betro-app/betro-js-lib.git#9f98db910d43f4a458613ca5a221814a7f8b7bca",
+    "betro-js-lib": "git+https://prijindal@github.com/betro-app/betro-js-lib.git#b4c7170f90e65157789f23634f1c7c82b4451df0",
     "history": "^4.10.1",
     "i18next": "^20.2.2",
     "i18next-xhr-backend": "^3.2.2",

@@ -1,4 +1,4 @@
-import { aesDecrypt, rsaDecrypt } from "betro-js-lib";
+import { symDecrypt, rsaDecrypt } from "betro-js-lib";
 import { bufferToImageUrl } from "../util/bufferToImage";
 import AuthController from "./auth";
 import { parsePost, parseUserProfile } from "./profileHelper";
@@ -97,13 +97,12 @@ class FeedController {
             );
             const posts: PostsFeedResponse = response.data;
             const data = await this.transformPostFeed(posts, async (post, keys) => {
-                const symKey = await aesDecrypt(
-                    this.auth.encryptionKey,
-                    this.auth.encryptionMac,
-                    keys[post.key_id]
-                );
-                const sym_key = symKey.data.toString("base64");
-                return sym_key;
+                const symKey = await symDecrypt(this.auth.encryptionKey, keys[post.key_id]);
+                if (symKey != null) {
+                    const sym_key = symKey.toString("base64");
+                    return sym_key;
+                }
+                return "";
             });
             return {
                 data,

@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { aesDecrypt, rsaDecrypt, symEncrypt } from "betro-js-lib";
+import { symDecrypt, rsaDecrypt, symEncrypt } from "betro-js-lib";
 import { bufferToImageUrl } from "../util/bufferToImage";
 import AuthController from "./auth";
 import { parsePost, parseUserProfile } from "./profileHelper";
@@ -55,21 +55,14 @@ class PostController {
         media: Buffer | null
     ): Promise<null> => {
         try {
-            const sym_key = await aesDecrypt(
-                this.auth.encryptionKey,
-                this.auth.encryptionMac,
-                encrypted_sym_key
-            );
+            const sym_key = await symDecrypt(this.auth.encryptionKey, encrypted_sym_key);
             let encryptedText: string | null = null;
-            if (text != null) {
-                encryptedText = await symEncrypt(
-                    sym_key.data.toString("base64"),
-                    Buffer.from(text)
-                );
+            if (text != null && sym_key != null) {
+                encryptedText = await symEncrypt(sym_key.toString("base64"), Buffer.from(text));
             }
             let encryptedMedia: string | null = null;
-            if (media != null) {
-                encryptedMedia = await symEncrypt(sym_key.data.toString("base64"), media);
+            if (media != null && sym_key != null) {
+                encryptedMedia = await symEncrypt(sym_key.toString("base64"), media);
             }
             const response = await this.auth.instance.post(`/api/post`, {
                 group_id: group_id,

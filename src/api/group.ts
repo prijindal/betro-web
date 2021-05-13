@@ -1,4 +1,4 @@
-import { aesEncrypt, generateSymKey } from "betro-js-lib";
+import { symEncrypt, generateSymKey } from "betro-js-lib";
 
 import AuthController from "./auth";
 import { GroupResponse } from "./types";
@@ -32,9 +32,8 @@ class GroupController {
 
     createGroup = async (name: string, is_default: boolean): Promise<GroupResponse | null> => {
         const sym_key = await generateSymKey();
-        const encryptedSymKey = await aesEncrypt(
+        const encryptedSymKey = await symEncrypt(
             this.auth.encryptionKey,
-            this.auth.encryptionMac,
             Buffer.from(sym_key, "base64")
         );
         try {

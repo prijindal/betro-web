@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { aesDecrypt, aesEncrypt, symDecrypt, symEncrypt } from "betro-js-lib";
+import { symDecrypt, symEncrypt } from "betro-js-lib";
 import AuthController from "./auth";
 import {
     CountResponse,
@@ -33,21 +33,13 @@ class AccountController {
         const data = response.data;
         const encryptedPrivateKey = data.private_key;
         const encryptedSymKey = data.sym_key;
-        const privateKey = await aesDecrypt(
-            this.auth.encryptionKey,
-            this.auth.encryptionMac,
-            encryptedPrivateKey
-        );
-        if (privateKey.isVerified) {
-            const private_key = privateKey.data.toString("base64");
+        const privateKey = await symDecrypt(this.auth.encryptionKey, encryptedPrivateKey);
+        if (privateKey != null) {
+            const private_key = privateKey.toString("base64");
             let sym_key: string | undefined;
-            const symKey = await aesDecrypt(
-                this.auth.encryptionKey,
-                this.auth.encryptionMac,
-                encryptedSymKey
-            );
-            if (symKey.isVerified) {
-                sym_key = symKey.data.toString("base64");
+            const symKey = await symDecrypt(this.auth.encryptionKey, encryptedSymKey);
+            if (symKey != null) {
+                sym_key = symKey.toString("base64");
                 this.auth.privateKey = private_key;
                 this.auth.symKey = sym_key;
                 return true;
@@ -116,24 +108,23 @@ class AccountController {
             const encrypted_last_name = data.last_name;
             const encrypted_profile_picture = data.profile_picture;
             const encrypted_sym_key = data.sym_key;
-            const aesDecrypted = await aesDecrypt(
-                this.auth.encryptionKey,
-                this.auth.encryptionMac,
-                encrypted_sym_key
-            );
-            const sym_key = aesDecrypted.data.toString("base64");
-            const first_name = await symDecrypt(sym_key, encrypted_first_name);
-            const last_name = await symDecrypt(sym_key, encrypted_last_name);
-            const profile_picture = await symDecrypt(sym_key, encrypted_profile_picture);
-            if (first_name == null || last_name == null || profile_picture == null) {
-                throw new Error("Failed decryption");
+            const symDecrypted = await symDecrypt(this.auth.encryptionKey, encrypted_sym_key);
+            if (symDecrypted != null) {
+                const sym_key = symDecrypted.toString("base64");
+                const first_name = await symDecrypt(sym_key, encrypted_first_name);
+                const last_name = await symDecrypt(sym_key, encrypted_last_name);
+                const profile_picture = await symDecrypt(sym_key, encrypted_profile_picture);
+                if (first_name == null || last_name == null || profile_picture == null) {
+                    throw new Error("Failed decryption");
+                }
+                return {
+                    first_name: first_name.toString("utf-8"),
+                    last_name: last_name.toString("utf-8"),
+                    profile_picture: profile_picture,
+                    sym_key: sym_key,
+                };
             }
-            return {
-                first_name: first_name.toString("utf-8"),
-                last_name: last_name.toString("utf-8"),
-                profile_picture: profile_picture,
-                sym_key: sym_key,
-            };
+            return null;
         } catch (e) {
             return null;
         }
@@ -145,9 +136,8 @@ class AccountController {
         profile_picture: Buffer | null
     ): Promise<UserProfileResponse | null> => {
         try {
-            const encrypted_sym_key = await aesEncrypt(
+            const encrypted_sym_key = await symEncrypt(
                 this.auth.encryptionKey,
-                this.auth.encryptionMac,
                 Buffer.from(this.auth.symKey, "base64")
             );
             const encrypted_first_name = await symEncrypt(
