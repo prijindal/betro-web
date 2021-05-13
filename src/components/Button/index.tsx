@@ -21,24 +21,49 @@ const Button: React.FunctionComponent<ButtonProps> = ({
     ...props
 }) => {
     const color = props.color || "purple";
-    let internalClassName = `transition-colors bg-transparent text-${color}-700 font-semibold rounded ${
-        disabled ? "opacity-50 cursor-not-allowed" : noHoverBg ? "" : `hover:bg-${color}-500`
-    } ${className != null ? className : ""} ${
-        noBorder
-            ? noHoverBg
-                ? "border border-transparent focus:outline-none hover:border-purple-500"
-                : ""
-            : `border border-${color}-500 hover:border-transparent`
-    } ${noHoverBg ? "" : "hover:text-white"}`;
-    if (outlined !== true) {
-        internalClassName = `transition-colors bg-${color}-500 text-white font-bold rounded ${
-            disabled ? "opacity-50 cursor-not-allowed" : noHoverBg ? "" : `hover:bg-${color}-700`
-        } ${className != null ? className : ""}`;
+    let internalClassName = "";
+    if (outlined) {
+        internalClassName += " transition-colors bg-transparent font-semibold rounded";
+        if (noBorder && noHoverBg) {
+            internalClassName +=
+                " border border-transparent focus:outline-none hover:border-purple-500";
+        }
+        if (!noBorder) {
+            internalClassName += " border hover:border-transparent";
+        }
+        if (!noHoverBg) {
+            internalClassName += " hover:text-white";
+        }
+    } else {
+        internalClassName += " transition-colors text-white font-bold rounded";
+    }
+    if (disabled) {
+        internalClassName += " opacity-50 cursor-not-allowed";
+    }
+    if (className != null) {
+        internalClassName += ` ${className}`;
     }
     if (size === "small") {
         internalClassName += " px-2";
     } else {
         internalClassName += " px-4 py-2";
+    }
+    if (color === "purple") {
+        internalClassName += ` ${outlined ? "text-purple-700" : "bg-purple-500"}`;
+        if (noHoverBg) {
+            internalClassName += " hover:bg-purple-700";
+        }
+        if (noBorder) {
+            internalClassName += " border-purple-500";
+        }
+    } else {
+        internalClassName += ` ${outlined ? "text-gray-700" : "bg-gray-500"}`;
+        if (noHoverBg) {
+            internalClassName += " hover:bg-gray-700";
+        }
+        if (noBorder) {
+            internalClassName += " border-gray-500";
+        }
     }
     return (
         <button onClick={disabled ? undefined : onClick} {...props} className={internalClassName}>
