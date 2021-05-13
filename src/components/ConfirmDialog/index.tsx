@@ -1,19 +1,3 @@
-import React from "react";
-import LoadingFullPage from "../LoadingFullPage";
+import ConfirmDialog from "./ConfirmDialog";
 
-import { ConfirmDialogProps } from "./types";
-const ConfirmDialog = React.lazy(() => import("./ConfirmDialog"));
-
-const Loading = () => <LoadingFullPage />;
-
-const ConfirmDialogWrapper: React.FunctionComponent<ConfirmDialogProps> = (props) => {
-    return props.open ? (
-        <React.Suspense fallback={<Loading />}>
-            <ConfirmDialog {...props} />
-        </React.Suspense>
-    ) : (
-        <div />
-    );
-};
-
-export default ConfirmDialogWrapper;
+export default ConfirmDialog;

@@ -1,9 +1,4 @@
-import React from "react";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import React, { useCallback, useState } from "react";
 import Button from "../Button";
 
 import { ConfirmDialogProps } from "./types";
@@ -19,26 +14,53 @@ const ConfirmDialog: React.FunctionComponent<ConfirmDialogProps> = (props) => {
         confirmText,
         cancelText,
     } = props;
+    const [closing, setClosing] = useState<boolean>(false);
+    const cancel = useCallback(() => {
+        setClosing(true);
+        setTimeout(() => {
+            handleCancel();
+            setClosing(false);
+        }, 150);
+    }, [handleCancel]);
     return (
-        <Dialog
-            open={open}
-            onClose={handleCancel}
-            aria-labelledby={`${id}-title`}
-            aria-describedby={`${id}-description`}
+        <div
+            onClick={cancel}
+            className={`fixed top-0 left-0 bg-black bg-opacity-50 full flex-col justify-center items-center z-30 transition-opacity ${
+                open
+                    ? closing
+                        ? "flex opacity-0 pointer-events-none w-full h-full opacity-0"
+                        : "flex opacity-100 w-full h-full"
+                    : "pointer-events-none hidden opacity-0 w-0 h-0"
+            }`}
         >
-            <DialogTitle id={`${id}-title`}>{title}</DialogTitle>
-            {description != null && (
-                <DialogContent>
-                    <DialogContentText id={`${id}-description`}>{description}</DialogContentText>
-                </DialogContent>
-            )}
-            <DialogActions>
-                <Button onClick={handleCancel}>{cancelText || "Disagree"}</Button>
-                {handleConfirm != null && (
-                    <Button onClick={handleConfirm}>{confirmText || "Agree"}</Button>
+            <div
+                className="bg-white shadow-2xl"
+                aria-labelledby={`${id}-title`}
+                aria-describedby={`${id}-description`}
+            >
+                <div className="px-6 py-4 flex-0" id={`${id}-title`}>
+                    <span className="text-xl font-medium">{title}</span>
+                </div>
+                {description != null && (
+                    <div className="flex-1 px-6 py-2">
+                        <div
+                            className="mb-4 text-base font-normal text-gray-600"
+                            id={`${id}-description`}
+                        >
+                            {description}
+                        </div>
+                    </div>
                 )}
-            </DialogActions>
-        </Dialog>
+                <div className="p-2 flex-0 align-center flex flex-row justify-end">
+                    <Button onClick={cancel}>{cancelText || "Disagree"}</Button>
+                    {handleConfirm != null && (
+                        <Button className="ml-2" onClick={handleConfirm}>
+                            {confirmText || "Agree"}
+                        </Button>
+                    )}
+                </div>
+            </div>
+        </div>
     );
 };
 
