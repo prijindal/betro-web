@@ -74,7 +74,7 @@ const PostListItem: React.FunctionComponent<{ routing: boolean; post: PostResour
             {post.media_content != null && (
                 <div className="p-4" onClick={onClickHandler}>
                     <img
-                        style={{ maxWidth: "200px", maxHeight: "200px" }}
+                        className="max-w-xl max-h-48"
                         src={post.media_content}
                         alt={post.text_content || "Post"}
                     />

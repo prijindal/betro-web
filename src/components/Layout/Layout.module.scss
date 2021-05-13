@@ -1,0 +1,7 @@
+.innerContainer {
+    min-width: 42rem;
+
+    @media (max-width: 940px) {
+        min-width: 0;
+    }
+}

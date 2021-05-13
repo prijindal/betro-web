@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { useHistory, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import { loggedIn, resetAuth, verifedLogin } from "../../store/app/actions";
-import classes from "./Login.module.scss";
 import BetroApiObject from "../../api/context";
 import Button from "../../components/Button";
 import TextField from "../../components/TextField";
@@ -55,13 +54,13 @@ const App: React.FC<any> = () => {
     return (
         <React.Fragment>
             <div className={"shadow-2xl flex flex-col mt-12 max-w-xl p-16 mx-auto"}>
-                <div className={classes.paper}>
-                    <form onSubmit={handleSubmit} className={classes.formWrapper}>
-                        <div className={classes.formComponent} style={{ marginBottom: "20px" }}>
+                <div>
+                    <form onSubmit={handleSubmit} className="flex flex-col">
+                        <div className="my-2 mx-auto text-center">
                             <div className="text-2xl text-gray-700">Welcome to Betro App.</div>
                             <div className="text-xl text-gray-500">Please login below</div>
                         </div>
-                        <div className={classes.formComponent}>
+                        <div className="my-2 mx-auto text-center">
                             <TextField
                                 type="email"
                                 disabled={loading}
@@ -73,7 +72,7 @@ const App: React.FC<any> = () => {
                                 onChange={setEmail}
                             />
                         </div>
-                        <div className={classes.formComponent}>
+                        <div className="my-2 mx-auto text-center">
                             <TextField
                                 type="password"
                                 disabled={loading}
@@ -86,16 +85,16 @@ const App: React.FC<any> = () => {
                             />
                         </div>
                         {error != null && (
-                            <div className={classes.formComponent}>
+                            <div className="my-2 mx-auto text-center">
                                 <div className="my-2 text-sm text-gray-500">{error}</div>
                             </div>
                         )}
-                        <div className={classes.formComponent}>
+                        <div className="my-2 mx-auto text-center">
                             <Button disabled={loading} type="submit">
                                 Login
                             </Button>
                         </div>
-                        <div className={classes.formComponent}>
+                        <div className="my-2 mx-auto text-center">
                             <Link to="/register">Register</Link>
                         </div>
                     </form>

@@ -95,7 +95,7 @@ const ProfileForm: React.FunctionComponent<{
                 </div>
                 <div className="mb-4">
                     <input
-                        style={{ display: "none" }}
+                        className="hidden"
                         accept="image/*"
                         id="contained-button-file"
                         multiple

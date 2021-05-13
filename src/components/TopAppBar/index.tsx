@@ -42,7 +42,7 @@ const TopAppBar: React.FunctionComponent<{
                 </span>
             )}
             <span className="text-xl font-medium">Betro</span>
-            <div style={{ flex: 1 }}></div>
+            <div className="flex-1" />
             <div>
                 <UserAvatar user={{ ...profile, username: profile.username || "" }} />
             </div>

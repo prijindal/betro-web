@@ -2,6 +2,8 @@ import React, { Suspense, useCallback, useState } from "react";
 import TopAppBar from "../TopAppBar";
 import AppDrawer from "../AppDrawer";
 import LoadingFullPage from "../LoadingFullPage";
+import classes from "./Layout.module.scss";
+
 const MobileAppDrawer = React.lazy(() => import("../AppDrawer/MobileAppDrawer"));
 
 const Layout: React.FunctionComponent<{ includeRouting: boolean }> = (props) => {
@@ -28,7 +30,7 @@ const Layout: React.FunctionComponent<{ includeRouting: boolean }> = (props) => 
                 className="flex flex-col flex-1 ml-auto mr-auto overflow-auto"
                 style={{ flexBasis: "auto" }}
             >
-                <div className="flex-1 max-w-5xl" style={{ minWidth: "42rem" }}>
+                <div className={`flex-1 max-w-5xl ${classes.innerContainer}`}>
                     <TopAppBar onDrawerToggle={drawerToggle} includeRouting={includeRouting} />
                     <div className="m-1">{children}</div>
                 </div>

@@ -22,12 +22,7 @@ const Badge: React.FunctionComponent = ({ children }) => {
     return (
         <span className="relative inline-flex align-middle flex-shrink">
             {children}
-            <span
-                className="flex flex-row justify-center items-center absolute box-border text-sm w-2 h-2 rounded-full bg-pink-500 top-0 right-0 origin-top-right"
-                style={{
-                    transform: "scale(1) translate(50%, -50%)",
-                }}
-            ></span>
+            <span className="flex flex-row justify-center items-center absolute box-border text-sm w-2 h-2 rounded-full bg-pink-500 top-0 right-0 origin-top-right transform scale-100 -translate-y-1/2 translate-x-1/2"></span>
         </span>
     );
 };
@@ -98,7 +93,7 @@ const AppDrawer: React.FunctionComponent<{ includeRouting: boolean }> = (props) 
                     <span>Followers</span>
                 </NavLink>
                 <NavLink
-                    icon={<UsersIcon className="heroicon" style={{ transform: "scaleX(-1)" }} />}
+                    icon={<UsersIcon className={`heroicon ${classes.reverseIcon}`} />}
                     includeRouting={includeRouting}
                     to="/followees"
                     chip={getChipComponent(countData, "followees")}

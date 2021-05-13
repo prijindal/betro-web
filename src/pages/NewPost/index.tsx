@@ -75,7 +75,7 @@ const NewPost = () => {
                     </div>
                     <div className="flex flex-row items-center mb-4">
                         <input
-                            style={{ display: "none" }}
+                            className="hidden"
                             accept="image/*"
                             id="contained-button-file"
                             multiple
