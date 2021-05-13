@@ -32,7 +32,9 @@ const ApprovalComponent: React.FunctionComponent<{
                 description="By approving this user, you agree to allow them to see your email and name"
             />
             <GroupSelect groupId={groupId} setGroupId={setGroupId} groupData={groupData} />
-            <Button onClick={() => setConfirmApprove(true)}>Approve</Button>
+            <Button aria-label="Approve" onClick={() => setConfirmApprove(true)}>
+                Approve
+            </Button>
         </UserListItem>
     );
 };

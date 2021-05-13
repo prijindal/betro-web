@@ -27,9 +27,9 @@ const TopAppBar: React.FunctionComponent<{
         }
     }, [fetchProfilePicture, fetchWhoami, fetchCount, includeRouting]);
     return (
-        <div className="text-white sticky top-0 shadow-appbar max-w bg-purple-500 flex flex-row items-center justify-between p-2">
+        <div className="text-white sticky top-0 shadow-appbar max-w bg-purple-700 flex flex-row items-center justify-between p-2">
             {hidden ? (
-                <Button onClick={onDrawerToggle}>
+                <Button aria-label="Menu" onClick={onDrawerToggle}>
                     <MenuIcon className="heroicon" />
                 </Button>
             ) : includeRouting ? (

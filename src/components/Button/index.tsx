@@ -1,20 +1,18 @@
 import React from "react";
 
-const Button: React.FunctionComponent<{
-    disabled?: boolean;
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     outlined?: boolean;
     onClick?: () => void;
-    type?: "submit" | "button" | "reset";
-    className?: string;
     noBorder?: boolean;
     color?: "purple" | "gray";
     noHoverBg?: boolean;
     size?: "small" | "medium";
-}> = ({
+}
+
+const Button: React.FunctionComponent<ButtonProps> = ({
     noHoverBg,
     disabled,
     noBorder,
-    type,
     outlined,
     onClick,
     children,
@@ -43,7 +41,7 @@ const Button: React.FunctionComponent<{
         internalClassName += " px-4 py-2";
     }
     return (
-        <button onClick={disabled ? undefined : onClick} type={type} className={internalClassName}>
+        <button onClick={disabled ? undefined : onClick} {...props} className={internalClassName}>
             {children}
         </button>
     );

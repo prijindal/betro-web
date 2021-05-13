@@ -107,7 +107,9 @@ const ProfileForm: React.FunctionComponent<{
                     </label>
                 </div>
                 <div>
-                    <Button type="submit">Save</Button>
+                    <Button aria-label="Save" type="submit">
+                        Save
+                    </Button>
                 </div>
             </form>
         </div>

@@ -23,7 +23,7 @@ const NewGroupForm = (params: { isDefault?: boolean; onCreated: () => void }) =>
                 onChange={setName}
             />
             <Switch className="mr-4" value={isDefault} onChange={setIsDefault} label="Default" />
-            <Button outlined type="submit">
+            <Button aria-label="New Group" outlined type="submit">
                 New group
             </Button>
         </form>

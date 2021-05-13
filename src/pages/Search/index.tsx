@@ -43,7 +43,7 @@ const Search = () => {
                     }}
                 />
                 <div className="ml-2 text-center flex text-gray-500">
-                    <Button type="submit">
+                    <Button aria-label="Search" type="submit">
                         <SearchIcon className="heroicon" />
                     </Button>
                 </div>

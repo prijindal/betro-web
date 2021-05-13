@@ -90,7 +90,7 @@ const App: React.FC<any> = () => {
                             </div>
                         )}
                         <div className="my-2 mx-auto text-center">
-                            <Button disabled={loading} type="submit">
+                            <Button aria-label="Login" disabled={loading} type="submit">
                                 Login
                             </Button>
                         </div>

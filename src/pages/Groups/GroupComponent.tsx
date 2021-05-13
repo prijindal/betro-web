@@ -18,7 +18,9 @@ const GroupComponent: React.FunctionComponent<{ group: Group }> = (props) => {
         <li className="relative flex flex-row justify-end items-center py-4 px-8">
             <span className="text-lg mr-auto">{group.name}</span>
             {group.is_default && <Chip selected={true}>Default</Chip>}
-            <Button onClick={() => setConfirmDeletion(true)}>Delete</Button>
+            <Button aria-label="Delete" onClick={() => setConfirmDeletion(true)}>
+                Delete
+            </Button>
             <ConfirmDialog
                 id="groups-new-form"
                 open={confirmDeletion}

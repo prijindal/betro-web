@@ -86,7 +86,7 @@ const NewPost = () => {
                             <span className="text-base text-gray-700">Upload Media</span>
                         </label>
                     </div>
-                    <Button type="submit" disabled={loading}>
+                    <Button aria-label="Post" type="submit" disabled={loading}>
                         Post
                     </Button>
                 </div>

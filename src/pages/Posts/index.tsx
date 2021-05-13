@@ -44,7 +44,7 @@ const Posts = () => {
                         </div>
                     ))}
                     {pageInfo != null && pageInfo.next && (
-                        <Button onClick={() => fetch()}>
+                        <Button aria-label="Load more" onClick={() => fetch()}>
                             Load More (Loaded {response.length} out of {pageInfo.total})
                         </Button>
                     )}

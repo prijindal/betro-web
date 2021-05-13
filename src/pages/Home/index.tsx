@@ -48,7 +48,7 @@ const App = () => {
                         <span className="font-normal text-sm text-gray-700">
                             Feed is still building. The respponses might not be complete.
                         </span>
-                        <Button onClick={() => fetch(true)} outlined>
+                        <Button aria-label="Refresh" onClick={() => fetch(true)} outlined>
                             Refresh
                         </Button>
                     </div>
@@ -59,7 +59,7 @@ const App = () => {
                         {pageInfo != null && pageInfo.updating ? (
                             <span>
                                 Feed is still building{" "}
-                                <Button onClick={() => fetch(true)} outlined>
+                                <Button aria-label="Refresh" onClick={() => fetch(true)} outlined>
                                     Refresh
                                 </Button>
                             </span>

@@ -17,7 +17,9 @@ const FollowButton: React.FunctionComponent<{
     }, [followUser, onFollow]);
     return (
         <div>
-            <Button onClick={() => setConfirmFollow(true)}>Follow</Button>
+            <Button aria-label="Follow" onClick={() => setConfirmFollow(true)}>
+                Follow
+            </Button>
             <ConfirmDialog
                 id={`user-follow-${username}`}
                 open={confirmFollow}

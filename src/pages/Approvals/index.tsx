@@ -55,7 +55,7 @@ const Approvals = () => {
                     />
                 ))}
                 {response.next && (
-                    <Button onClick={() => fetch()}>
+                    <Button aria-label="Load more" onClick={() => fetch()}>
                         Load More (Loaded {response.data.length} out of {response.total})
                     </Button>
                 )}

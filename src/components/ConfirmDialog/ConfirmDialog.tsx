@@ -52,9 +52,15 @@ const ConfirmDialog: React.FunctionComponent<ConfirmDialogProps> = (props) => {
                     </div>
                 )}
                 <div className="p-2 flex-0 align-center flex flex-row justify-end">
-                    <Button onClick={cancel}>{cancelText || "Disagree"}</Button>
+                    <Button aria-label={cancelText || "Disagree"} onClick={cancel}>
+                        {cancelText || "Disagree"}
+                    </Button>
                     {handleConfirm != null && (
-                        <Button className="ml-2" onClick={handleConfirm}>
+                        <Button
+                            aria-label={confirmText || "Agree"}
+                            className="ml-2"
+                            onClick={handleConfirm}
+                        >
                             {confirmText || "Agree"}
                         </Button>
                     )}

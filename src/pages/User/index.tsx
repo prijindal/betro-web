@@ -68,7 +68,7 @@ const User = () => {
                                 </div>
                             ))}
                             {pageInfo != null && pageInfo.next && (
-                                <Button onClick={() => fetchPosts()}>
+                                <Button aria-label="Load more" onClick={() => fetchPosts()}>
                                     Load More (Loaded {response.length} out of {pageInfo.total})
                                 </Button>
                             )}

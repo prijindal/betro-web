@@ -40,7 +40,9 @@ const Profile = () => {
         return (
             <div>
                 <div>
-                    <Button onClick={() => setEditing(true)}>Edit</Button>
+                    <Button aria-label="Edit" onClick={() => setEditing(true)}>
+                        Edit
+                    </Button>
                 </div>
                 <div>First Name: {profile.first_name}</div>
                 <div>Last Name: {profile.last_name}</div>
