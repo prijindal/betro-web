@@ -22,7 +22,7 @@ const App: React.FC<any> = () => {
 
     const login = useCallback(() => {
         if (auth.isLoggedIn && auth.isLoaded) {
-            BetroApiObject.account
+            BetroApiObject.keys
                 .fetchKeys()
                 .then(async (resp) => {
                     if (resp === true) {

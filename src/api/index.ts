@@ -6,6 +6,7 @@ import FeedController from "./feed";
 import NotificationController from "./notifications";
 import SettingsController from "./settings";
 import PostController from "./post";
+import KeysController from "./keys";
 export * from "./types";
 
 class BetroApi {
@@ -18,6 +19,10 @@ class BetroApi {
 
     get account() {
         return new AccountController(this.auth);
+    }
+
+    get keys() {
+        return new KeysController(this.auth);
     }
 
     get follow() {

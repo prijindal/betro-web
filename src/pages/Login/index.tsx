@@ -23,7 +23,7 @@ const App: React.FC<any> = () => {
             .login(email, password)
             .then((payload) => {
                 dispatch(loggedIn());
-                BetroApiObject.account
+                BetroApiObject.keys
                     .fetchKeys()
                     .then(async (resp) => {
                         setLoading(false);

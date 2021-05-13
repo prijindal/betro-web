@@ -37,7 +37,7 @@ const ProfileForm: React.FunctionComponent<{
         }
     };
     const afterProfileSaved = useCallback(() => {
-        BetroApiObject.account.fetchKeys().then((resp) => {
+        BetroApiObject.keys.fetchKeys().then((resp) => {
             if (resp != null) {
                 dispatch(verifedLogin());
             }
