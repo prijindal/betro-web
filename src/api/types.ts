@@ -74,10 +74,12 @@ export interface PostResponse {
 
 export interface PostUserResponse {
     username: string;
-    sym_key?: string | null;
-    first_name?: string | null;
-    last_name?: string | null;
-    profile_picture?: string | null;
+    first_name?: string;
+    last_name?: string;
+    profile_picture?: string;
+    public_key?: string | null;
+    own_key_id?: string | null;
+    encrypted_profile_sym_key?: string | null;
 }
 
 export interface FeedPageInfo {
@@ -91,7 +93,9 @@ export interface FeedPageInfo {
 export interface ApprovalResponse {
     id: string;
     follower_id: string;
-    public_key: string;
+    follower_key_id: string;
+    follower_public_key: string;
+    own_key_id?: string | null;
     username: string;
     first_name?: string | null;
     last_name?: string | null;
@@ -124,6 +128,7 @@ export interface FolloweeResponse {
 }
 
 export interface UserInfo {
+    id: string;
     is_following: boolean;
     is_approved: boolean;
     username: string;

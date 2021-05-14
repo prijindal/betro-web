@@ -14,6 +14,10 @@ class AuthController {
     private token = "";
     public privateKey = "";
     public symKey = "";
+    // public ecdhKeys: Array<{ id: string; publicKey: string; privateKey: string }> = [];
+    public ecdhKeys: {
+        [id: string]: { id: string; publicKey: string; privateKey: string; claimed: boolean };
+    } = {};
     public instance: AxiosInstance;
     constructor(host: string) {
         this.host = host;
@@ -38,9 +42,8 @@ class AuthController {
 
     loadFromLocal = (): boolean => {
         const encryptionKey = localStorage.getItem("ENCRYPTION_KEY");
-        const encryptionMac = localStorage.getItem("ENCRYPTION_MAC");
         const token = localStorage.getItem("TOKEN");
-        if (encryptionKey != null && encryptionMac != null && token != null) {
+        if (encryptionKey != null && token != null) {
             this.encryptionKey = encryptionKey;
             this.token = token;
             this.instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;

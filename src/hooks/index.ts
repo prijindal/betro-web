@@ -146,6 +146,7 @@ export const useFetchUserInfoHook = (
                   profile_picture:
                       typeof state.profile_picture == "string" ? null : state.profile_picture,
                   username: state.username || "",
+                  id: "",
               }
     );
     const fetchPosts = useCallback(
@@ -186,15 +187,19 @@ export const useFetchUserInfoHook = (
     };
 };
 
-export const useFollowUserHook = (username?: string, public_key?: string | null) => {
+export const useFollowUserHook = (
+    id?: string,
+    followee_key_id?: string | null,
+    public_key?: string | null
+) => {
     const dispatch = useDispatch();
     const followHandler = useCallback(async () => {
-        if (username != null && public_key != null) {
-            const follow = BetroApiObject.follow.followUser(username, public_key);
+        if (id != null && followee_key_id != null && public_key != null) {
+            const follow = BetroApiObject.follow.followUser(id, followee_key_id, public_key);
             dispatch(incrementCount("followees"));
             return follow;
         }
-    }, [username, public_key, dispatch]);
+    }, [id, followee_key_id, public_key, dispatch]);
     return followHandler;
 };
 
@@ -262,18 +267,19 @@ export const useGroupSelector = () => {
 export const useApproveUser = (approval: ApprovalResponse, group: Group | undefined) => {
     const dispatch = useDispatch();
     const approveHandler = useCallback(() => {
-        if (group !== undefined) {
+        if (group !== undefined && approval.own_key_id != null) {
             const approvePromise = BetroApiObject.follow.approveUser(
                 approval.id,
-                approval.public_key,
+                approval.follower_public_key,
                 group.id,
-                group.sym_key
+                group.sym_key,
+                approval.own_key_id
             );
             dispatch(incrementCount("followers"));
             dispatch(decremenetCount("approvals"));
             return approvePromise;
         }
-    }, [approval.id, approval.public_key, group, dispatch]);
+    }, [approval.id, approval.own_key_id, approval.follower_public_key, group, dispatch]);
 
     return approveHandler;
 };

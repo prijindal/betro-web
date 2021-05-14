@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { symDecrypt, rsaDecrypt, symEncrypt } from "betro-js-lib";
+import { symDecrypt, deriveExchangeSymKey, symEncrypt } from "betro-js-lib";
 import { bufferToImageUrl } from "../util/bufferToImage";
 import AuthController from "./auth";
 import { parsePost, parseUserProfile } from "./profileHelper";
@@ -19,11 +19,16 @@ class PostController {
         let user: PostResourceUser = {
             username: resp.user.username,
         };
-        if (resp.user.sym_key != null) {
+        if (
+            resp.user.encrypted_profile_sym_key != null &&
+            resp.user.public_key != null &&
+            resp.user.own_key_id != null
+        ) {
             const userProfile = await parseUserProfile(
-                resp.user.sym_key,
-                this.auth.privateKey,
-                resp.user
+                resp.user.encrypted_profile_sym_key,
+                resp.user.public_key,
+                this.auth.ecdhKeys[resp.user.own_key_id].privateKey,
+                user
             );
             user = {
                 username: resp.user.username,
@@ -35,7 +40,12 @@ class PostController {
                         : null,
             };
         }
-        const symKey = await rsaDecrypt(this.auth.privateKey, resp.post.key);
+        if (resp.user.own_key_id == null || resp.user.public_key == null) {
+            throw Error("Decryption issues");
+        }
+        const ownKey = this.auth.ecdhKeys[resp.user.own_key_id];
+        const derivedKey = await deriveExchangeSymKey(resp.user.public_key, ownKey.privateKey);
+        const symKey = await symDecrypt(derivedKey, resp.post.key);
         if (symKey == null) {
             throw Error("Decryption issues");
         }

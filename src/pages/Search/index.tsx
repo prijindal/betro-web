@@ -62,8 +62,8 @@ const Search = () => {
                                 </span>
                             ) : (
                                 <FollowButton
+                                    id={a.id}
                                     username={a.username}
-                                    public_key={a.public_key}
                                     onFollow={() => searchUserThrottled(query)}
                                 />
                             )}

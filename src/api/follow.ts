@@ -1,4 +1,4 @@
-import { symDecrypt, rsaEncrypt } from "betro-js-lib";
+import { symDecrypt, deriveExchangeSymKey, symEncrypt } from "betro-js-lib";
 import { parseUserProfile } from "./profileHelper";
 
 import AuthController from "./auth";
@@ -28,11 +28,19 @@ class FollowController {
             const resp = response.data;
             const data: Array<ApprovalResponse> = [];
             for (const res of resp.data) {
-                const userResponse = await parseUserProfile(res.sym_key, this.auth.privateKey, res);
+                console.log(res);
+                const userResponse = await parseUserProfile(
+                    res.follower_encrypted_profile_sym_key,
+                    res.follower_public_key,
+                    this.auth.ecdhKeys[res.own_key_id].privateKey,
+                    res
+                );
                 data.push({
                     id: res.id,
                     follower_id: res.follower_id,
-                    public_key: res.public_key,
+                    follower_public_key: res.follower_public_key,
+                    follower_key_id: res.follower_key_id,
+                    own_key_id: res.own_key_id,
                     username: res.username,
                     ...userResponse,
                 });
@@ -54,7 +62,12 @@ class FollowController {
             const resp = response.data;
             const data: Array<FollowerResponse> = [];
             for (const res of resp.data) {
-                const userResponse = await parseUserProfile(res.sym_key, this.auth.privateKey, res);
+                const userResponse = await parseUserProfile(
+                    res.encrypted_profile_sym_key,
+                    res.public_key,
+                    this.auth.ecdhKeys[res.own_key_id].privateKey,
+                    res
+                );
                 data.push({
                     follow_id: res.follow_id,
                     group_id: res.group_id,
@@ -93,8 +106,9 @@ class FollowController {
                 };
                 if (res.sym_key != null) {
                     const userResponse = await parseUserProfile(
-                        res.sym_key,
-                        this.auth.privateKey,
+                        res.follower_encrypted_profile_sym_key,
+                        res.follower_public_key,
+                        this.auth.ecdhKeys[res.own_key_id].privateKey,
                         res
                     );
                     row = { ...row, ...userResponse };
@@ -108,44 +122,60 @@ class FollowController {
     };
 
     followUser = async (
-        username: string,
-        public_key: string
+        followee_id: string,
+        followee_key_id: string,
+        followee_public_key: string
     ): Promise<{ is_following: boolean; is_approved: boolean; email: string } | null> => {
         try {
-            const encrypted_sym_key = await rsaEncrypt(
-                public_key,
+            const ownKeyPair = this.auth.ecdhKeys[Object.keys(this.auth.ecdhKeys)[0]];
+            const derivedKey = await deriveExchangeSymKey(
+                followee_public_key,
+                ownKeyPair.privateKey
+            );
+            const encrypted_profile_sym_key = await symEncrypt(
+                derivedKey,
                 Buffer.from(this.auth.symKey, "base64")
             );
             const response = await this.auth.instance.post(`/api/follow/`, {
-                followee_username: username,
-                sym_key: encrypted_sym_key,
+                followee_id: followee_id,
+                own_key_id: ownKeyPair.id,
+                followee_key_id: followee_key_id,
+                encrypted_profile_sym_key: encrypted_profile_sym_key,
             });
             const data = response.data;
             return data;
         } catch (e) {
+            console.error(e);
             return null;
         }
     };
 
     approveUser = async (
         followId: string,
-        publicKey: string,
+        follower_public_key: string,
         group_id: string,
-        encrypted_group_sym_key: string
+        encrypted_by_user_group_sym_key: string,
+        own_key_id: string
     ): Promise<{ is_following: boolean; is_approved: boolean; email: string } | null> => {
         const decryptedGroupSymKey = await symDecrypt(
             this.auth.encryptionKey,
-            encrypted_group_sym_key
+            encrypted_by_user_group_sym_key
         );
-        const userSymKey = await rsaEncrypt(publicKey, Buffer.from(this.auth.symKey, "base64"));
+        const ownKeyPair = this.auth.ecdhKeys[own_key_id];
+        const derivedKey = await deriveExchangeSymKey(follower_public_key, ownKeyPair.privateKey);
         try {
             if (decryptedGroupSymKey != null) {
-                const groupSymKey = await rsaEncrypt(publicKey, decryptedGroupSymKey);
+                const encrypted_group_sym_key = await symEncrypt(derivedKey, decryptedGroupSymKey);
+                const encrypted_profile_sym_key = await symEncrypt(
+                    derivedKey,
+                    Buffer.from(this.auth.symKey, "base64")
+                );
                 const response = await this.auth.instance.post(`/api/follow/approve`, {
                     follow_id: followId,
                     group_id: group_id,
-                    group_sym_key: groupSymKey,
-                    followee_sym_key: userSymKey,
+                    encrypted_group_sym_key,
+                    encrypted_profile_sym_key,
+                    own_key_id: ownKeyPair.id,
                 });
                 const data = response.data;
                 return data;
@@ -156,14 +186,20 @@ class FollowController {
         }
     };
 
+    fetchUserEcdhKey = async (id: string): Promise<{ id: string; public_key: string }> => {
+        const response = await this.auth.instance.get(`/api/keys/ecdh/user/${id}`);
+        return response.data;
+    };
+
     fetchUserInfo = async (username: string): Promise<UserInfo | null> => {
         try {
             const response = await this.auth.instance.get(`/api/user/${username}`);
             const data = response.data;
             if (data.sym_key != null) {
                 const userResponse = await parseUserProfile(
-                    data.sym_key,
-                    this.auth.privateKey,
+                    data.follower_encrypted_profile_sym_key,
+                    data.follower_public_key,
+                    this.auth.ecdhKeys[data.own_key_id].privateKey,
                     data
                 );
                 return { ...data, ...userResponse };
@@ -189,8 +225,9 @@ class FollowController {
                 };
                 if (res.sym_key != null) {
                     const userResponse = await parseUserProfile(
-                        res.sym_key,
-                        this.auth.privateKey,
+                        res.follower_encrypted_profile_sym_key,
+                        res.follower_public_key,
+                        this.auth.ecdhKeys[res.own_key_id].privateKey,
                         res
                     );
                     row = { ...row, ...userResponse };

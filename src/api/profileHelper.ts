@@ -1,4 +1,4 @@
-import { rsaDecrypt, symDecrypt } from "betro-js-lib";
+import { deriveExchangeSymKey, symDecrypt } from "betro-js-lib";
 import { bufferToImageUrl } from "../util/bufferToImage";
 import { PostResponse } from "./types";
 
@@ -10,7 +10,8 @@ interface UserProfile {
 
 export const parseUserProfile = async (
     encrypted_sym_key: string,
-    private_key: string,
+    remote_public_key: string,
+    own_private_key: string,
     res: {
         first_name?: string | null;
         last_name?: string | null;
@@ -18,7 +19,8 @@ export const parseUserProfile = async (
     }
 ): Promise<UserProfile> => {
     const response: UserProfile = {};
-    const sym_key_bytes = await rsaDecrypt(private_key, encrypted_sym_key);
+    const derivedKey = await deriveExchangeSymKey(remote_public_key, own_private_key);
+    const sym_key_bytes = await symDecrypt(derivedKey, encrypted_sym_key);
     if (sym_key_bytes == null) {
         return response;
     }

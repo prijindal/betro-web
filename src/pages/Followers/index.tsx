@@ -26,8 +26,8 @@ const FollowerComponent: React.FunctionComponent<{
                     </span>
                 ) : (
                     <FollowButton
+                        id={follower.user_id}
                         username={follower.username}
-                        public_key={follower.public_key}
                         onFollow={onFollow}
                     />
                 )}

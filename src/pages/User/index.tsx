@@ -45,8 +45,8 @@ const User = () => {
                             {!userInfo.is_following && (
                                 <FollowButton
                                     onFollow={() => fetchInfo()}
+                                    id={userInfo.id}
                                     username={userInfo.username}
-                                    public_key={userInfo.public_key}
                                 />
                             )}
                             {userInfo.is_following && !userInfo.is_approved && (

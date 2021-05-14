@@ -1,4 +1,4 @@
-import { symDecrypt, rsaDecrypt } from "betro-js-lib";
+import { symDecrypt, deriveExchangeSymKey } from "betro-js-lib";
 import { bufferToImageUrl } from "../util/bufferToImage";
 import AuthController from "./auth";
 import { parsePost, parseUserProfile } from "./profileHelper";
@@ -8,6 +8,7 @@ import {
     PostResourceUser,
     PostResponse,
     PostsFeedResponse,
+    PostUserResponse,
 } from "./types";
 
 class FeedController {
@@ -18,17 +19,26 @@ class FeedController {
 
     transformPostFeed = async (
         feed: PostsFeedResponse,
-        postToSymKey: (post: PostResponse, keys: { [key_id: string]: string }) => Promise<string>
+        postToSymKey: (
+            post: PostResponse,
+            keys: { [key_id: string]: string },
+            users: { [user_id: string]: PostUserResponse }
+        ) => Promise<string>
     ): Promise<Array<PostResource>> => {
         const posts: Array<PostResource> = [];
         const users: { [user_id: string]: PostResourceUser } = {};
         for (const user_id in feed.users) {
             if (Object.prototype.hasOwnProperty.call(feed.users, user_id)) {
                 const user = feed.users[user_id];
-                if (user.sym_key != null) {
+                if (
+                    user.encrypted_profile_sym_key != null &&
+                    user.public_key != null &&
+                    user.own_key_id != null
+                ) {
                     const userProfile = await parseUserProfile(
-                        user.sym_key,
-                        this.auth.privateKey,
+                        user.encrypted_profile_sym_key,
+                        user.public_key,
+                        this.auth.ecdhKeys[user.own_key_id].privateKey,
                         user
                     );
                     users[user_id] = {
@@ -44,7 +54,7 @@ class FeedController {
             }
         }
         for (const post of feed.posts) {
-            const sym_key = await postToSymKey(post, feed.keys);
+            const sym_key = await postToSymKey(post, feed.keys, feed.users);
             const parsedPost = await parsePost(post, sym_key);
             posts.push({
                 ...parsedPost,
@@ -52,6 +62,25 @@ class FeedController {
             });
         }
         return posts;
+    };
+
+    private feedDefaultTransform = async (
+        post: PostResponse,
+        keys: { [key_id: string]: string },
+        users: { [user_id: string]: PostUserResponse }
+    ) => {
+        const user = users[post.user_id];
+        if (user.own_key_id == null || user.public_key == null) {
+            throw Error("Decryption issues");
+        }
+        const ownKey = this.auth.ecdhKeys[user.own_key_id];
+        const derivedKey = await deriveExchangeSymKey(user.public_key, ownKey.privateKey);
+        const symKey = await symDecrypt(derivedKey, keys[post.key_id]);
+        if (symKey == null) {
+            throw Error("Decryption issues");
+        }
+        const sym_key = symKey.toString("base64");
+        return sym_key;
     };
 
     fetchUserPosts = async (
@@ -67,19 +96,13 @@ class FeedController {
                 `/api/user/${username}/posts?limit=${limit}&after=${after}`
             );
             const posts: PostsFeedResponse = response.data;
-            const data = await this.transformPostFeed(posts, async (post, keys) => {
-                const symKey = await rsaDecrypt(this.auth.privateKey, keys[post.key_id]);
-                if (symKey == null) {
-                    throw Error("Decryption issues");
-                }
-                const sym_key = symKey.toString("base64");
-                return sym_key;
-            });
+            const data = await this.transformPostFeed(posts, this.feedDefaultTransform);
             return {
                 data,
                 pageInfo: response.data.pageInfo,
             };
         } catch (e) {
+            console.error(e);
             return null;
         }
     };
@@ -125,14 +148,7 @@ class FeedController {
                 `/api/feed?limit=${limit}&after=${after}`
             );
             const posts: PostsFeedResponse = response.data;
-            const data = await this.transformPostFeed(posts, async (post, keys) => {
-                const symKey = await rsaDecrypt(this.auth.privateKey, keys[post.key_id]);
-                if (symKey == null) {
-                    throw Error("Decryption issues");
-                }
-                const sym_key = symKey.toString("base64");
-                return sym_key;
-            });
+            const data = await this.transformPostFeed(posts, this.feedDefaultTransform);
             return {
                 data,
                 pageInfo: response.data.pageInfo,
