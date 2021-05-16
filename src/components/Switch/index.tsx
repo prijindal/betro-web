@@ -24,7 +24,6 @@ const SwitchComponent: React.FunctionComponent<{
     );
     const handleKeyUp = useCallback(
         (event: React.KeyboardEvent<HTMLElement>) => {
-            console.log(event.key);
             if (event.key !== Keys.Tab && event.key !== Keys.Enter) event.preventDefault();
             if (event.key === Keys.Space) toggle();
         },

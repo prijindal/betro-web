@@ -2,7 +2,7 @@ import { deriveExchangeSymKey, symDecrypt } from "betro-js-lib";
 import { bufferToImageUrl } from "../util/bufferToImage";
 import { PostResponse } from "./types";
 
-interface UserProfile {
+export interface UserProfile {
     first_name?: string | null;
     last_name?: string | null;
     profile_picture?: Buffer | null;

@@ -1,6 +1,5 @@
 import axios, { AxiosInstance } from "axios";
 import {
-    generateRsaPair,
     generateSymKey,
     getEncryptionKey,
     getMasterHash,
@@ -108,20 +107,13 @@ class AuthController {
         const masterKey = await getMasterKey(email, password);
         const masterHash = await getMasterHash(masterKey, password);
         const encryptionKey = await getEncryptionKey(masterKey);
-        const { publicKey, privateKey } = await generateRsaPair();
         const symKey = await generateSymKey();
-        const encryptedPrivateKey = await symEncrypt(
-            encryptionKey,
-            Buffer.from(privateKey, "base64")
-        );
         const encryptedSymKey = await symEncrypt(encryptionKey, Buffer.from(symKey, "base64"));
         const response = await this.instance.post(`/api/register`, {
             username,
             email,
             master_hash: masterHash,
             inhibit_login: true,
-            public_key: publicKey,
-            private_key: encryptedPrivateKey,
             sym_key: encryptedSymKey,
         });
         const token = response.data.token;

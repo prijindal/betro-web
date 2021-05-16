@@ -48,7 +48,6 @@ class KeysController {
                     this.auth.encryptionKey,
                     Buffer.from(privateKey, "base64")
                 );
-                console.log(Buffer.from(publicKey, "base64").length);
                 return {
                     public_key: publicKey,
                     private_key: privKey,

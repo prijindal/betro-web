@@ -1,5 +1,5 @@
 import { symDecrypt, deriveExchangeSymKey, symEncrypt } from "betro-js-lib";
-import { parseUserProfile } from "./profileHelper";
+import { parseUserProfile, UserProfile } from "./profileHelper";
 
 import AuthController from "./auth";
 import {
@@ -22,19 +22,33 @@ class FollowController {
     ): Promise<PaginatedResponse<ApprovalResponse> | null> => {
         const limit = 50;
         try {
-            const response = await this.auth.instance.get(
-                `/api/follow/approvals?limit=${limit}&after=${after}`
-            );
+            const response = await this.auth.instance.get<
+                PaginatedResponse<{
+                    id: string;
+                    follower_id: string;
+                    username: string;
+                    created_at: Date;
+                    follower_key_id: string;
+                    follower_public_key: string;
+                    own_key_id?: string | null;
+                    follower_encrypted_profile_sym_key?: string | null;
+                    first_name?: string | null;
+                    last_name?: string | null;
+                    profile_picture?: string | null;
+                }>
+            >(`/api/follow/approvals?limit=${limit}&after=${after}`);
             const resp = response.data;
             const data: Array<ApprovalResponse> = [];
             for (const res of resp.data) {
-                console.log(res);
-                const userResponse = await parseUserProfile(
-                    res.follower_encrypted_profile_sym_key,
-                    res.follower_public_key,
-                    this.auth.ecdhKeys[res.own_key_id].privateKey,
-                    res
-                );
+                let userResponse: UserProfile = {};
+                if (res.follower_encrypted_profile_sym_key != null && res.own_key_id != null) {
+                    userResponse = await parseUserProfile(
+                        res.follower_encrypted_profile_sym_key,
+                        res.follower_public_key,
+                        this.auth.ecdhKeys[res.own_key_id].privateKey,
+                        res
+                    );
+                }
                 data.push({
                     id: res.id,
                     follower_id: res.follower_id,
@@ -92,9 +106,20 @@ class FollowController {
     ): Promise<PaginatedResponse<FolloweeResponse> | null> => {
         const limit = 50;
         try {
-            const response = await this.auth.instance.get(
-                `/api/follow/followees?limit=${limit}&after=${after}`
-            );
+            const response = await this.auth.instance.get<
+                PaginatedResponse<{
+                    user_id: string;
+                    follow_id: string;
+                    username: string;
+                    is_approved: boolean;
+                    public_key?: string | null;
+                    encrypted_profile_sym_key?: string | null;
+                    own_key_id?: string | null;
+                    first_name?: string | null;
+                    last_name?: string | null;
+                    profile_picture?: string | null;
+                }>
+            >(`/api/follow/followees?limit=${limit}&after=${after}`);
             const resp = response.data;
             const data: Array<FolloweeResponse> = [];
             for (const res of resp.data) {
@@ -104,10 +129,14 @@ class FollowController {
                     user_id: res.user_id,
                     username: res.username,
                 };
-                if (res.sym_key != null) {
+                if (
+                    res.encrypted_profile_sym_key != null &&
+                    res.public_key != null &&
+                    res.own_key_id != null
+                ) {
                     const userResponse = await parseUserProfile(
-                        res.follower_encrypted_profile_sym_key,
-                        res.follower_public_key,
+                        res.encrypted_profile_sym_key,
+                        res.public_key,
                         this.auth.ecdhKeys[res.own_key_id].privateKey,
                         res
                     );
