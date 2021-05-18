@@ -1,15 +1,14 @@
 import { symDecrypt, deriveExchangeSymKey } from "betro-js-lib";
-import { bufferToImageUrl } from "../util/bufferToImage";
 import AuthController from "./auth";
-import { parsePost, parseUserProfile } from "./profileHelper";
+import { parsePost, parseUserGrant } from "./profileHelper";
 import {
     FeedPageInfo,
     PostResource,
     PostResourceUser,
     PostResponse,
     PostsFeedResponse,
-    PostUserResponse,
 } from "./types";
+import { PostUserResponse } from "./UserResponses";
 
 class FeedController {
     auth: AuthController;
@@ -30,27 +29,10 @@ class FeedController {
         for (const user_id in feed.users) {
             if (Object.prototype.hasOwnProperty.call(feed.users, user_id)) {
                 const user = feed.users[user_id];
-                if (
-                    user.encrypted_profile_sym_key != null &&
-                    user.public_key != null &&
-                    user.own_key_id != null
-                ) {
-                    const userProfile = await parseUserProfile(
-                        user.encrypted_profile_sym_key,
-                        user.public_key,
-                        this.auth.ecdhKeys[user.own_key_id].privateKey,
-                        user
-                    );
-                    users[user_id] = {
-                        username: user.username,
-                        first_name: userProfile.first_name,
-                        last_name: userProfile.last_name,
-                        profile_picture:
-                            userProfile.profile_picture != null
-                                ? bufferToImageUrl(userProfile.profile_picture)
-                                : null,
-                    };
-                }
+                users[user_id] = {
+                    username: user.username,
+                    ...(await parseUserGrant(this.auth.encryptionKey, user)),
+                };
             }
         }
         for (const post of feed.posts) {
@@ -70,11 +52,17 @@ class FeedController {
         users: { [user_id: string]: PostUserResponse }
     ) => {
         const user = users[post.user_id];
-        if (user.own_key_id == null || user.public_key == null) {
+        if (user.own_private_key == null || user.public_key == null) {
             throw Error("Decryption issues");
         }
-        const ownKey = this.auth.ecdhKeys[user.own_key_id];
-        const derivedKey = await deriveExchangeSymKey(user.public_key, ownKey.privateKey);
+        const privateKey = await symDecrypt(this.auth.encryptionKey, user.own_private_key);
+        if (privateKey == null) {
+            throw Error("Decryption issues");
+        }
+        const derivedKey = await deriveExchangeSymKey(
+            user.public_key,
+            privateKey.toString("base64")
+        );
         const symKey = await symDecrypt(derivedKey, keys[post.key_id]);
         if (symKey == null) {
             throw Error("Decryption issues");

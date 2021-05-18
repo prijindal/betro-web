@@ -1,5 +1,5 @@
 import { symDecrypt, deriveExchangeSymKey, symEncrypt } from "betro-js-lib";
-import { parseUserProfile, UserProfile } from "./profileHelper";
+import { parseUserGrant, UserProfile } from "./profileHelper";
 
 import AuthController from "./auth";
 import {
@@ -10,6 +10,13 @@ import {
     UserInfo,
     PaginatedResponse,
 } from "./types";
+import {
+    ApprovalResponseBackend,
+    FolloweeResponseBackend,
+    FollowerResponseBackend,
+    SearchResultBackend,
+    UserInfoResponseBackend,
+} from "./UserResponses";
 
 class FollowController {
     auth: AuthController;
@@ -23,44 +30,27 @@ class FollowController {
         const limit = 50;
         try {
             const response = await this.auth.instance.get<
-                PaginatedResponse<{
-                    id: string;
-                    follower_id: string;
-                    username: string;
-                    created_at: Date;
-                    follower_key_id: string;
-                    follower_public_key: string;
-                    own_key_id?: string | null;
-                    follower_encrypted_profile_sym_key?: string | null;
-                    first_name?: string | null;
-                    last_name?: string | null;
-                    profile_picture?: string | null;
-                }>
+                PaginatedResponse<ApprovalResponseBackend>
             >(`/api/follow/approvals?limit=${limit}&after=${after}`);
             const resp = response.data;
             const data: Array<ApprovalResponse> = [];
             for (const res of resp.data) {
                 let userResponse: UserProfile = {};
-                if (res.follower_encrypted_profile_sym_key != null && res.own_key_id != null) {
-                    userResponse = await parseUserProfile(
-                        res.follower_encrypted_profile_sym_key,
-                        res.follower_public_key,
-                        this.auth.ecdhKeys[res.own_key_id].privateKey,
-                        res
-                    );
-                }
+                userResponse = await parseUserGrant(this.auth.encryptionKey, res);
                 data.push({
                     id: res.id,
                     follower_id: res.follower_id,
-                    follower_public_key: res.follower_public_key,
-                    follower_key_id: res.follower_key_id,
+                    public_key: res.public_key,
                     own_key_id: res.own_key_id,
+                    created_at: res.created_at,
+                    own_private_key: userResponse.own_private_key,
                     username: res.username,
                     ...userResponse,
                 });
             }
             return { ...resp, data };
         } catch (e) {
+            console.error(e);
             return null;
         }
     };
@@ -70,18 +60,13 @@ class FollowController {
     ): Promise<PaginatedResponse<FollowerResponse> | null> => {
         const limit = 50;
         try {
-            const response = await this.auth.instance.get(
-                `/api/follow/followers?limit=${limit}&after=${after}`
-            );
+            const response = await this.auth.instance.get<
+                PaginatedResponse<FollowerResponseBackend>
+            >(`/api/follow/followers?limit=${limit}&after=${after}`);
             const resp = response.data;
             const data: Array<FollowerResponse> = [];
             for (const res of resp.data) {
-                const userResponse = await parseUserProfile(
-                    res.encrypted_profile_sym_key,
-                    res.public_key,
-                    this.auth.ecdhKeys[res.own_key_id].privateKey,
-                    res
-                );
+                const userResponse = await parseUserGrant(this.auth.encryptionKey, res);
                 data.push({
                     follow_id: res.follow_id,
                     group_id: res.group_id,
@@ -107,18 +92,7 @@ class FollowController {
         const limit = 50;
         try {
             const response = await this.auth.instance.get<
-                PaginatedResponse<{
-                    user_id: string;
-                    follow_id: string;
-                    username: string;
-                    is_approved: boolean;
-                    public_key?: string | null;
-                    encrypted_profile_sym_key?: string | null;
-                    own_key_id?: string | null;
-                    first_name?: string | null;
-                    last_name?: string | null;
-                    profile_picture?: string | null;
-                }>
+                PaginatedResponse<FolloweeResponseBackend>
             >(`/api/follow/followees?limit=${limit}&after=${after}`);
             const resp = response.data;
             const data: Array<FolloweeResponse> = [];
@@ -129,19 +103,8 @@ class FollowController {
                     user_id: res.user_id,
                     username: res.username,
                 };
-                if (
-                    res.encrypted_profile_sym_key != null &&
-                    res.public_key != null &&
-                    res.own_key_id != null
-                ) {
-                    const userResponse = await parseUserProfile(
-                        res.encrypted_profile_sym_key,
-                        res.public_key,
-                        this.auth.ecdhKeys[res.own_key_id].privateKey,
-                        res
-                    );
-                    row = { ...row, ...userResponse };
-                }
+                const userResponse = await parseUserGrant(this.auth.encryptionKey, res);
+                row = { ...row, ...userResponse };
                 data.push(row);
             }
             return { ...resp, data };
@@ -184,14 +147,14 @@ class FollowController {
         follower_public_key: string,
         group_id: string,
         encrypted_by_user_group_sym_key: string,
-        own_key_id: string
+        own_key_id: string,
+        private_key: string
     ): Promise<{ is_following: boolean; is_approved: boolean; email: string } | null> => {
         const decryptedGroupSymKey = await symDecrypt(
             this.auth.encryptionKey,
             encrypted_by_user_group_sym_key
         );
-        const ownKeyPair = this.auth.ecdhKeys[own_key_id];
-        const derivedKey = await deriveExchangeSymKey(follower_public_key, ownKeyPair.privateKey);
+        const derivedKey = await deriveExchangeSymKey(follower_public_key, private_key);
         try {
             if (decryptedGroupSymKey != null) {
                 const encrypted_group_sym_key = await symEncrypt(derivedKey, decryptedGroupSymKey);
@@ -204,7 +167,7 @@ class FollowController {
                     group_id: group_id,
                     encrypted_group_sym_key,
                     encrypted_profile_sym_key,
-                    own_key_id: ownKeyPair.id,
+                    own_key_id: own_key_id,
                 });
                 const data = response.data;
                 return data;
@@ -222,19 +185,19 @@ class FollowController {
 
     fetchUserInfo = async (username: string): Promise<UserInfo | null> => {
         try {
-            const response = await this.auth.instance.get(`/api/user/${username}`);
+            const response = await this.auth.instance.get<UserInfoResponseBackend>(
+                `/api/user/${username}`
+            );
             const data = response.data;
-            if (data.sym_key != null) {
-                const userResponse = await parseUserProfile(
-                    data.follower_encrypted_profile_sym_key,
-                    data.follower_public_key,
-                    this.auth.ecdhKeys[data.own_key_id].privateKey,
-                    data
-                );
-                return { ...data, ...userResponse };
-            } else {
-                return { ...data, first_name: null, last_name: null, profile_picture: null };
-            }
+            const userResponse = await parseUserGrant(this.auth.encryptionKey, data);
+            return {
+                id: data.id,
+                username: data.username,
+                is_approved: data.is_approved,
+                is_following: data.is_following,
+                ...userResponse,
+                public_key: data.public_key,
+            };
         } catch (e) {
             return null;
         }
@@ -242,25 +205,19 @@ class FollowController {
 
     searchUser = async (query: string): Promise<Array<SearchResult>> => {
         try {
-            const response = await this.auth.instance.get(`/api/user/search?query=${query}`);
+            const response = await this.auth.instance.get<Array<SearchResultBackend>>(
+                `/api/user/search?query=${query}`
+            );
             const data: Array<SearchResult> = [];
             for (const res of response.data) {
                 let row: SearchResult = {
                     id: res.id,
                     username: res.username,
-                    public_key: res.public_key,
                     is_following: res.is_following,
                     is_following_approved: res.is_following_approved,
                 };
-                if (res.sym_key != null) {
-                    const userResponse = await parseUserProfile(
-                        res.follower_encrypted_profile_sym_key,
-                        res.follower_public_key,
-                        this.auth.ecdhKeys[res.own_key_id].privateKey,
-                        res
-                    );
-                    row = { ...row, ...userResponse };
-                }
+                const userResponse = await parseUserGrant(this.auth.encryptionKey, res);
+                row = { ...row, ...userResponse, public_key: res.public_key };
                 data.push(row);
             }
             return data;

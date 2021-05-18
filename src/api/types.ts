@@ -1,3 +1,5 @@
+import { PostUserResponse } from "./UserResponses";
+
 export interface WhoAmiResponse {
     user_id: string;
     username: string;
@@ -72,16 +74,6 @@ export interface PostResponse {
     created_at: Date;
 }
 
-export interface PostUserResponse {
-    username: string;
-    first_name?: string;
-    last_name?: string;
-    profile_picture?: string;
-    public_key?: string | null;
-    own_key_id?: string | null;
-    encrypted_profile_sym_key?: string | null;
-}
-
 export interface FeedPageInfo {
     updating: boolean;
     next: boolean;
@@ -93,13 +85,14 @@ export interface FeedPageInfo {
 export interface ApprovalResponse {
     id: string;
     follower_id: string;
-    follower_key_id: string;
-    follower_public_key: string;
-    own_key_id?: string | null;
     username: string;
+    created_at: Date;
     first_name?: string | null;
     last_name?: string | null;
-    profile_picture?: Buffer | null;
+    profile_picture?: string | null;
+    public_key: string | null;
+    own_key_id: string | null;
+    own_private_key?: string | null;
 }
 
 export interface FollowerResponse {
@@ -114,7 +107,7 @@ export interface FollowerResponse {
     public_key: string | null;
     first_name?: string | null;
     last_name?: string | null;
-    profile_picture?: Buffer | null;
+    profile_picture?: string | null;
 }
 
 export interface FolloweeResponse {
@@ -124,7 +117,7 @@ export interface FolloweeResponse {
     username: string;
     first_name?: string | null;
     last_name?: string | null;
-    profile_picture?: Buffer | null;
+    profile_picture?: string | null;
 }
 
 export interface UserInfo {
@@ -132,10 +125,10 @@ export interface UserInfo {
     is_following: boolean;
     is_approved: boolean;
     username: string;
-    public_key: string | null;
+    public_key?: string | null;
     first_name?: string | null;
     last_name?: string | null;
-    profile_picture?: Buffer | null;
+    profile_picture?: Buffer | string | null;
 }
 
 export interface SearchResult {
@@ -143,10 +136,10 @@ export interface SearchResult {
     username: string;
     is_following: boolean;
     is_following_approved: boolean;
-    public_key: string;
+    public_key?: string | null;
     first_name?: string | null;
     last_name?: string | null;
-    profile_picture?: Buffer | null;
+    profile_picture?: string | null;
 }
 
 export interface GroupResponse {

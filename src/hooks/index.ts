@@ -267,19 +267,29 @@ export const useGroupSelector = () => {
 export const useApproveUser = (approval: ApprovalResponse, group: Group | undefined) => {
     const dispatch = useDispatch();
     const approveHandler = useCallback(() => {
-        if (group !== undefined && approval.own_key_id != null) {
+        if (group !== undefined && approval.public_key != null && approval.own_key_id != null) {
+            const ownKeyPair = BetroApiObject.auth.ecdhKeys[approval.own_key_id];
+            const privateKey = approval.own_private_key || ownKeyPair.privateKey;
             const approvePromise = BetroApiObject.follow.approveUser(
                 approval.id,
-                approval.follower_public_key,
+                approval.public_key,
                 group.id,
                 group.sym_key,
-                approval.own_key_id
+                approval.own_key_id,
+                privateKey
             );
             dispatch(incrementCount("followers"));
             dispatch(decremenetCount("approvals"));
             return approvePromise;
         }
-    }, [approval.id, approval.own_key_id, approval.follower_public_key, group, dispatch]);
+    }, [
+        approval.id,
+        approval.own_key_id,
+        approval.own_private_key,
+        approval.public_key,
+        group,
+        dispatch,
+    ]);
 
     return approveHandler;
 };

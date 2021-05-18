@@ -15,8 +15,7 @@ class KeysController {
         const data = response.data;
         const ecdh_max_keys = data.ecdh_max_keys;
         const ecdh_unclaimed_keys = data.ecdh_unclaimed_keys;
-        const ecdh_claimed_keys = data.ecdh_claimed_keys;
-        if (ecdh_claimed_keys + ecdh_unclaimed_keys > 0) {
+        if (ecdh_unclaimed_keys > 0) {
             this.getExistingEcdhKeys();
         }
         if (ecdh_unclaimed_keys < ecdh_max_keys) {
@@ -93,7 +92,7 @@ class KeysController {
                     claimed: boolean;
                 }>
             >
-        >("api/keys/ecdh");
+        >("api/keys/ecdh?include_types=unclaimed");
         const encryptedKeyPairs = response.data;
         for (const encryptedKeyPair of encryptedKeyPairs) {
             const { id, public_key, private_key, claimed } = encryptedKeyPair;

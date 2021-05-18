@@ -1,8 +1,7 @@
 import { AxiosResponse } from "axios";
 import { symDecrypt, deriveExchangeSymKey, symEncrypt } from "betro-js-lib";
-import { bufferToImageUrl } from "../util/bufferToImage";
 import AuthController from "./auth";
-import { parsePost, parseUserProfile } from "./profileHelper";
+import { parsePost, parseUserGrant } from "./profileHelper";
 import { GetPostResponse, PostResource, PostResourceUser, LikeResponse } from "./types";
 
 class PostController {
@@ -19,32 +18,21 @@ class PostController {
         let user: PostResourceUser = {
             username: resp.user.username,
         };
-        if (
-            resp.user.encrypted_profile_sym_key != null &&
-            resp.user.public_key != null &&
-            resp.user.own_key_id != null
-        ) {
-            const userProfile = await parseUserProfile(
-                resp.user.encrypted_profile_sym_key,
-                resp.user.public_key,
-                this.auth.ecdhKeys[resp.user.own_key_id].privateKey,
-                user
-            );
-            user = {
-                username: resp.user.username,
-                first_name: userProfile.first_name,
-                last_name: userProfile.last_name,
-                profile_picture:
-                    userProfile.profile_picture != null
-                        ? bufferToImageUrl(userProfile.profile_picture)
-                        : null,
-            };
-        }
-        if (resp.user.own_key_id == null || resp.user.public_key == null) {
+        user = {
+            username: resp.user.username,
+            ...parseUserGrant(this.auth.encryptionKey, resp.user),
+        };
+        if (resp.user.own_private_key == null || resp.user.public_key == null) {
             throw Error("Decryption issues");
         }
-        const ownKey = this.auth.ecdhKeys[resp.user.own_key_id];
-        const derivedKey = await deriveExchangeSymKey(resp.user.public_key, ownKey.privateKey);
+        const privateKey = await symDecrypt(this.auth.encryptionKey, resp.user.own_private_key);
+        if (privateKey == null) {
+            throw Error("Decryption issues");
+        }
+        const derivedKey = await deriveExchangeSymKey(
+            resp.user.public_key,
+            privateKey.toString("base64")
+        );
         const symKey = await symDecrypt(derivedKey, resp.post.key);
         if (symKey == null) {
             throw Error("Decryption issues");
