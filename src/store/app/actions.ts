@@ -1,4 +1,4 @@
-import { CountResponse } from "../../api";
+import { CountResponse } from "betro-js-client";
 import { Action, Group, Locale } from "./types";
 
 export const ActionTypes = {

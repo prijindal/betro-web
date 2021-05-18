@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import BetroApiObject from "../../api/context";
-import { NotificationResponse } from "../../api";
+import { NotificationResponse } from "betro-js-client";
 import { wrapLayout } from "../../components/Layout";
 import NotificationComponent from "./NotificationComponent";
 import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";

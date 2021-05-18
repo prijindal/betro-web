@@ -1,5 +1,5 @@
 import { produce } from "immer";
-import { CountResponse } from "../../api";
+import { CountResponse } from "betro-js-client";
 import { ActionTypes } from "./actions";
 import { Action, AppState } from "./types";
 

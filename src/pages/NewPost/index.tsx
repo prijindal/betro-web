@@ -5,7 +5,7 @@ import GroupSelect from "../../components/GroupSelect";
 import Button from "../../components/Button";
 import TextField from "../../components/TextField";
 import { useFetchGroupsHook, useGroupSelector } from "../../hooks";
-import { bufferToImageUrl } from "../../util/bufferToImage";
+import { bufferToImageUrl } from "betro-js-client";
 import BetroApiObject from "../../api/context";
 import { incrementCount } from "../../store/app/actions";
 import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";

@@ -3,7 +3,7 @@ import isEmpty from "lodash/isEmpty";
 import { useSelector } from "react-redux";
 import { wrapLayout } from "../../components/Layout";
 import { getProfile } from "../../store/app/selectors";
-import { imageUrlToBuffer } from "../../util/bufferToImage";
+import { imageUrlToBuffer } from "betro-js-client";
 import ProfileForm from "./ProfileForm";
 import Button from "../../components/Button";
 import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";

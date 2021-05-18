@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import UserListItem from "../../components/UserListItem";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import Button from "../../components/Button";
-import { ApprovalResponse } from "../../api";
+import { ApprovalResponse } from "betro-js-client";
 import { useApproveUser, useGroupSelector } from "../../hooks";
 import GroupSelect from "../../components/GroupSelect";
 

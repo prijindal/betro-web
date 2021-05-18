@@ -1,6 +1,6 @@
 import { API_HOST } from "../constants";
 
-import BetroApi from "./index";
+import BetroApi from "betro-js-client";
 
 const BetroApiObject = new BetroApi(API_HOST);
 

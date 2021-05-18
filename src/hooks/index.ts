@@ -20,9 +20,9 @@ import {
     UserInfo,
     UserSettingResponse,
     NotificationResponse,
-} from "../api";
+} from "betro-js-client";
 import throttle from "lodash/throttle";
-import { bufferToImageUrl } from "../util/bufferToImage";
+import { bufferToImageUrl } from "betro-js-client";
 import { UserListItemUserProps } from "../components/UserListItem/types";
 import { createPaginatedHook } from "./paginated";
 import BetroApiObject from "../api/context";

@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import Divider from "../Divider";
 import HeartIcon from "@heroicons/react/solid/HeartIcon";
 import HeartOutlineIcon from "@heroicons/react/outline/HeartIcon";
-import { LikeResponse, PostResource } from "../../api";
+import { LikeResponse, PostResource } from "betro-js-client";
 import { UserAvatar } from "../UserListItem/UserAvatar";
 import { getPrimaryText } from "../UserListItem/getPrimaryText";
 import { fromNow } from "../../util/fromNow";

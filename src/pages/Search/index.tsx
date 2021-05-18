@@ -5,7 +5,7 @@ import BetroApiObject from "../../api/context";
 import { wrapLayout } from "../../components/Layout";
 import UserListItem from "../../components/UserListItem";
 import FollowButton from "../../components/FollowButton";
-import { SearchResult } from "../../api";
+import { SearchResult } from "betro-js-client";
 import Button from "../../components/Button";
 import TextField from "../../components/TextField";
 import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";

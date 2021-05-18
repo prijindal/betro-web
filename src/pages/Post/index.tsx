@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useState } from "react";
 import throttle from "lodash/throttle";
 import { useHistory, useLocation, useParams } from "react-router";
-import { PostResource } from "../../api";
+import { PostResource } from "betro-js-client";
 import BetroApiObject from "../../api/context";
 import { wrapLayout } from "../../components/Layout";
 import PostListItem from "../../components/PostListItem";
