@@ -26,6 +26,7 @@ const App: React.FC<any> = () => {
                 BetroApiObject.keys
                     .fetchKeys()
                     .then(async (resp) => {
+                        BetroApiObject.auth.storeLocal();
                         setLoading(false);
                         if (resp === true) {
                             dispatch(verifedLogin());

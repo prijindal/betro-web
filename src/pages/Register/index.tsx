@@ -99,6 +99,7 @@ const App: React.FC<any> = () => {
                 setLoading(false);
                 history.push("/");
                 if (payload) {
+                    BetroApiObject.auth.storeLocal();
                     dispatch(loggedIn());
                 }
             })

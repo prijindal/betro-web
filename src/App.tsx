@@ -1,12 +1,11 @@
 // import React, { Suspense } from 'react';
 import * as React from "react";
 import { Helmet } from "react-helmet-async";
-import { Router, Route, Switch } from "react-router-dom";
+import { Router, Route, Switch, Redirect } from "react-router-dom";
 import createHistory from "./store/history";
 import favicon from "./assets/favicon.png";
 import routes from "./routes";
 import PrivateRoute from "./components/PrivateRoute";
-import Loading from "./pages/Loading";
 import { useSelector } from "react-redux";
 import { getAuth } from "./store/app/selectors";
 import { wrapLayout } from "./components/Layout";
@@ -108,7 +107,7 @@ const App: React.FC = () => {
                 />
                 <Switch>
                     <Route exact path={routes.loading}>
-                        <Loading />
+                        <Redirect to="/home" />
                     </Route>
                     <Route exact path={routes.login}>
                         <Login />
