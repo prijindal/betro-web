@@ -76,6 +76,6 @@
     "yarn-or-npm": "^3.0.1"
   },
   "resolutions": {
-    "caniuse-lite": "^1.0.30001055"
+    "caniuse-lite": "^1.0.30001228"
   }
 }
