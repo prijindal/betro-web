@@ -1,18 +1,18 @@
 import React, { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 import BetroApiObject from "../../api/context";
 import { resetAuth } from "../../store/app/actions";
 import LoadingFullPage from "../../components/LoadingFullPage";
 
 const Logout = () => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const logoutFunction = useCallback(async () => {
         BetroApiObject.auth.logout();
-        history.push("/login");
+        navigate("/login");
         dispatch(resetAuth());
-    }, [history, dispatch]);
+    }, [navigate, dispatch]);
     useEffect(() => {
         logoutFunction();
     }, [logoutFunction]);

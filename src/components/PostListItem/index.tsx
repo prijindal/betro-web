@@ -6,7 +6,7 @@ import { LikeResponse, PostResource } from "betro-js-client";
 import { UserAvatar } from "../UserListItem/UserAvatar";
 import { getPrimaryText } from "../UserListItem/getPrimaryText";
 import { fromNow } from "../../util/fromNow";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import BetroApiObject from "../../api/context";
 import Button from "../Button";
 
@@ -52,14 +52,12 @@ const PostLikedButton: React.FunctionComponent<{ post: PostResource }> = (props)
 
 const PostListItem: React.FunctionComponent<{ routing: boolean; post: PostResource }> = (props) => {
     const { post, routing } = props;
-    const history = useHistory();
+    const navigate = useNavigate();
     const secondary =
         post.user.first_name != null
             ? `@${post.user.username} ${fromNow(new Date(post.created_at))}`
             : fromNow(new Date(post.created_at));
-    const onClickHandler = routing
-        ? () => history.push({ pathname: `/post/${post.id}`, state: post })
-        : () => null;
+    const onClickHandler = routing ? () => navigate(`/post/${post.id}`) : () => null;
     return (
         <div className="my-2 max-w-xl">
             <div className="flex flex-row p-4">

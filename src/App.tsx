@@ -1,8 +1,6 @@
-// import React, { Suspense } from 'react';
 import * as React from "react";
 import { Helmet } from "react-helmet-async";
-import { Router, Route, Switch, Redirect } from "react-router-dom";
-import createHistory from "./store/history";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import favicon from "./assets/favicon.png";
 import routes from "./routes";
 import PrivateRoute from "./components/PrivateRoute";
@@ -27,8 +25,6 @@ import UserSettings from "./pages/UserSettings";
 import Profile from "./pages/Profile";
 import Logout from "./pages/Logout";
 import LoadingFullPage from "./components/LoadingFullPage";
-
-const history = createHistory();
 
 const LayoutLoading = wrapLayout(() => <LoadingFullPage />, { includeRouting: false });
 
@@ -99,39 +95,23 @@ const APP_ROUTES = [
 const App: React.FC = () => {
     return (
         <React.Suspense fallback={<LoadingSuspense />}>
-            <Router history={history}>
+            <Router>
                 <Helmet
                     defaultTitle="Betro"
                     titleTemplate="%s – Betro"
                     link={[{ rel: "icon", type: "image/png", href: favicon }]}
                 />
-                <Switch>
-                    <Route exact path={routes.loading}>
-                        <Redirect to="/home" />
-                    </Route>
-                    <Route exact path={routes.login}>
-                        <Login />
-                    </Route>
-                    <Route exact path={routes.register}>
-                        <Register />
-                    </Route>
+                <Routes>
+                    <Route path={routes.loading} element={<Navigate to="/home" />} />
+                    <Route path={routes.login} element={<Login />} />
+                    <Route path={routes.register} element={<Register />} />
                     {APP_ROUTES.map(({ route, Component }) => (
-                        <PrivateRoute key={route} exact path={route}>
-                            <Route>
-                                <Component />
-                            </Route>
-                        </PrivateRoute>
+                        <PrivateRoute key={route} path={route} element={<Component />} />
                     ))}
-                    <PrivateRoute exact path={routes.search}>
-                        <Route>
-                            <Search />
-                        </Route>
-                    </PrivateRoute>
-                    <Route exact path={routes.logout}>
-                        <Logout />
-                    </Route>
-                    <Route>404</Route>
-                </Switch>
+                    <PrivateRoute path={routes.search} element={<Search />} />
+                    <Route path={routes.logout} element={<Logout />} />
+                    <Route path="*">404</Route>
+                </Routes>
             </Router>
         </React.Suspense>
     );

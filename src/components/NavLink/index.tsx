@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Chip from "../Chip";
 
 const liClassName = (selected: boolean) =>
@@ -30,14 +30,14 @@ const NavLinkWithRouting: React.FunctionComponent<{
     chip?: React.ReactElement;
 }> = (props) => {
     const { children, pathname, icon, chip } = props;
-    const history = useHistory();
+    const navigate = useNavigate();
     const location = useLocation();
     const selected = location.pathname === pathname;
     if (selected) {
         return (
             <span
                 className={liClassName(selected)}
-                onClick={selected ? undefined : () => history.push(pathname)}
+                onClick={selected ? undefined : () => navigate(pathname)}
             >
                 {icon != null && <span className={iconClassName(selected)}>{icon}</span>}
                 {children}
@@ -49,7 +49,7 @@ const NavLinkWithRouting: React.FunctionComponent<{
         <Link
             to={pathname}
             className={liClassName(selected)}
-            onClick={selected ? undefined : () => history.push(pathname)}
+            onClick={selected ? undefined : () => navigate(pathname)}
         >
             {icon != null && <span className={iconClassName(selected)}>{icon}</span>}
             {children}

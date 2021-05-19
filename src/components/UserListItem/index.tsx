@@ -34,7 +34,7 @@ const UserListItem: React.FunctionComponent<{
                 </div>
             )}
             {routing ? (
-                <Link to={{ pathname: `/user/${user.username}`, state: user }}>{itemText}</Link>
+                <Link to={{ pathname: `/user/${user.username}` }}>{itemText}</Link>
             ) : (
                 itemText
             )}

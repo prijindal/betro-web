@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useHistory, useLocation } from "react-router";
+import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { loggedIn, resetAuth, verifedLogin } from "../../store/app/actions";
 import BetroApiObject from "../../api/context";
@@ -13,8 +13,7 @@ const App: React.FC<any> = () => {
     const [password, setPassword] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
     const dispatch = useDispatch();
-    const history = useHistory();
-    const location = useLocation();
+    const navigate = useNavigate();
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -30,12 +29,10 @@ const App: React.FC<any> = () => {
                         setLoading(false);
                         if (resp === true) {
                             dispatch(verifedLogin());
-                            const state = location.state || { from: { pathname: "/home" } };
-                            history.replace((state as any).from);
+                            navigate("/home");
                         } else {
-                            const state = { from: { pathname: "/login" } };
                             dispatch(resetAuth());
-                            history.replace((state as any).from);
+                            navigate("/login");
                         }
                     })
                     .catch((error) => {

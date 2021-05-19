@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import { Redirect, Route, RouteProps } from "react-router";
+import { Navigate, Route, RouteProps } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { authLoaded, resetAuth, verifedLogin } from "../../store/app/actions";
 import { getAuth } from "../../store/app/selectors";
@@ -57,27 +57,23 @@ const CheckLoginLoading = () => {
     );
 };
 
-const PrivateRoute: React.FC<RouteProps<string>> = ({ children, ...rest }) => {
+const PrivateRouteInternal: React.FC<{ element?: React.ReactElement | null }> = ({ element }) => {
     const auth = useSelector(getAuth);
-    return (
-        <Route
-            {...rest}
-            render={({ location }) =>
-                auth.isLoaded && auth.isLoggedIn && auth.isVerified ? (
-                    children
-                ) : auth.isLoaded && !auth.isLoggedIn ? (
-                    <Redirect
-                        to={{
-                            pathname: "/login",
-                            state: { from: location },
-                        }}
-                    />
-                ) : (
-                    <CheckLoginLoading />
-                )
-            }
+    return auth.isLoaded && auth.isLoggedIn && auth.isVerified ? (
+        <div>{element}</div>
+    ) : auth.isLoaded && !auth.isLoggedIn ? (
+        <Navigate
+            to={{
+                pathname: "/login",
+            }}
         />
+    ) : (
+        <CheckLoginLoading />
     );
+};
+
+const PrivateRoute: React.FC<RouteProps> = ({ element, path, ...rest }) => {
+    return <Route {...rest} path={path} element={<PrivateRouteInternal element={element} />} />;
 };
 
 export default PrivateRoute;

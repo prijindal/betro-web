@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import isEmpty from "lodash/isEmpty";
 import throttle from "lodash/throttle";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { loggedIn } from "../../store/app/actions";
 import CheckIcon from "@heroicons/react/solid/CheckIcon";
@@ -86,7 +86,7 @@ const App: React.FC<any> = () => {
     const [confirmPassword, setConfirmPassword] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
     const dispatch = useDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (isEmpty(password) || password !== confirmPassword) {
@@ -97,7 +97,7 @@ const App: React.FC<any> = () => {
             .register(username, email, password)
             .then((payload) => {
                 setLoading(false);
-                history.push("/");
+                navigate("/home");
                 if (payload) {
                     BetroApiObject.auth.storeLocal();
                     dispatch(loggedIn());
