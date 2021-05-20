@@ -4,7 +4,7 @@ const paths = require('./config/paths');
 module.exports = {
     verbose: true,
     collectCoverageFrom: ['src/**/*.{js,jsx,mjs,ts,tsx}'],
-    coveragePathIgnorePatterns: ['.css.d.ts'],
+    coveragePathIgnorePatterns: ['.css.d.ts','.stories.tsx'],
     setupFiles: [
         '<rootDir>/node_modules/regenerator-runtime/runtime',
         '<rootDir>/config/polyfills.js',

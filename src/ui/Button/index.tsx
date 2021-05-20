@@ -56,7 +56,11 @@ const Button: React.FunctionComponent<ButtonProps> = ({
     if (color === "purple") {
         internalClassName += ` ${outlined ? "text-purple-700" : "bg-purple-700"}`;
         if (!noHoverBg) {
-            internalClassName += " hover:bg-purple-900";
+            if (outlined) {
+                internalClassName += " hover:bg-purple-700";
+            } else {
+                internalClassName += " hover:bg-purple-900";
+            }
         }
         if (noBorder) {
             internalClassName += " border-purple-500";
@@ -64,7 +68,11 @@ const Button: React.FunctionComponent<ButtonProps> = ({
     } else {
         internalClassName += ` ${outlined ? "text-gray-700" : "bg-gray-500"}`;
         if (!noHoverBg) {
-            internalClassName += " hover:bg-gray-700";
+            if (outlined) {
+                internalClassName += " hover:bg-gray-500";
+            } else {
+                internalClassName += " hover:bg-gray-700";
+            }
         }
         if (noBorder) {
             internalClassName += " border-gray-500";
