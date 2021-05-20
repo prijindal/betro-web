@@ -1,6 +1,7 @@
+import isEmpty from "lodash/isEmpty";
 import React from "react";
 
-const TextField: React.FunctionComponent<{
+export interface TextFieldProps {
     value: string;
     onChange: (e: string) => void;
     label?: React.ReactNode;
@@ -11,25 +12,38 @@ const TextField: React.FunctionComponent<{
     placeholder?: string;
     name?: string;
     type: "text" | "email" | "password";
-    styleType?: "solid" | "underline";
-}> = ({
+}
+
+const defaultProps: TextFieldProps = {
+    value: "",
+    onChange: (a) => null,
+    type: "text",
+};
+
+const TextField: React.FunctionComponent<TextFieldProps> = ({
     value,
     onChange,
     label,
     className,
-    error,
     disabled,
     type,
-    styleType,
     placeholder,
     name,
     required,
-}) => {
-    const solidStyles =
-        "mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0";
-    const underlineStyles = `mt-0 block w-full px-0.5 border-0 border-b-2 ${
-        error ? "border-red-200 focus:border-red-500" : "border-purple-200 focus:border-purple-500"
-    } focus:ring-0`;
+    ...props
+} = defaultProps) => {
+    let error = props.error;
+    let borderColorStyles = "border-purple-300 focus:border-purple-700";
+    if (required && isEmpty(value)) {
+        error = true;
+    }
+    if (error) {
+        borderColorStyles = "border-red-300 focus:border-red-500";
+    }
+    if (disabled) {
+        borderColorStyles = "border-purple-200";
+    }
+    const underlineStyles = `transition-colors mt-0 block w-full px-0.5 border-0 border-b-2 focus:ring-0 ${borderColorStyles}`;
     return (
         <label
             className={`flex flex-col items-start max-w-sm ${className != null ? className : ""}`}
@@ -41,12 +55,14 @@ const TextField: React.FunctionComponent<{
                 placeholder={placeholder}
                 type={type}
                 required={required}
-                className={styleType === "solid" ? solidStyles : underlineStyles}
+                className={underlineStyles}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
             />
         </label>
     );
 };
+
+TextField.defaultProps = defaultProps;
 
 export default TextField;
