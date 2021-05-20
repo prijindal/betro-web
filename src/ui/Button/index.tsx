@@ -7,22 +7,26 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
     color?: "purple" | "gray";
     noHoverBg?: boolean;
     size?: "small" | "medium";
+    disabled?: boolean;
+    className?: string;
+    type?: "submit" | "reset" | "button";
+    children?: React.ReactNode;
 }
 
-const Button: React.FunctionComponent<ButtonProps> = (
-    {
-        noHoverBg,
-        disabled,
-        noBorder,
-        outlined,
-        onClick,
-        children,
-        className,
-        size,
-        color,
-        ...props
-    } = { color: "purple" }
-) => {
+const defaultProps: ButtonProps = { color: "purple" };
+
+const Button: React.FunctionComponent<ButtonProps> = ({
+    noHoverBg,
+    disabled,
+    noBorder,
+    outlined,
+    onClick,
+    children,
+    className,
+    size,
+    color,
+    ...props
+} = defaultProps) => {
     let internalClassName = "";
     if (outlined) {
         internalClassName += " transition-colors bg-transparent font-semibold rounded";
@@ -72,5 +76,7 @@ const Button: React.FunctionComponent<ButtonProps> = (
         </button>
     );
 };
+
+Button.defaultProps = defaultProps;
 
 export default Button;
