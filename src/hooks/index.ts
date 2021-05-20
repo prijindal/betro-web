@@ -187,26 +187,23 @@ export const useFetchUserInfoHook = (
     };
 };
 
-export const useFollowUserHook = (
-    id?: string,
-    followee_key_id?: string | null,
-    public_key?: string | null
-) => {
+export const useFollowUserHook = (id?: string, followee_key_id?: string | null) => {
     const dispatch = useDispatch();
-    const followHandler = useCallback(async () => {
-        if (id != null && followee_key_id != null && public_key != null) {
-            const follow = BetroApiObject.follow.followUser(id, followee_key_id, public_key);
-            dispatch(incrementCount("followees"));
-            return follow;
-        }
-    }, [id, followee_key_id, public_key, dispatch]);
+    const followHandler = useCallback(
+        async (public_key?: string | null) => {
+            if (id != null && followee_key_id != null) {
+                const follow = BetroApiObject.follow.followUser(id, followee_key_id, public_key);
+                dispatch(incrementCount("followees"));
+                return follow;
+            }
+        },
+        [id, followee_key_id, dispatch]
+    );
     return followHandler;
 };
 
 const createFeedHook = (
-    fetchFunction: (
-        after: string | undefined
-    ) => Promise<{
+    fetchFunction: (after: string | undefined) => Promise<{
         data: Array<PostResource>;
         pageInfo: FeedPageInfo;
     } | null>
@@ -266,30 +263,34 @@ export const useGroupSelector = () => {
 
 export const useApproveUser = (approval: ApprovalResponse, group: Group | undefined) => {
     const dispatch = useDispatch();
-    const approveHandler = useCallback(() => {
-        if (group !== undefined && approval.public_key != null && approval.own_key_id != null) {
-            const ownKeyPair = BetroApiObject.auth.ecdhKeys[approval.own_key_id];
-            const privateKey = approval.own_private_key || ownKeyPair.privateKey;
-            const approvePromise = BetroApiObject.follow.approveUser(
-                approval.id,
-                approval.public_key,
-                group.id,
-                group.sym_key,
-                approval.own_key_id,
-                privateKey
-            );
-            dispatch(incrementCount("followers"));
-            dispatch(decremenetCount("approvals"));
-            return approvePromise;
-        }
-    }, [
-        approval.id,
-        approval.own_key_id,
-        approval.own_private_key,
-        approval.public_key,
-        group,
-        dispatch,
-    ]);
+    const approveHandler = useCallback(
+        (allowProfileRead = false) => {
+            if (group !== undefined && approval.public_key != null && approval.own_key_id != null) {
+                const ownKeyPair = BetroApiObject.auth.ecdhKeys[approval.own_key_id];
+                const privateKey = approval.own_private_key || ownKeyPair.privateKey;
+                const approvePromise = BetroApiObject.follow.approveUser(
+                    approval.id,
+                    approval.public_key,
+                    group.id,
+                    group.sym_key,
+                    approval.own_key_id,
+                    privateKey,
+                    allowProfileRead
+                );
+                dispatch(incrementCount("followers"));
+                dispatch(decremenetCount("approvals"));
+                return approvePromise;
+            }
+        },
+        [
+            approval.id,
+            approval.own_key_id,
+            approval.own_private_key,
+            approval.public_key,
+            group,
+            dispatch,
+        ]
+    );
 
     return approveHandler;
 };

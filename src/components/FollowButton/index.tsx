@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useFollowUserHook } from "../../hooks";
 import ConfirmDialog from "../../ui/ConfirmDialog";
+import Switch from "../../ui/Switch";
 import Button from "../../ui/Button";
 import BetroApiObject from "../../api/context";
 import isEmpty from "lodash/isEmpty";
@@ -11,13 +12,14 @@ const FollowButton: React.FunctionComponent<{
     onFollow?: () => void;
 }> = (props) => {
     const { id, username, onFollow } = props;
+    const [allowProfileRead, setAllowProfileRead] = useState<boolean>(false);
     const [key, setKey] = useState<{ id: string; public_key: string } | null>(null);
     const [confirmFollow, setConfirmFollow] = useState<boolean>(false);
-    const followUser = useFollowUserHook(id, key?.id, key?.public_key);
+    const followUser = useFollowUserHook(id, key?.id);
     const followHandler = useCallback(() => {
         setConfirmFollow(false);
-        followUser().then(onFollow);
-    }, [followUser, onFollow]);
+        followUser(allowProfileRead ? key?.public_key : null).then(onFollow);
+    }, [followUser, onFollow, key?.public_key, allowProfileRead]);
     useEffect(() => {
         if (!isEmpty(id) && confirmFollow && key == null) {
             BetroApiObject.follow.fetchUserEcdhKey(id).then((response) => {
@@ -36,7 +38,15 @@ const FollowButton: React.FunctionComponent<{
                 handleCancel={() => setConfirmFollow(false)}
                 handleConfirm={followHandler}
                 title={`Follow user ${username}?`}
-                description="By following this user, you agree to allow them to see your email and name"
+                description={
+                    <div>
+                        <Switch
+                            value={allowProfileRead}
+                            onChange={setAllowProfileRead}
+                            label="Allow user to see your name and profile picture"
+                        />
+                    </div>
+                }
             />
         </div>
     );

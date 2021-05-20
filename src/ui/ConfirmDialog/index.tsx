@@ -7,7 +7,7 @@ export type ConfirmDialogProps = {
     open: boolean;
     handleCancel: () => void;
     handleConfirm?: () => void;
-    description?: string;
+    description?: React.ReactNode;
     cancelText?: string;
     confirmText?: string;
 };
