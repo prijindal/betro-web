@@ -40,6 +40,11 @@ const App = () => {
     if (response == null) {
         return <div>Some error occurred</div>;
     }
+    const RefreshButton = () => (
+        <Button disabled={loading} aria-label="Refresh" onClick={() => fetch(true)} outlined>
+            Refresh
+        </Button>
+    );
     return (
         <React.Fragment>
             <div>
@@ -48,9 +53,7 @@ const App = () => {
                         <span className="font-normal text-sm text-gray-700">
                             Feed is still building. The respponses might not be complete.
                         </span>
-                        <Button aria-label="Refresh" onClick={() => fetch(true)} outlined>
-                            Refresh
-                        </Button>
+                        <RefreshButton />
                     </div>
                 )}
                 {response.length === 0 && (
@@ -58,10 +61,7 @@ const App = () => {
                         No posts found.{" "}
                         {pageInfo != null && pageInfo.updating ? (
                             <span>
-                                Feed is still building{" "}
-                                <Button aria-label="Refresh" onClick={() => fetch(true)} outlined>
-                                    Refresh
-                                </Button>
+                                Feed is still building <RefreshButton />
                             </span>
                         ) : (
                             "Follow more users to build your feed"
