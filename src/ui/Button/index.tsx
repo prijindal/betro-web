@@ -9,26 +9,31 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
     size?: "small" | "medium";
 }
 
-const Button: React.FunctionComponent<ButtonProps> = ({
-    noHoverBg,
-    disabled,
-    noBorder,
-    outlined,
-    onClick,
-    children,
-    className,
-    size,
-    ...props
-}) => {
-    const color = props.color || "purple";
+const Button: React.FunctionComponent<ButtonProps> = (
+    {
+        noHoverBg,
+        disabled,
+        noBorder,
+        outlined,
+        onClick,
+        children,
+        className,
+        size,
+        color,
+        ...props
+    } = { color: "purple" }
+) => {
     let internalClassName = "";
     if (outlined) {
         internalClassName += " transition-colors bg-transparent font-semibold rounded";
         if (noBorder && !noHoverBg) {
-            internalClassName += ` border border-transparent focus:outline-none hover:text-white `;
+            internalClassName += ` border border-transparent focus:outline-none`;
         }
         if (!noBorder) {
             internalClassName += " border hover:border-transparent";
+        }
+        if (!noHoverBg) {
+            internalClassName += " hover:text-white";
         }
     } else {
         internalClassName += " transition-colors text-white font-bold rounded";
@@ -40,9 +45,9 @@ const Button: React.FunctionComponent<ButtonProps> = ({
         internalClassName += ` ${className}`;
     }
     if (size === "small") {
-        internalClassName += " px-2";
+        internalClassName += " px-2 py-1 text-sm";
     } else {
-        internalClassName += " px-4 py-2";
+        internalClassName += " px-4 py-2 text-base";
     }
     if (color === "purple") {
         internalClassName += ` ${outlined ? "text-purple-700" : "bg-purple-700"}`;

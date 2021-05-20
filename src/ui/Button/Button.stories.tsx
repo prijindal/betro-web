@@ -21,13 +21,19 @@ Primary.args = {
 
 export const Secondary = Template.bind({});
 Secondary.args = {
+    color: "purple",
+    children: "Login",
+};
+
+export const SecondaryDisabled = Template.bind({});
+SecondaryDisabled.args = {
     disabled: true,
     color: "purple",
     children: "Login",
 };
 
-export const Large = Template.bind({});
-Large.args = {
+export const Outlined = Template.bind({});
+Outlined.args = {
     outlined: true,
     children: "Login",
 };
@@ -35,6 +41,6 @@ Large.args = {
 export const Small = Template.bind({});
 Small.args = {
     outlined: true,
-    noBorder: true,
+    size: "small",
     children: "Login",
 };
