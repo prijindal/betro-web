@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useFollowUserHook } from "../../hooks";
-import ConfirmDialog from "../../components/ConfirmDialog";
-import Button from "../../components/Button";
+import ConfirmDialog from "../../ui/ConfirmDialog";
+import Button from "../../ui/Button";
 import BetroApiObject from "../../api/context";
 import isEmpty from "lodash/isEmpty";
 

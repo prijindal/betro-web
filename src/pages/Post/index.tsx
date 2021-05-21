@@ -5,7 +5,7 @@ import { PostResource } from "betro-js-client";
 import BetroApiObject from "../../api/context";
 import { wrapLayout } from "../../components/Layout";
 import PostListItem from "../../components/PostListItem";
-import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";
+import { LoadingSpinnerCenter } from "../../ui/LoadingSpinner";
 
 const Post = () => {
     const params: any = useParams();

@@ -8,8 +8,8 @@ import PostListItem from "../../components/PostListItem";
 import UserListItem from "../../components/UserListItem";
 import { useFetchUserInfoHook } from "../../hooks";
 import FollowButton from "../../components/FollowButton";
-import Button from "../../components/Button";
-import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";
+import Button from "../../ui/Button";
+import { LoadingSpinnerCenter } from "../../ui/LoadingSpinner";
 
 const User = () => {
     const params: any = useParams();

@@ -8,9 +8,9 @@ import { loggedIn } from "../../store/app/actions";
 import CheckIcon from "@heroicons/react/solid/CheckIcon";
 import ExclamationCircleIcon from "@heroicons/react/solid/ExclamationCircleIcon";
 import BetroApiObject from "../../api/context";
-import Button from "../../components/Button";
-import TextField from "../../components/TextField";
-import LoadingSpinner from "../../components/LoadingSpinner";
+import Button from "../../ui/Button";
+import TextField from "../../ui/TextField";
+import LoadingSpinner from "../../ui/LoadingSpinner";
 
 const UsernameField: React.FunctionComponent<{
     value: string;

@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { wrapLayout } from "../../components/Layout";
 import GroupSelect from "../../components/GroupSelect";
-import Button from "../../components/Button";
-import TextField from "../../components/TextField";
+import Button from "../../ui/Button";
+import TextField from "../../ui/TextField";
 import { useFetchGroupsHook, useGroupSelector } from "../../hooks";
 import { bufferToImageUrl } from "betro-js-client";
 import BetroApiObject from "../../api/context";
 import { incrementCount } from "../../store/app/actions";
-import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";
+import { LoadingSpinnerCenter } from "../../ui/LoadingSpinner";
 
 const NewPost = () => {
     const { groupId, setGroupId, groupData } = useGroupSelector();

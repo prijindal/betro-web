@@ -2,13 +2,13 @@ import { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import throttle from "lodash/throttle";
 import { wrapLayout } from "../../components/Layout";
-import Button from "../../components/Button";
+import Button from "../../ui/Button";
 import { getGroup, getProfile } from "../../store/app/selectors";
 import { useFetchApprovals, useFetchGroupsHook } from "../../hooks";
 import ApprovalComponent from "./ApprovalComponent";
 import { Link } from "react-router-dom";
 import isEmpty from "lodash/isEmpty";
-import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";
+import { LoadingSpinnerCenter } from "../../ui/LoadingSpinner";
 
 const Approvals = () => {
     const profile = useSelector(getProfile);

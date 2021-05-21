@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import Divider from "../Divider";
+import Divider from "../../ui/Divider";
 import HeartIcon from "@heroicons/react/solid/HeartIcon";
 import HeartOutlineIcon from "@heroicons/react/outline/HeartIcon";
 import { LikeResponse, PostResource } from "betro-js-client";
@@ -8,7 +8,7 @@ import { getPrimaryText } from "../UserListItem/getPrimaryText";
 import { fromNow } from "../../util/fromNow";
 import { useNavigate } from "react-router-dom";
 import BetroApiObject from "../../api/context";
-import Button from "../Button";
+import Button from "../../ui/Button";
 
 const PostLikedButton: React.FunctionComponent<{ post: PostResource }> = (props) => {
     const { post } = props;

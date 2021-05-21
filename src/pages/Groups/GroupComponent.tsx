@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from "react";
 import { useFetchGroupsHook } from "../../hooks";
-import ConfirmDialog from "../../components/ConfirmDialog";
+import ConfirmDialog from "../../ui/ConfirmDialog";
 import { Group } from "../../store/app/types";
 import BetroApiObject from "../../api/context";
 import Chip from "../../components/Chip";
-import Button from "../../components/Button";
+import Button from "../../ui/Button";
 
 const GroupComponent: React.FunctionComponent<{ group: Group }> = (props) => {
     const { group } = props;

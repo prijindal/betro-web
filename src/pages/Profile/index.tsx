@@ -5,8 +5,8 @@ import { wrapLayout } from "../../components/Layout";
 import { getProfile } from "../../store/app/selectors";
 import { imageUrlToBuffer } from "betro-js-client";
 import ProfileForm from "./ProfileForm";
-import Button from "../../components/Button";
-import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";
+import Button from "../../ui/Button";
+import { LoadingSpinnerCenter } from "../../ui/LoadingSpinner";
 
 const Profile = () => {
     const profile = useSelector(getProfile);

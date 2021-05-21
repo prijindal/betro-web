@@ -24,7 +24,7 @@ import Notifications from "./pages/Notifications";
 import UserSettings from "./pages/UserSettings";
 import Profile from "./pages/Profile";
 import Logout from "./pages/Logout";
-import LoadingFullPage from "./components/LoadingFullPage";
+import LoadingFullPage from "./ui/LoadingFullPage";
 
 const LayoutLoading = wrapLayout(() => <LoadingFullPage />, { includeRouting: false });
 

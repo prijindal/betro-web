@@ -4,8 +4,8 @@ import { profilePictureLoaded, verifedLogin } from "../../store/app/actions";
 import { bufferToImageUrl } from "betro-js-client";
 import { useFetchWhoami } from "../../hooks";
 import BetroApiObject from "../../api/context";
-import Button from "../../components/Button";
-import TextField from "../../components/TextField";
+import Button from "../../ui/Button";
+import TextField from "../../ui/TextField";
 
 const ProfileForm: React.FunctionComponent<{
     method: "POST" | "PUT";

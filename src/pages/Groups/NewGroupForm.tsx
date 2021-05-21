@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import BetroApiObject from "../../api/context";
-import Button from "../../components/Button";
-import Switch from "../../components/Switch";
-import TextField from "../../components/TextField";
+import Button from "../../ui/Button";
+import Switch from "../../ui/Switch";
+import TextField from "../../ui/TextField";
 
 const NewGroupForm = (params: { isDefault?: boolean; onCreated: () => void }) => {
     const [name, setName] = useState<string>("");

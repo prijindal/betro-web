@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
 import UserListItem from "../../components/UserListItem";
-import ConfirmDialog from "../../components/ConfirmDialog";
-import Button from "../../components/Button";
+import ConfirmDialog from "../../ui/ConfirmDialog";
+import Button from "../../ui/Button";
 import { ApprovalResponse } from "betro-js-client";
 import { useApproveUser, useGroupSelector } from "../../hooks";
 import GroupSelect from "../../components/GroupSelect";

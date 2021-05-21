@@ -16,7 +16,7 @@ import classes from "./AppDrawer.module.scss";
 import NavLink from "../NavLink";
 import { getCount, getProfile } from "../../store/app/selectors";
 import { CountState } from "../../store/app/types";
-import Divider from "../Divider";
+import Divider from "../../ui/Divider";
 
 const Badge: React.FunctionComponent = ({ children }) => {
     return (

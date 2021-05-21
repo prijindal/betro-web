@@ -2,11 +2,11 @@ import React, { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import throttle from "lodash/throttle";
 import { wrapLayout } from "../../components/Layout";
-import Button from "../../components/Button";
+import Button from "../../ui/Button";
 import { getProfile } from "../../store/app/selectors";
 import PostListItem from "../../components/PostListItem";
 import { useFetchOwnFeed } from "../../hooks";
-import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";
+import { LoadingSpinnerCenter } from "../../ui/LoadingSpinner";
 
 const Posts = () => {
     const { fetch, response, pageInfo, loaded } = useFetchOwnFeed();

@@ -1,7 +1,7 @@
 import React, { Suspense, useCallback, useState } from "react";
 import TopAppBar from "../TopAppBar";
 import AppDrawer from "../AppDrawer";
-import LoadingFullPage from "../LoadingFullPage";
+import LoadingFullPage from "../../ui/LoadingFullPage";
 import classes from "./Layout.module.scss";
 
 const MobileAppDrawer = React.lazy(() => import("../AppDrawer/MobileAppDrawer"));

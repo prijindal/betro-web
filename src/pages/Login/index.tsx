@@ -4,8 +4,8 @@ import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { loggedIn, resetAuth, verifedLogin } from "../../store/app/actions";
 import BetroApiObject from "../../api/context";
-import Button from "../../components/Button";
-import TextField from "../../components/TextField";
+import Button from "../../ui/Button";
+import TextField from "../../ui/TextField";
 
 const App: React.FC<any> = () => {
     const [loading, setLoading] = useState<boolean>(false);

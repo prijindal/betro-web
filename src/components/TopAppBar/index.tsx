@@ -7,7 +7,7 @@ import { getProfile } from "../../store/app/selectors";
 import { useFetchCountHook, useFetchWhoami, useFetchProfilePicture } from "../../hooks";
 import { UserAvatar } from "../UserListItem/UserAvatar";
 import { getPrimaryText } from "../UserListItem/getPrimaryText";
-import Button from "../Button";
+import Button from "../../ui/Button";
 
 const TopAppBar: React.FunctionComponent<{
     includeRouting: boolean;

@@ -5,9 +5,9 @@ import { wrapLayout } from "../../components/Layout";
 import { getGroup } from "../../store/app/selectors";
 import { useFetchFollowees, useFetchGroupsHook } from "../../hooks";
 import UserListItem from "../../components/UserListItem";
-import Button from "../../components/Button";
+import Button from "../../ui/Button";
 import { FolloweeResponse } from "betro-js-client";
-import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";
+import { LoadingSpinnerCenter } from "../../ui/LoadingSpinner";
 
 const FolloweeComponent: React.FunctionComponent<{ follower: FolloweeResponse }> = (props) => {
     const { follower } = props;

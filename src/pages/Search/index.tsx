@@ -6,9 +6,9 @@ import { wrapLayout } from "../../components/Layout";
 import UserListItem from "../../components/UserListItem";
 import FollowButton from "../../components/FollowButton";
 import { SearchResult } from "betro-js-client";
-import Button from "../../components/Button";
-import TextField from "../../components/TextField";
-import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";
+import Button from "../../ui/Button";
+import TextField from "../../ui/TextField";
+import { LoadingSpinnerCenter } from "../../ui/LoadingSpinner";
 
 const Search = () => {
     const [query, setQuery] = useState<string>("");

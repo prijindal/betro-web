@@ -3,8 +3,8 @@ import { UserSettingResponse, UserSettingsType } from "betro-js-client";
 import { wrapLayout } from "../../components/Layout";
 import { useFetchUserSettings, useFetchCountHook } from "../../hooks";
 import BetroApiObject from "../../api/context";
-import Switch from "../../components/Switch";
-import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";
+import Switch from "../../ui/Switch";
+import { LoadingSpinnerCenter } from "../../ui/LoadingSpinner";
 
 interface Setting {
     type: UserSettingsType;

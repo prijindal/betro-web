@@ -4,7 +4,7 @@ import throttle from "lodash/throttle";
 import { wrapLayout } from "../../components/Layout";
 import PostListItem from "../../components/PostListItem";
 import { useFetchHomeFeed } from "../../hooks";
-import Button from "../../components/Button";
+import Button from "../../ui/Button";
 
 const LoadingComponent = () => (
     <div className="border border-purple-300 shadow rounded-md p-4 max-w-xl w-full">

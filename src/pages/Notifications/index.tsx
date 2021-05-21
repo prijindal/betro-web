@@ -3,7 +3,7 @@ import BetroApiObject from "../../api/context";
 import { NotificationResponse } from "betro-js-client";
 import { wrapLayout } from "../../components/Layout";
 import NotificationComponent from "./NotificationComponent";
-import { LoadingSpinnerCenter } from "../../components/LoadingSpinner";
+import { LoadingSpinnerCenter } from "../../ui/LoadingSpinner";
 
 const Notifications = () => {
     const [loaded, setLoaded] = useState<boolean>(false);

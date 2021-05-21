@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import BetroApiObject from "../../api/context";
 import { resetAuth } from "../../store/app/actions";
-import LoadingFullPage from "../../components/LoadingFullPage";
+import LoadingFullPage from "../../ui/LoadingFullPage";
 
 const Logout = () => {
     const navigate = useNavigate();

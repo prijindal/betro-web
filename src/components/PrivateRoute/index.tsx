@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { authLoaded, resetAuth, verifedLogin } from "../../store/app/actions";
 import { getAuth } from "../../store/app/selectors";
 import BetroApiObject from "../../api/context";
-import LoadingFullPage from "../../components/LoadingFullPage";
+import LoadingFullPage from "../../ui/LoadingFullPage";
 
 const CheckLoginLoading = () => {
     const dispatch = useDispatch();
