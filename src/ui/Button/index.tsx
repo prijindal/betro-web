@@ -1,6 +1,6 @@
 import React from "react";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     outlined?: boolean;
     onClick?: () => void;
     noBorder?: boolean;
@@ -24,15 +24,11 @@ const Button: React.FunctionComponent<ButtonProps> = ({
     let internalClassName = "";
     if (outlined) {
         internalClassName += " transition-colors bg-transparent font-semibold rounded";
-        if (noBorder && noHoverBg) {
-            internalClassName +=
-                " border border-transparent focus:outline-none hover:border-purple-500";
+        if (noBorder && !noHoverBg) {
+            internalClassName += ` border border-transparent focus:outline-none hover:text-white `;
         }
         if (!noBorder) {
             internalClassName += " border hover:border-transparent";
-        }
-        if (!noHoverBg) {
-            internalClassName += " hover:text-white";
         }
     } else {
         internalClassName += " transition-colors text-white font-bold rounded";
@@ -49,16 +45,16 @@ const Button: React.FunctionComponent<ButtonProps> = ({
         internalClassName += " px-4 py-2";
     }
     if (color === "purple") {
-        internalClassName += ` ${outlined ? "text-purple-700" : "bg-purple-500"}`;
-        if (noHoverBg) {
-            internalClassName += " hover:bg-purple-700";
+        internalClassName += ` ${outlined ? "text-purple-700" : "bg-purple-700"}`;
+        if (!noHoverBg) {
+            internalClassName += " hover:bg-purple-900";
         }
         if (noBorder) {
             internalClassName += " border-purple-500";
         }
     } else {
         internalClassName += ` ${outlined ? "text-gray-700" : "bg-gray-500"}`;
-        if (noHoverBg) {
+        if (!noHoverBg) {
             internalClassName += " hover:bg-gray-700";
         }
         if (noBorder) {
