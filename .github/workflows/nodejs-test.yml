@@ -30,7 +30,9 @@ jobs:
           env_vars: NODE_VERSION
         env:
           NODE_VERSION: ${{ matrix.node-version }}
-      - run: env PUBLIC_URL="https://betro.easycode.club" REACT_APP_API_HOST="https://betro.easycode.club" npm run build
+      - name: Build
+        if: startsWith(matrix.node-version, '16')
+        run: env PUBLIC_URL="https://betro.easycode.club" REACT_APP_API_HOST="https://betro.easycode.club" npm run build
       - uses: actions/upload-artifact@v2
         if: startsWith(matrix.node-version, '16')
         with:
