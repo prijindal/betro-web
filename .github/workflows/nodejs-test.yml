@@ -16,6 +16,11 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Cache Node dependencies
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ matrix.node-version }}-node
       - run: npm ci
       - run: npm run lint
       - run: npm run tsc
@@ -25,7 +30,7 @@ jobs:
           env_vars: NODE_VERSION
         env:
           NODE_VERSION: ${{ matrix.node-version }}
-      - run: npm run build
+      - run: env PUBLIC_URL="https://betro.easycode.club" REACT_APP_API_HOST="https://betro.easycode.club" npm run build
       - uses: actions/upload-artifact@v2
         if: startsWith(matrix.node-version, '16')
         with:
