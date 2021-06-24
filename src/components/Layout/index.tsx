@@ -27,7 +27,7 @@ const Layout: React.FunctionComponent<{ includeRouting: boolean }> = (props) => 
                 </div>
             )}
             <div
-                className="flex flex-col flex-1 ml-auto mr-auto overflow-auto"
+                className="flex flex-col flex-1 ml-auto mr-auto overflow-auto h-screen"
                 style={{ flexBasis: "auto" }}
             >
                 <div className={`flex-1 max-w-5xl ${classes.innerContainer}`}>
