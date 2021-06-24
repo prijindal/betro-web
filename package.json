@@ -7,7 +7,7 @@
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
     "@heroicons/react": "^1.0.1",
-    "@material-ui/core": "^5.0.0-alpha.37",
+    "@material-ui/core": "^5.0.0-alpha.38",
     "@tailwindcss/forms": "^0.3.3",
     "axios": "^0.21.1",
     "betro-js-client": "git+https://prijindal@github.com/betro-app/betro-js-client.git#01b9588d60635a3fe232dd0a5c68cfd5ee35c453",
