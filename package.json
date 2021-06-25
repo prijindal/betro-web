@@ -76,7 +76,7 @@
     "dependency-cruiser": "^10.0.2",
     "husky": "^6.0.0",
     "jest-puppeteer": "^5.0.4",
-    "postcss": "^7.0.35",
+    "postcss": "^7.0.36",
     "prettier": "^2.3.1",
     "puppeteer": "^9.1.1",
     "stylelint": "^13.13.1",
