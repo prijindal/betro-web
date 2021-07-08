@@ -2,6 +2,7 @@ import React, { useState, useCallback, Suspense } from "react";
 import Divider from "../../ui/Divider";
 import HeartIcon from "@heroicons/react/solid/HeartIcon";
 import HeartOutlineIcon from "@heroicons/react/outline/HeartIcon";
+import CodeIcon from "@heroicons/react/solid/CodeIcon";
 import { LikeResponse, PostResource } from "betro-js-client";
 import { UserAvatar } from "../UserListItem/UserAvatar";
 import { getPrimaryText } from "../UserListItem/getPrimaryText";
@@ -9,6 +10,7 @@ import { fromNow } from "../../util/fromNow";
 import { useNavigate } from "react-router-dom";
 import BetroApiObject from "../../api/context";
 import Button from "../../ui/Button";
+import ConfirmDialog from "../../ui/ConfirmDialog";
 
 const MarkedText = React.lazy(() => import("../../components/MarkedText"));
 
@@ -55,6 +57,7 @@ const PostLikedButton: React.FunctionComponent<{ post: PostResource }> = (props)
 const PostListItem: React.FunctionComponent<{ routing: boolean; post: PostResource }> = (props) => {
     const { post, routing } = props;
     const navigate = useNavigate();
+    const [showSource, setShowSource] = useState<boolean>(false);
     const secondary =
         post.user.first_name != null
             ? `@${post.user.username} ${fromNow(new Date(post.created_at))}`
@@ -70,6 +73,13 @@ const PostListItem: React.FunctionComponent<{ routing: boolean; post: PostResour
                     </div>
                     <div className="font-normal text-gray-500 text-sm">{secondary}</div>
                 </div>
+                <span className="flex-grow" />
+                <span
+                    onClick={() => setShowSource(true)}
+                    className="cursor-pointer text-gray-500 hover:text-purple-700 w-8 h-8 p-2"
+                >
+                    <CodeIcon />
+                </span>
             </div>
             {post.media_content != null && (
                 <div className="p-4" onClick={onClickHandler}>
@@ -89,6 +99,13 @@ const PostListItem: React.FunctionComponent<{ routing: boolean; post: PostResour
                 <PostLikedButton post={post} />
             </div>
             <Divider />
+            <ConfirmDialog
+                open={showSource}
+                handleCancel={() => setShowSource(false)}
+                description={
+                    <pre className="max-w-xl overflow-x-auto">{JSON.stringify(post, null, 4)}</pre>
+                }
+            />
         </div>
     );
 };
