@@ -2,6 +2,7 @@ import isEmpty from "lodash/isEmpty";
 import React from "react";
 
 export interface TextFieldProps {
+    textarea?: boolean;
     value: string;
     onChange: (e: string) => void;
     label?: React.ReactNode;
@@ -15,12 +16,14 @@ export interface TextFieldProps {
 }
 
 const defaultProps: TextFieldProps = {
+    textarea: false,
     value: "",
     onChange: (a) => null,
     type: "text",
 };
 
 const TextField: React.FunctionComponent<TextFieldProps> = ({
+    textarea,
     value,
     onChange,
     label,
@@ -49,16 +52,30 @@ const TextField: React.FunctionComponent<TextFieldProps> = ({
             className={`flex flex-col items-start max-w-sm ${className != null ? className : ""}`}
         >
             {label != null && <span className="text-gray-700">{label}</span>}
-            <input
-                name={name}
-                disabled={disabled}
-                placeholder={placeholder}
-                type={type}
-                required={required}
-                className={underlineStyles}
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-            />
+            {textarea ? (
+                <textarea
+                    name={name}
+                    disabled={disabled}
+                    placeholder={placeholder}
+                    required={required}
+                    className={underlineStyles}
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                >
+                    {value}
+                </textarea>
+            ) : (
+                <input
+                    name={name}
+                    disabled={disabled}
+                    placeholder={placeholder}
+                    type={type}
+                    required={required}
+                    className={underlineStyles}
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                />
+            )}
         </label>
     );
 };

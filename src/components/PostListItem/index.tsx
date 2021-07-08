@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, Suspense } from "react";
 import Divider from "../../ui/Divider";
 import HeartIcon from "@heroicons/react/solid/HeartIcon";
 import HeartOutlineIcon from "@heroicons/react/outline/HeartIcon";
@@ -9,6 +9,8 @@ import { fromNow } from "../../util/fromNow";
 import { useNavigate } from "react-router-dom";
 import BetroApiObject from "../../api/context";
 import Button from "../../ui/Button";
+
+const MarkedText = React.lazy(() => import("../../components/MarkedText"));
 
 const PostLikedButton: React.FunctionComponent<{ post: PostResource }> = (props) => {
     const { post } = props;
@@ -79,7 +81,9 @@ const PostListItem: React.FunctionComponent<{ routing: boolean; post: PostResour
                 </div>
             )}
             <div className="p-4" onClick={onClickHandler}>
-                <div className="font-normal text-gray-900 text-sm">{post.text_content}</div>
+                <Suspense fallback={<div>Loading..</div>}>
+                    <MarkedText text={post.text_content || ""} />
+                </Suspense>
             </div>
             <div className="p-2 flex flex-row items-center">
                 <PostLikedButton post={post} />

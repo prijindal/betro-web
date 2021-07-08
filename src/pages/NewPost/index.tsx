@@ -56,6 +56,7 @@ const NewPost = () => {
             <form onSubmit={handleSubmit}>
                 <div className="flex flex-col max-w-sm">
                     <TextField
+                        textarea
                         className="mb-4"
                         disabled={loading}
                         type="text"
