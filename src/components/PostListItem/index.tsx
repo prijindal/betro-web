@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import BetroApiObject from "../../api/context";
 import Button from "../../ui/Button";
 import ConfirmDialog from "../../ui/ConfirmDialog";
+import { LoadingSpinnerCenter } from "../../ui/LoadingSpinner";
 
 const MarkedText = React.lazy(() => import("../../components/MarkedText"));
 
@@ -91,7 +92,7 @@ const PostListItem: React.FunctionComponent<{ routing: boolean; post: PostResour
                 </div>
             )}
             <div className="p-4" onClick={onClickHandler}>
-                <Suspense fallback={<div>Loading..</div>}>
+                <Suspense fallback={<LoadingSpinnerCenter />}>
                     <MarkedText text={post.text_content || ""} />
                 </Suspense>
             </div>

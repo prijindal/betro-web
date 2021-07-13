@@ -1,5 +1,6 @@
-import { CountResponse } from "betro-js-client";
-import { Action, Group, Locale } from "./types";
+import { CountResponse, MessageResponse } from "betro-js-client";
+import { ConversationResponseBackend } from "betro-js-client/dist/UserResponses";
+import { Action, Group, Locale, MessagesState } from "./types";
 
 export const ActionTypes = {
     SETLOCALE: "app/set-locale",
@@ -13,6 +14,14 @@ export const ActionTypes = {
     COUNT_LOADED: "count/loaded",
     COUNT_INCREMENT: "count/increment",
     COUNT_DECREMENT: "count/decrement",
+    CONVERSATIONS_LOADED: "conversations/loaded",
+    CONVERSATIONS_ADD: "conversations/add",
+    CONVERSATIONS_OPEN: "conversations/open",
+    CONVERSATIONS_CLOSE: "conversations/close",
+    CONVERSATIONS_SHOW: "conversations/show",
+    CONVERSATIONS_HIDE: "conversations/hide",
+    MESSAGES_LOADED: "messages/loaded",
+    MESSAGES_ADD: "messages/add",
 };
 
 export const setLocale = (locale: Locale): Action => ({
@@ -79,4 +88,44 @@ export const incrementCount = (field: keyof CountResponse): Action => ({
 export const decremenetCount = (field: keyof CountResponse): Action => ({
     type: ActionTypes.COUNT_DECREMENT,
     payload: field,
+});
+
+export const loadConversations = (conversations: Array<ConversationResponseBackend>): Action => ({
+    type: ActionTypes.CONVERSATIONS_LOADED,
+    payload: conversations,
+});
+
+export const addConversation = (conversation: ConversationResponseBackend): Action => ({
+    type: ActionTypes.CONVERSATIONS_ADD,
+    payload: conversation,
+});
+
+export const openConversation = (conversation_id: string): Action => ({
+    type: ActionTypes.CONVERSATIONS_OPEN,
+    payload: conversation_id,
+});
+
+export const closeConversation = (conversation_id: string): Action => ({
+    type: ActionTypes.CONVERSATIONS_CLOSE,
+    payload: conversation_id,
+});
+
+export const showConversation = (conversation_id: string): Action => ({
+    type: ActionTypes.CONVERSATIONS_SHOW,
+    payload: conversation_id,
+});
+
+export const hideConversation = (conversation_id: string): Action => ({
+    type: ActionTypes.CONVERSATIONS_HIDE,
+    payload: conversation_id,
+});
+
+export const loadMessages = (conversation_id: string, messages: MessagesState) => ({
+    type: ActionTypes.MESSAGES_LOADED,
+    payload: { conversation_id, messages },
+});
+
+export const addMessage = (conversation_id: string, message: MessageResponse) => ({
+    type: ActionTypes.MESSAGES_LOADED,
+    payload: { conversation_id, message },
 });

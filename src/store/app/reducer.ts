@@ -34,6 +34,12 @@ export const initialState = Object.freeze<AppState>({
         approvals: null,
         posts: null,
     },
+    conversations: {
+        isLoaded: false,
+        data: [],
+        opened: [],
+        messages: {},
+    },
 });
 
 const appReducer = (state: AppState = initialState, action: Action): AppState =>
@@ -108,6 +114,58 @@ const appReducer = (state: AppState = initialState, action: Action): AppState =>
                     draft.count[action.payload as keyof CountResponse] = count - 1;
                 } else {
                     draft.count[action.payload as keyof CountResponse] = 0;
+                }
+                return draft;
+            }
+            case ActionTypes.CONVERSATIONS_LOADED: {
+                draft.conversations.data = action.payload;
+                draft.conversations.isLoaded = true;
+                return draft;
+            }
+            case ActionTypes.CONVERSATIONS_ADD: {
+                if (draft.conversations.data.map((a) => a.id).indexOf(action.payload.id) === -1) {
+                    draft.conversations.data.push(action.payload);
+                }
+                return draft;
+            }
+            case ActionTypes.CONVERSATIONS_OPEN: {
+                if (draft.conversations.opened.map((a) => a.id).indexOf(action.payload) === -1) {
+                    draft.conversations.opened.push({ id: action.payload, visible: true });
+                }
+                return draft;
+            }
+            case ActionTypes.CONVERSATIONS_CLOSE: {
+                if (draft.conversations.opened.map((a) => a.id).indexOf(action.payload) >= 0) {
+                    draft.conversations.opened = draft.conversations.opened.filter(
+                        (a) => a.id !== action.payload
+                    );
+                }
+                return draft;
+            }
+            case ActionTypes.CONVERSATIONS_SHOW: {
+                draft.conversations.opened = draft.conversations.opened.map((a) => ({
+                    id: a.id,
+                    visible: a.id === action.payload ? true : a.visible,
+                }));
+                return draft;
+            }
+            case ActionTypes.CONVERSATIONS_HIDE: {
+                draft.conversations.opened = draft.conversations.opened.map((a) => ({
+                    id: a.id,
+                    visible: a.id === action.payload ? false : a.visible,
+                }));
+                return draft;
+            }
+            case ActionTypes.MESSAGES_LOADED: {
+                draft.conversations.messages[action.payload.conversation_id] =
+                    action.payload.messages;
+                return draft;
+            }
+            case ActionTypes.MESSAGES_ADD: {
+                if (draft.conversations.messages[action.payload.conversation_id] != null) {
+                    draft.conversations.messages[action.payload.conversation_id].data.push(
+                        action.payload.message
+                    );
                 }
                 return draft;
             }

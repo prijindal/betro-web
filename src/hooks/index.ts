@@ -9,6 +9,11 @@ import {
     profilePictureLoaded,
     decremenetCount,
     incrementCount,
+    openConversation,
+    loadConversations,
+    addConversation,
+    loadMessages,
+    addMessage,
 } from "../store/app/actions";
 import { Group } from "../store/app/types";
 import {
@@ -20,12 +25,15 @@ import {
     UserInfo,
     UserSettingResponse,
     NotificationResponse,
+    MessageResponse,
+    PaginatedResponse,
 } from "betro-js-client";
 import throttle from "lodash/throttle";
 import { bufferToImageUrl } from "betro-js-client";
 import { UserListItemUserProps } from "../components/UserListItem/types";
 import { createPaginatedHook } from "./paginated";
 import BetroApiObject from "../api/context";
+import { ConversationResponseBackend } from "betro-js-client/dist/UserResponses";
 
 export function useFetchGroupsHook() {
     const groupData = useSelector(getGroup);
@@ -323,3 +331,112 @@ export const useFetchFollowers = createPaginatedHook<FollowerResponse>(
 export const useFetchFollowees = createPaginatedHook<FolloweeResponse>(
     BetroApiObject.follow.fetchFollowees
 );
+
+export function useFetchConversations() {
+    const [response, setResponse] = useState<PaginatedResponse<ConversationResponseBackend> | null>(
+        null
+    );
+    const after = response == null ? undefined : response.after;
+    const dispatch = useDispatch();
+    const getResponse = useCallback(
+        async (forceRefresh = false) => {
+            const resp = await BetroApiObject.conversation.fetchConversations(after);
+            if (resp !== null) {
+                if (response == null || forceRefresh) {
+                    dispatch(loadConversations(resp.data));
+                    setResponse(resp);
+                } else {
+                    const data = [...response.data, ...resp.data];
+                    setResponse({ ...resp, data: data });
+                    dispatch(loadConversations(data));
+                }
+            }
+        },
+        [after, response, dispatch]
+    );
+    return { fetch: getResponse, after };
+}
+
+export function useFetchMessages(
+    conversation_id: string,
+    private_key: string | null,
+    public_key: string | null
+) {
+    const [response, setResponse] = useState<PaginatedResponse<MessageResponse> | null>(null);
+    const after = response == null ? undefined : response.after;
+    // const [loaded, setLoaded] = useState<boolean>(false);
+    const dispatch = useDispatch();
+    const getResponse = useCallback(
+        async (forceRefresh = false) => {
+            if (private_key == null || public_key == null) {
+                return;
+            }
+            const resp = await BetroApiObject.conversation.fetchMessages(
+                conversation_id,
+                private_key,
+                public_key,
+                after
+            );
+            if (resp !== null) {
+                if (response == null || forceRefresh) {
+                    setResponse(resp);
+                    dispatch(loadMessages(conversation_id, { ...resp, isLoaded: true }));
+                } else {
+                    const r = { ...resp, data: [...response.data, ...resp.data] };
+                    setResponse(r);
+                    dispatch(loadMessages(conversation_id, { ...r, isLoaded: true }));
+                }
+            }
+        },
+        [after, response, conversation_id, private_key, public_key, dispatch]
+    );
+    return {
+        fetch: getResponse,
+    };
+}
+
+export function useSendMessage(
+    conversation_id: string,
+    private_key: string | null,
+    public_key: string | null
+) {
+    // const [loaded, setLoaded] = useState<boolean>(false);
+    const dispatch = useDispatch();
+    const getResponse = useCallback(
+        async (text_content: string) => {
+            if (private_key == null || public_key == null) {
+                return;
+            }
+            const resp = await BetroApiObject.conversation.sendMessage(
+                conversation_id,
+                private_key,
+                public_key,
+                text_content
+            );
+            if (resp !== null) {
+                dispatch(addMessage(conversation_id, resp));
+            }
+        },
+        [conversation_id, private_key, public_key, dispatch]
+    );
+    return getResponse;
+}
+
+export function useOpenConversation(
+    user_id: string | undefined,
+    user_key_id: string | null | undefined
+) {
+    const dispatch = useDispatch();
+    const createConversation = useCallback(async () => {
+        if (user_id == null || user_key_id == null) {
+            return;
+        }
+        const conversation = await BetroApiObject.conversation.createConversation(
+            user_id,
+            user_key_id
+        );
+        dispatch(addConversation(conversation));
+        dispatch(openConversation(conversation.id));
+    }, [user_id, user_key_id, dispatch]);
+    return createConversation;
+}

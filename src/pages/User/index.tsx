@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
+import MailIcon from "@heroicons/react/solid/MailIcon";
 import throttle from "lodash/throttle";
 import { Navigate, useParams } from "react-router";
 import { wrapLayout } from "../../components/Layout";
 import { getProfile } from "../../store/app/selectors";
 import PostListItem from "../../components/PostListItem";
 import UserListItem from "../../components/UserListItem";
-import { useFetchUserInfoHook } from "../../hooks";
+import { useFetchUserInfoHook, useOpenConversation } from "../../hooks";
 import FollowButton from "../../components/FollowButton";
 import Button from "../../ui/Button";
 import { LoadingSpinnerCenter } from "../../ui/LoadingSpinner";
@@ -19,6 +20,7 @@ const User = () => {
         useFetchUserInfoHook(params.username, undefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const fetchInfoThrottled = useCallback(throttle(fetchInfo, 2000), []);
+    const openConversation = useOpenConversation(userInfo?.id, userInfo?.public_key);
     useEffect(() => {
         fetchInfoThrottled();
     }, [fetchInfoThrottled]);
@@ -34,6 +36,9 @@ const User = () => {
                 <UserListItem user={userInfo}>
                     {loaded === true && (
                         <React.Fragment>
+                            <Button onClick={() => openConversation()}>
+                                <MailIcon className="heroicon" />
+                            </Button>
                             {!userInfo.is_following && (
                                 <FollowButton
                                     onFollow={() => fetchInfo()}

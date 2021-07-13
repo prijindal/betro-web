@@ -1,3 +1,6 @@
+import { MessageResponse, PaginatedResponse } from "betro-js-client";
+import { ConversationResponseBackend } from "betro-js-client/dist/UserResponses";
+
 export type Locale = "en_US" | "de_DE";
 
 export type AppState = Readonly<{
@@ -6,12 +9,22 @@ export type AppState = Readonly<{
     profile: ProfileState;
     group: GroupState;
     count: CountState;
+    conversations: ConversationsState;
 }>;
 
 export type Action = {
     type: string;
     payload?: any;
 };
+
+export type MessagesState = PaginatedResponse<MessageResponse> & { isLoaded: boolean };
+
+export type ConversationsState = Readonly<{
+    isLoaded: boolean;
+    data: Array<ConversationResponseBackend>;
+    opened: Array<{ id: string; visible: boolean }>;
+    messages: { [k: string]: MessagesState };
+}>;
 
 export type AuthState = Readonly<{
     isLoaded: boolean;

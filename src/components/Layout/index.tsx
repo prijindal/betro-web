@@ -3,6 +3,7 @@ import TopAppBar from "../TopAppBar";
 import AppDrawer from "../AppDrawer";
 import LoadingFullPage from "../../ui/LoadingFullPage";
 import classes from "./Layout.module.scss";
+import Conversations from "../Conversations";
 
 const MobileAppDrawer = React.lazy(() => import("../AppDrawer/MobileAppDrawer"));
 
@@ -33,6 +34,9 @@ const Layout: React.FunctionComponent<{ includeRouting: boolean }> = (props) => 
                 <div className={`flex-1 max-w-5xl ${classes.innerContainer}`}>
                     <TopAppBar onDrawerToggle={drawerToggle} includeRouting={includeRouting} />
                     <div className="m-1">{children}</div>
+                </div>
+                <div className="fixed bottom-0 right-0">
+                    <Conversations />
                 </div>
             </div>
         </div>

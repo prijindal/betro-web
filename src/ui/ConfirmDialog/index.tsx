@@ -25,7 +25,6 @@ const ConfirmDialog: React.FunctionComponent<ConfirmDialogProps> = (props) => {
     }, [handleCancel]);
     return (
         <div
-            onClick={cancel}
             className={`fixed top-0 left-0 bg-black bg-opacity-50 full flex-col justify-center items-center z-30 transition-opacity ${
                 open
                     ? closing
@@ -35,7 +34,13 @@ const ConfirmDialog: React.FunctionComponent<ConfirmDialogProps> = (props) => {
             }`}
         >
             <div
-                className="bg-white shadow-2xl"
+                onClick={cancel}
+                className={`bg-white shadow-2xl z-10 fixed top-0 left-0 bg-opacity-0 ${
+                    open && !closing ? "w-full h-full" : "w-0 h-0"
+                }`}
+            />
+            <div
+                className="bg-white shadow-2xl z-40"
                 aria-labelledby={`${id}-title`}
                 aria-describedby={`${id}-description`}
             >
