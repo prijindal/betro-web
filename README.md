@@ -50,3 +50,9 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+
+## Browser Support
+- Chromium
+- Should work in all Chromium derivatives (Edge, Google Chrome etc)
+- Maybe work in firefox after this fix: [Bug 1133698](https://bugzilla.mozilla.org/show_bug.cgi?id=1133698)
