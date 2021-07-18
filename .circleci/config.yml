@@ -16,12 +16,8 @@ jobs:
             - v1-dependencies-
 
       - run:
-          name: Upgrade yarn
-          command: sudo npm install -g yarn --force
-
-      - run:
           name: Install dependencies
-          command: yarn
+          command: npm ci
 
       - save_cache:
           paths:
@@ -30,15 +26,19 @@ jobs:
 
       - run:
           name: Lint files
-          command: yarn lint
+          command: npm run lint
 
       - run:
           name: Check types
-          command: yarn tsc
+          command: npm run tsc
+
+      - run:
+          name: Build
+          command: npm run build
 
       - run:
           name: Run tests
-          command: yarn test
+          command: npm run test
 
 workflows:
   version: 2
