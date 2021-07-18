@@ -11,7 +11,7 @@
     "@tailwindcss/forms": "^0.3.3",
     "@tailwindcss/typography": "^0.4.1",
     "axios": "^0.21.1",
-    "betro-js-client": "git+https://git@github.com/betro-app/betro-js-client.git#24db5621dd6e57b86456483c79a2e8e388901e97",
+    "betro-js-client": "git+https://git@github.com/betro-app/betro-js-client.git#ff30a0a7c7b1bdf4c23dd4b7e256597063e07d26",
     "history": "^5.0.0",
     "i18next": "^20.3.3",
     "i18next-xhr-backend": "^3.2.2",

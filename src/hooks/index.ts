@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import isEmpty from "lodash/isEmpty";
-import { getGroup, getCount, getProfile } from "../store/app/selectors";
+import { getGroup, getCount, getProfile, getConversation } from "../store/app/selectors";
 import {
     groupsLoaded,
     countLoaded,
@@ -439,4 +439,36 @@ export function useOpenConversation(
         dispatch(openConversation(conversation.id));
     }, [user_id, user_key_id, dispatch]);
     return createConversation;
+}
+
+export function useProcessIncomingMessage() {
+    const dispatch = useDispatch();
+    const conversations = useSelector(getConversation);
+    const processMessage = useCallback(async (messageResponse:MessageResponse) => {
+        const { sender_id, conversation_id, id, message, created_at } = messageResponse;
+        let conversation = conversations.data.find((a) => a.id === conversation_id);
+        if (conversation == null) {
+            conversation = await BetroApiObject.conversation.fetchConversation(conversation_id);
+            dispatch(addConversation(conversation));
+        }
+        dispatch(openConversation(conversation_id));
+        if (conversation != null) {
+            const decryptedMessage = await BetroApiObject.conversation.parseMessage(
+                conversation,
+                message
+            );
+            if (decryptedMessage != null) {
+                dispatch(
+                    addMessage(conversation_id, {
+                        id,
+                        conversation_id,
+                        sender_id: sender_id,
+                        message: decryptedMessage,
+                        created_at,
+                    })
+                );
+            }
+        }
+    }, [conversations.data, dispatch]);
+    return processMessage;
 }
