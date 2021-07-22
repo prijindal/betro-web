@@ -163,9 +163,12 @@ const appReducer = (state: AppState = initialState, action: Action): AppState =>
             }
             case ActionTypes.MESSAGES_ADD: {
                 if (draft.conversations.messages[action.payload.conversation_id] != null) {
-                    draft.conversations.messages[action.payload.conversation_id].data.push(
+                    draft.conversations.messages[action.payload.conversation_id].data.splice(
+                        0,
+                        0,
                         action.payload.message
                     );
+                    draft.conversations.messages[action.payload.conversation_id].total += 1;
                 }
                 return draft;
             }

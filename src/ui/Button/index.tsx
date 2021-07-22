@@ -6,14 +6,14 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
     noBorder?: boolean;
     color?: "purple" | "gray";
     noHoverBg?: boolean;
-    size?: "small" | "medium";
+    size?: "small" | "medium" | "large";
     disabled?: boolean;
     className?: string;
     type?: "submit" | "reset" | "button";
     children?: React.ReactNode;
 }
 
-const defaultProps: ButtonProps = { color: "purple" };
+const defaultProps: ButtonProps = { color: "purple", size: "medium" };
 
 const Button: React.FunctionComponent<ButtonProps> = ({
     noHoverBg,
@@ -50,6 +50,8 @@ const Button: React.FunctionComponent<ButtonProps> = ({
     }
     if (size === "small") {
         internalClassName += " px-2 py-1 text-sm";
+    } else if (size === "large") {
+        internalClassName += " px-6 py-4 text-base";
     } else {
         internalClassName += " px-4 py-2 text-base";
     }

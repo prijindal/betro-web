@@ -32,6 +32,10 @@ p {
         0px 1px 10px 0px rgb(0 0 0 / 12%);
 }
 
+.shadow-subtle {
+    box-shadow: 0 0 15px 1px rgba(101, 119, 134, 0.2);
+}
+
 .heroicon {
     --tw-text-opacity: 1;
     width: 1.5rem;

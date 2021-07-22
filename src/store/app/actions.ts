@@ -126,6 +126,6 @@ export const loadMessages = (conversation_id: string, messages: MessagesState) =
 });
 
 export const addMessage = (conversation_id: string, message: MessageResponse) => ({
-    type: ActionTypes.MESSAGES_LOADED,
+    type: ActionTypes.MESSAGES_ADD,
     payload: { conversation_id, message },
 });

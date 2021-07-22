@@ -400,7 +400,6 @@ export function useSendMessage(
     private_key: string | null,
     public_key: string | null
 ) {
-    // const [loaded, setLoaded] = useState<boolean>(false);
     const dispatch = useDispatch();
     const getResponse = useCallback(
         async (text_content: string) => {
@@ -414,7 +413,7 @@ export function useSendMessage(
                 text_content
             );
             if (resp !== null) {
-                dispatch(addMessage(conversation_id, resp));
+                dispatch(addMessage(conversation_id, { ...resp, message: text_content }));
             }
         },
         [conversation_id, private_key, public_key, dispatch]
@@ -444,31 +443,34 @@ export function useOpenConversation(
 export function useProcessIncomingMessage() {
     const dispatch = useDispatch();
     const conversations = useSelector(getConversation);
-    const processMessage = useCallback(async (messageResponse:MessageResponse) => {
-        const { sender_id, conversation_id, id, message, created_at } = messageResponse;
-        let conversation = conversations.data.find((a) => a.id === conversation_id);
-        if (conversation == null) {
-            conversation = await BetroApiObject.conversation.fetchConversation(conversation_id);
-            dispatch(addConversation(conversation));
-        }
-        dispatch(openConversation(conversation_id));
-        if (conversation != null) {
-            const decryptedMessage = await BetroApiObject.conversation.parseMessage(
-                conversation,
-                message
-            );
-            if (decryptedMessage != null) {
-                dispatch(
-                    addMessage(conversation_id, {
-                        id,
-                        conversation_id,
-                        sender_id: sender_id,
-                        message: decryptedMessage,
-                        created_at,
-                    })
-                );
+    const processMessage = useCallback(
+        async (messageResponse: MessageResponse) => {
+            const { sender_id, conversation_id, id, message, created_at } = messageResponse;
+            let conversation = conversations.data.find((a) => a.id === conversation_id);
+            if (conversation == null) {
+                conversation = await BetroApiObject.conversation.fetchConversation(conversation_id);
+                dispatch(addConversation(conversation));
             }
-        }
-    }, [conversations.data, dispatch]);
+            dispatch(openConversation(conversation_id));
+            if (conversation != null) {
+                const decryptedMessage = await BetroApiObject.conversation.parseMessage(
+                    conversation,
+                    message
+                );
+                if (decryptedMessage != null) {
+                    dispatch(
+                        addMessage(conversation_id, {
+                            id,
+                            conversation_id,
+                            sender_id: sender_id,
+                            message: decryptedMessage,
+                            created_at,
+                        })
+                    );
+                }
+            }
+        },
+        [conversations.data, dispatch]
+    );
     return processMessage;
 }
