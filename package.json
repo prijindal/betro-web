@@ -10,7 +10,7 @@
     "@material-ui/core": "^5.0.0-beta.4",
     "@tailwindcss/forms": "^0.3.3",
     "@tailwindcss/typography": "^0.4.1",
-    "axios": "^0.21.1",
+    "axios": "^0.21.3",
     "betro-js-client": "git+https://git@github.com/betro-app/betro-js-client.git#f01f83e04479b2c1e2d07b8834d2bd4d2e7449f4",
     "history": "^5.0.1",
     "i18next": "^20.4.0",
