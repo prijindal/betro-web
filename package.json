@@ -31,7 +31,7 @@
     "redux": "^4.1.1",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "sanitize-html": "^2.4.0",
+    "sanitize-html": "^2.5.0",
     "sass": "^1.39.0",
     "source-map-explorer": "^2.5.2",
     "web-vitals": "^2.1.0"
