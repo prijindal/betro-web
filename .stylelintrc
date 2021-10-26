@@ -8,7 +8,6 @@
     "declaration-block-no-shorthand-property-overrides": [true, { "severity": "warning" } ],
     "color-no-invalid-hex": true,
     "font-family-no-duplicate-names": true,
-    "function-calc-no-invalid": true,
     "function-calc-no-unspaced-operator": true,
     "unit-no-unknown": true,
     "property-no-unknown": [true, { "severity": "warning" }],
