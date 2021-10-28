@@ -40,6 +40,8 @@
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "craco start",
     "build": "craco build",
+    "build:docker": "docker build -t betro/web .",
+    "docker:publish": "docker push betro/web:latest",
     "build-with-stats": "npm run build && npm run analyze",
     "depgraph": "depcruise -c .dependency-cruiser.js --exclude \"node_modules/*\" --output-type dot src | dot -T svg > dependency-graph.svg",
     "lint": "concurrently \"yarn-or-npm run lint:js\" \"yarn-or-npm run lint:css\"",
