@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import sanitizeHTML from "sanitize-html";
-import marked, { MarkedOptions, RendererObject } from "marked";
+import { marked } from "marked";
 
 interface UseMarkedOptions {
     skipSanitize: boolean;
-    markedOptions: MarkedOptions;
+    markedOptions: marked.MarkedOptions;
     sanitizeOptions: sanitizeHTML.IOptions;
 }
 
 // Override function
-const renderer: RendererObject = {
+const renderer: marked.RendererObject = {
     heading(text: string, level: number) {
         const headingClassMappings: { [k: string]: string } = {
             1: "prose-2xl font-medium",
