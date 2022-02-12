@@ -6,6 +6,7 @@ import { loggedIn, resetAuth, verifedLogin } from "../../store/app/actions";
 import BetroApiObject from "../../api/context";
 import Button from "../../ui/Button";
 import TextField from "../../ui/TextField";
+import { API_HOST } from "../../constants";
 
 const App: React.FC<any> = () => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -56,6 +57,7 @@ const App: React.FC<any> = () => {
                     <form onSubmit={handleSubmit} className="flex flex-col">
                         <div className="my-2 mx-auto text-center">
                             <div className="text-2xl text-gray-700">Welcome to Betro App.</div>
+                            <div className="text-xl text-gray-500">Connecting to {API_HOST}</div>
                             <div className="text-xl text-gray-500">Please login below</div>
                         </div>
                         <div className="my-2 mx-auto text-center">

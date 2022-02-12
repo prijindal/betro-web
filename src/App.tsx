@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import favicon from "./assets/favicon.png";
 import routes from "./routes";
-import PrivateRoute from "./components/PrivateRoute";
+import RequireAuth from "./components/RequireAuth";
 import { useSelector } from "react-redux";
 import { getAuth } from "./store/app/selectors";
 import { wrapLayout } from "./components/Layout";
@@ -106,9 +106,24 @@ const App: React.FC = () => {
                     <Route path={routes.login} element={<Login />} />
                     <Route path={routes.register} element={<Register />} />
                     {APP_ROUTES.map(({ route, Component }) => (
-                        <PrivateRoute key={route} path={route} element={<Component />} />
+                        <Route
+                            key={route}
+                            path={route}
+                            element={
+                                <RequireAuth>
+                                    <Component />
+                                </RequireAuth>
+                            }
+                        />
                     ))}
-                    <PrivateRoute path={routes.search} element={<Search />} />
+                    <Route
+                        path={routes.search}
+                        element={
+                            <RequireAuth>
+                                <Search />
+                            </RequireAuth>
+                        }
+                    />
                     <Route path={routes.logout} element={<Logout />} />
                     <Route path="*">404</Route>
                 </Routes>

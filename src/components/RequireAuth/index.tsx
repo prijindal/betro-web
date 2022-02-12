@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import { Navigate, Route, RouteProps } from "react-router";
+import { Navigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { authLoaded, resetAuth, verifedLogin } from "../../store/app/actions";
 import { getAuth } from "../../store/app/selectors";
@@ -57,10 +57,10 @@ const CheckLoginLoading = () => {
     );
 };
 
-const PrivateRouteInternal: React.FC<{ element?: React.ReactElement | null }> = ({ element }) => {
+const RequireAuth: React.FC = ({ children }) => {
     const auth = useSelector(getAuth);
     return auth.isLoaded && auth.isLoggedIn && auth.isVerified ? (
-        <div>{element}</div>
+        <div>{children}</div>
     ) : auth.isLoaded && !auth.isLoggedIn ? (
         <Navigate
             to={{
@@ -72,8 +72,4 @@ const PrivateRouteInternal: React.FC<{ element?: React.ReactElement | null }> = 
     );
 };
 
-const PrivateRoute: React.FC<RouteProps> = ({ element, path, ...rest }) => {
-    return <Route {...rest} path={path} element={<PrivateRouteInternal element={element} />} />;
-};
-
-export default PrivateRoute;
+export default RequireAuth;
