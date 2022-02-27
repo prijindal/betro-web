@@ -11,7 +11,7 @@
     "@tailwindcss/forms": "^0.4.0",
     "@tailwindcss/typography": "^0.5.2",
     "axios": "^0.26.0",
-    "@betro/client": "0.0.1",
+    "@betro/client": "0.0.2",
     "history": "^5.3.0",
     "i18next": "^21.6.12",
     "i18next-xhr-backend": "^3.2.2",
