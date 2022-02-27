@@ -1,5 +1,5 @@
-import { CountResponse, MessageResponse } from "betro-js-client";
-import { ConversationResponseBackend } from "betro-js-client/dist/UserResponses";
+import { CountResponse, MessageResponse } from "@betro/client";
+import { ConversationResponseBackend } from "@betro/client/dist/UserResponses";
 import { Action, Group, Locale, MessagesState } from "./types";
 
 export const ActionTypes = {

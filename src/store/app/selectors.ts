@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import { ConversationResponseBackend } from "betro-js-client/dist/UserResponses";
+import { ConversationResponseBackend } from "@betro/client/dist/UserResponses";
 import { createSelector } from "reselect";
 import { RootState } from "../types";
 import {

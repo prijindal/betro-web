@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { NotificationResponse } from "betro-js-client";
+import { NotificationResponse } from "@betro/client";
 import { fromNow } from "../../util/fromNow";
 import { useReadNotification } from "../../hooks";
 

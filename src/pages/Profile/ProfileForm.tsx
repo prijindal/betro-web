@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { profilePictureLoaded, verifedLogin } from "../../store/app/actions";
-import { bufferToImageUrl } from "betro-js-client";
+import { bufferToImageUrl } from "@betro/client";
 import { useFetchWhoami } from "../../hooks";
 import BetroApiObject from "../../api/context";
 import Button from "../../ui/Button";

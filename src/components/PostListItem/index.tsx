@@ -3,7 +3,7 @@ import Divider from "../../ui/Divider";
 import HeartIcon from "@heroicons/react/solid/HeartIcon";
 import HeartOutlineIcon from "@heroicons/react/outline/HeartIcon";
 import CodeIcon from "@heroicons/react/solid/CodeIcon";
-import { LikeResponse, PostResource } from "betro-js-client";
+import { LikeResponse, PostResource } from "@betro/client";
 import { UserAvatar } from "../UserListItem/UserAvatar";
 import { getPrimaryText } from "../UserListItem/getPrimaryText";
 import { fromNow } from "../../util/fromNow";

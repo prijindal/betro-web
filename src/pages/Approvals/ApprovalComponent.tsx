@@ -4,7 +4,7 @@ import UserListItem from "../../components/UserListItem";
 import ConfirmDialog from "../../ui/ConfirmDialog";
 import Switch from "../../ui/Switch";
 import Button from "../../ui/Button";
-import { ApprovalResponse } from "betro-js-client";
+import { ApprovalResponse } from "@betro/client";
 import { useApproveUser, useGroupSelector } from "../../hooks";
 import GroupSelect from "../../components/GroupSelect";
 

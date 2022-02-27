@@ -1,5 +1,5 @@
 import React from "react";
-import { bufferToImageUrl } from "betro-js-client";
+import { bufferToImageUrl } from "@betro/client";
 import { getPrimaryText } from "./getPrimaryText";
 import { UserListItemUserProps } from "./types";
 

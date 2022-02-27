@@ -1,9 +1,9 @@
 # Betro Web Application
 
-[![Build Status](https://github.com/betro-app/betro-web/actions/workflows/nodejs-test.yml/badge.svg)](https://github.com/betro-app/betro-web/actions/workflows/nodejs-test.yml)
-[![Known Vulnerabilities](https://snyk.io/test/github/betro-app/betro-web/badge.svg)](https://snyk.io/test/github/betro-app/betro-web)
-[![codecov](https://codecov.io/gh/betro-app/betro-web/branch/master/graph/badge.svg)](https://codecov.io/gh/betro-app/betro-web)
-[![CodeQL Analysis](https://github.com/betro-app/betro-web/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/betro-app/betro-web/actions/workflows/codeql-analysis.yml)
+[![Build Status](https://github.com/prijindal/betro-web/actions/workflows/nodejs-test.yml/badge.svg)](https://github.com/prijindal/betro-web/actions/workflows/nodejs-test.yml)
+[![Known Vulnerabilities](https://snyk.io/test/github/prijindal/betro-web/badge.svg)](https://snyk.io/test/github/prijindal/betro-web)
+[![codecov](https://codecov.io/gh/prijindal/betro-web/branch/master/graph/badge.svg)](https://codecov.io/gh/prijindal/betro-web)
+[![CodeQL Analysis](https://github.com/prijindal/betro-web/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/prijindal/betro-web/actions/workflows/codeql-analysis.yml)
 [![Gitter](https://badges.gitter.im/betroapp/community.svg)](https://gitter.im/betroapp/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 ## Available Scripts
