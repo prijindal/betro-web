@@ -1,5 +1,5 @@
 import React from "react";
-import Drawer from "@mui/material/Drawer";
+import { Drawer } from "@mantine/core";
 import AppDrawer from "../AppDrawer";
 
 const MobileAppDrawer: React.FunctionComponent<{
@@ -9,12 +9,7 @@ const MobileAppDrawer: React.FunctionComponent<{
 }> = (props) => {
     const { includeRouting, open, setOpen } = props;
     return (
-        <Drawer
-            sx={{ display: { md: "none", xs: "block" } }}
-            onClose={() => setOpen(false)}
-            variant="temporary"
-            open={open}
-        >
+        <Drawer onClose={() => setOpen(false)} opened={open} hideCloseButton>
             <AppDrawer includeRouting={includeRouting} />
         </Drawer>
     );

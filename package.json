@@ -4,10 +4,9 @@
   "private": true,
   "dependencies": {
     "@betro/client": "0.0.2",
-    "@emotion/react": "^11.8.1",
-    "@emotion/styled": "^11.8.1",
     "@heroicons/react": "^1.0.5",
-    "@mui/material": "^5.4.4",
+    "@mantine/core": "^3.6.11",
+    "@mantine/hooks": "^3.6.11",
     "@tailwindcss/forms": "^0.4.0",
     "@tailwindcss/typography": "^0.5.2",
     "axios": "^0.26.0",
