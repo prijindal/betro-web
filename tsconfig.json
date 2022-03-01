@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
+    "useDefineForClassFields": true,
     "lib": [
       "dom",
       "dom.iterable",
@@ -12,7 +13,6 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -22,5 +22,6 @@
   },
   "include": [
     "src"
-  ]
+  ],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

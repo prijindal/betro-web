@@ -25,15 +25,6 @@ export const configureStore = ({
         composeEnhancers(applyMiddleware(...[thunk].concat(...middleware)))
     );
 
-    if (process.env.NODE_ENV !== "production") {
-        if (module.hot) {
-            module.hot.accept("./rootReducer", () =>
-                // eslint-disable-next-line @typescript-eslint/no-var-requires
-                store.replaceReducer(require("./rootReducer").default)
-            );
-        }
-    }
-
     return store;
 };
 

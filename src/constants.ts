@@ -1,4 +1,4 @@
-export const API_HOST =
-    process.env.REACT_APP_API_HOST ||
-    window.localStorage.getItem("REACT_APP_API_HOST") ||
+export const API_HOST: string =
+    (import.meta.env.VITE_API_HOST as string | undefined) ||
+    window.localStorage.getItem("VITE_API_HOST") ||
     "http://localhost:4000";
