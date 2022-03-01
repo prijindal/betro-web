@@ -24,12 +24,6 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run tsc
-      - run: npm run test -- --coverage
-      - uses: codecov/codecov-action@v1
-        with:
-          env_vars: NODE_VERSION
-        env:
-          NODE_VERSION: ${{ matrix.node-version }}
       - name: Build
         if: startsWith(matrix.node-version, '16')
         run: env BASE_URL="https://betro.easycode.cloud" VITE_API_HOST="https://betro.easycode.cloud" npm run build
